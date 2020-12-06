@@ -13,6 +13,11 @@ gem 'rails', '~> 6.0.3', '>= 6.0.3.2'
 gem 'sprockets', '< 4'
 gem 'sassc-rails'
 
+gem 'groupdate' # added
+gem 'bootstrap-sass' # added
+gem 'httparty' # added
+gem 'hashie'  # added
+gem 'rubypython', '~> 0.6.3' #added
 gem 'faker'
 
 group :development do

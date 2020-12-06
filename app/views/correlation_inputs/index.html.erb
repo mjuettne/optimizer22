@@ -1,0 +1,134 @@
+<div>
+  <div>
+    <h1>
+      List of all correlation inputs
+    </h1>
+  </div>
+</div>
+
+<hr>
+
+<div>
+  <div>
+    <h2>
+      Add a new correlation input
+    </h2>
+
+    <form action="/insert_correlation_input" method="post">
+      <div>
+        <label for="correlation_id_box">
+          Correlation
+        </label>
+
+        <input type="text" id="correlation_id_box" name="query_correlation_id">
+      </div>
+
+      <div>
+        <label for="asset_class1_id_box">
+          Asset class1
+        </label>
+
+        <input type="text" id="asset_class1_id_box" name="query_asset_class1_id">
+      </div>
+
+      <div>
+        <label for="asset_class2_id_box">
+          Asset class2
+        </label>
+
+        <input type="text" id="asset_class2_id_box" name="query_asset_class2_id">
+      </div>
+
+      <div>
+        <label for="correl_box">
+          Correl
+        </label>
+
+        <input type="text" id="correl_box" name="query_correl">
+      </div>
+
+      <button>
+        Create correlation input
+      </button>
+    </form>
+  </div>
+</div>
+
+<hr>
+<div>
+  <div>
+    <table>
+      <tr>
+        <th>
+          ID
+        </th>
+
+        <th>
+          Correlation
+        </th>
+
+        <th>
+          Asset class1
+        </th>
+
+        <th>
+          Asset class2
+        </th>
+
+        <th>
+          Correl
+        </th>
+
+        <th>
+          Created at
+        </th>
+
+        <th>
+          Updated at
+        </th>
+
+        <th>
+        </th>
+      </tr>
+
+      <% @list_of_correlation_inputs.each do |a_correlation_input| %>
+      <tr>
+        <td>
+          <%= a_correlation_input.id %>
+        </td>
+
+        <td>
+          <%= a_correlation_input.correlation_id %>
+        </td>
+
+        <td>
+          <%= a_correlation_input.asset_class1_id %>
+        </td>
+
+        <td>
+          <%= a_correlation_input.asset_class2_id %>
+        </td>
+
+        <td>
+          <%= a_correlation_input.correl %>
+        </td>
+
+        <td>
+          <%= time_ago_in_words(a_correlation_input.created_at) %> ago
+        </td>
+        <td>
+          <%= time_ago_in_words(a_correlation_input.updated_at) %> ago
+        </td>
+
+        <td>
+          <a href="/correlation_inputs/<%= a_correlation_input.id %>">
+            Show details
+          </a>
+        </td>
+      </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+
+<hr>

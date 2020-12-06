@@ -1,0 +1,182 @@
+<div>
+  <div>
+    <h1>
+      List of all cma inputs
+    </h1>
+  </div>
+</div>
+
+<hr>
+
+<div>
+  <div>
+    <h2>
+      Add a new cma input
+    </h2>
+
+    <form action="/insert_cma_input" method="post">
+      <div>
+        <label for="cma_id_box">
+          Cma
+        </label>
+
+        <input type="text" id="cma_id_box" name="query_cma_id">
+      </div>
+
+      <div>
+        <label for="exp_ret_box">
+          Exp ret
+        </label>
+
+        <input type="text" id="exp_ret_box" name="query_exp_ret">
+      </div>
+
+      <div>
+        <label for="std_dev_box">
+          Std dev
+        </label>
+
+        <input type="text" id="std_dev_box" name="query_std_dev">
+      </div>
+
+      <div>
+        <label for="skew_box">
+          Skew
+        </label>
+
+        <input type="text" id="skew_box" name="query_skew">
+      </div>
+
+      <div>
+        <label for="kurt_box">
+          Kurt
+        </label>
+
+        <input type="text" id="kurt_box" name="query_kurt">
+      </div>
+
+      <div>
+        <label for="yield_box">
+          Yield
+        </label>
+
+        <input type="text" id="yield_box" name="query_yield">
+      </div>
+
+      <div>
+        <label for="asset_class_id_box">
+          Asset class
+        </label>
+
+        <input type="text" id="asset_class_id_box" name="query_asset_class_id">
+      </div>
+
+      <button>
+        Create cma input
+      </button>
+    </form>
+  </div>
+</div>
+
+<hr>
+<div>
+  <div>
+    <table>
+      <tr>
+        <th>
+          ID
+        </th>
+
+        <th>
+          Cma
+        </th>
+
+        <th>
+          Exp ret
+        </th>
+
+        <th>
+          Std dev
+        </th>
+
+        <th>
+          Skew
+        </th>
+
+        <th>
+          Kurt
+        </th>
+
+        <th>
+          Yield
+        </th>
+
+        <th>
+          Asset class
+        </th>
+
+        <th>
+          Created at
+        </th>
+
+        <th>
+          Updated at
+        </th>
+
+        <th>
+        </th>
+      </tr>
+
+      <% @list_of_cma_inputs.each do |a_cma_input| %>
+      <tr>
+        <td>
+          <%= a_cma_input.id %>
+        </td>
+
+        <td>
+          <%= a_cma_input.cma_id %>
+        </td>
+
+        <td>
+          <%= a_cma_input.exp_ret %>
+        </td>
+
+        <td>
+          <%= a_cma_input.std_dev %>
+        </td>
+
+        <td>
+          <%= a_cma_input.skew %>
+        </td>
+
+        <td>
+          <%= a_cma_input.kurt %>
+        </td>
+
+        <td>
+          <%= a_cma_input.yield %>
+        </td>
+
+        <td>
+          <%= a_cma_input.asset_class_id %>
+        </td>
+
+        <td>
+          <%= time_ago_in_words(a_cma_input.created_at) %> ago
+        </td>
+        <td>
+          <%= time_ago_in_words(a_cma_input.updated_at) %> ago
+        </td>
+
+        <td>
+          <a href="/cma_inputs/<%= a_cma_input.id %>">
+            Show details
+          </a>
+        </td>
+      </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+
+<hr>

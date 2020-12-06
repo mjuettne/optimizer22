@@ -1,0 +1,146 @@
+<div>
+  <div>
+    <h1>
+      Frontier input #<%= @the_frontier_input.id %> details
+    </h1>
+
+    <div>
+      <div>
+        <a href="/frontier_inputs">
+          Go back
+        </a>
+      </div>
+
+      <div>
+        <a href="/delete_frontier_input/<%= @the_frontier_input.id %>">
+          Delete frontier input
+        </a>
+      </div>
+    </div>
+
+    <dl>
+      <dt>
+        Asset class
+      </dt>
+      <dd>
+        <%= @the_frontier_input.asset_class_id %>
+      </dd>
+
+      <dt>
+        Frontier
+      </dt>
+      <dd>
+        <%= @the_frontier_input.frontier_id %>
+      </dd>
+
+      <dt>
+        Cma
+      </dt>
+      <dd>
+        <%= @the_frontier_input.cma_id %>
+      </dd>
+
+      <dt>
+        Correlation
+      </dt>
+      <dd>
+        <%= @the_frontier_input.correlation_id %>
+      </dd>
+
+      <dt>
+        Min
+      </dt>
+      <dd>
+        <%= @the_frontier_input.min %>
+      </dd>
+
+      <dt>
+        Max
+      </dt>
+      <dd>
+        <%= @the_frontier_input.max %>
+      </dd>
+
+      <dt>
+        Created at
+      </dt>
+      <dd>
+        <%= time_ago_in_words(@the_frontier_input.created_at) %> ago
+      </dd>
+
+      <dt>
+        Updated at
+      </dt>
+      <dd>
+        <%= time_ago_in_words(@the_frontier_input.updated_at) %> ago
+      </dd>
+    </dl>
+  </div>
+</div>
+
+<hr>
+
+
+<div>
+  <div>
+    <h2>
+      Edit frontier input
+    </h2>
+
+    <form action="/modify_frontier_input/<%= @the_frontier_input.id %>"  method="post" >
+      <div>
+        <label for="asset_class_id_box">
+          Asset class
+        </label>
+
+        <input type="text" id="asset_class_id_box" name="query_asset_class_id" value="<%= @the_frontier_input.asset_class_id %>">
+      </div>
+
+      <div>
+        <label for="frontier_id_box">
+          Frontier
+        </label>
+
+        <input type="text" id="frontier_id_box" name="query_frontier_id" value="<%= @the_frontier_input.frontier_id %>">
+      </div>
+
+      <div>
+        <label for="cma_id_box">
+          Cma
+        </label>
+
+        <input type="text" id="cma_id_box" name="query_cma_id" value="<%= @the_frontier_input.cma_id %>">
+      </div>
+
+      <div>
+        <label for="correlation_id_box">
+          Correlation
+        </label>
+
+        <input type="text" id="correlation_id_box" name="query_correlation_id" value="<%= @the_frontier_input.correlation_id %>">
+      </div>
+
+      <div>
+        <label for="min_box">
+          Min
+        </label>
+
+        <input type="text" id="min_box" name="query_min" value="<%= @the_frontier_input.min %>">
+      </div>
+
+      <div>
+        <label for="max_box">
+          Max
+        </label>
+
+        <input type="text" id="max_box" name="query_max" value="<%= @the_frontier_input.max %>">
+      </div>
+
+      <button>
+        Update frontier input
+      </button>
+    </form>
+  </div>
+</div>
+
+<hr>

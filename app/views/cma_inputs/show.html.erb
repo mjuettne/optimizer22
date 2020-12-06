@@ -1,0 +1,161 @@
+<div>
+  <div>
+    <h1>
+      Cma input #<%= @the_cma_input.id %> details
+    </h1>
+
+    <div>
+      <div>
+        <a href="/cma_inputs">
+          Go back
+        </a>
+      </div>
+
+      <div>
+        <a href="/delete_cma_input/<%= @the_cma_input.id %>">
+          Delete cma input
+        </a>
+      </div>
+    </div>
+
+    <dl>
+      <dt>
+        Cma
+      </dt>
+      <dd>
+        <%= @the_cma_input.cma_id %>
+      </dd>
+
+      <dt>
+        Exp ret
+      </dt>
+      <dd>
+        <%= @the_cma_input.exp_ret %>
+      </dd>
+
+      <dt>
+        Std dev
+      </dt>
+      <dd>
+        <%= @the_cma_input.std_dev %>
+      </dd>
+
+      <dt>
+        Skew
+      </dt>
+      <dd>
+        <%= @the_cma_input.skew %>
+      </dd>
+
+      <dt>
+        Kurt
+      </dt>
+      <dd>
+        <%= @the_cma_input.kurt %>
+      </dd>
+
+      <dt>
+        Yield
+      </dt>
+      <dd>
+        <%= @the_cma_input.yield %>
+      </dd>
+
+      <dt>
+        Asset class
+      </dt>
+      <dd>
+        <%= @the_cma_input.asset_class_id %>
+      </dd>
+
+      <dt>
+        Created at
+      </dt>
+      <dd>
+        <%= time_ago_in_words(@the_cma_input.created_at) %> ago
+      </dd>
+
+      <dt>
+        Updated at
+      </dt>
+      <dd>
+        <%= time_ago_in_words(@the_cma_input.updated_at) %> ago
+      </dd>
+    </dl>
+  </div>
+</div>
+
+<hr>
+
+
+<div>
+  <div>
+    <h2>
+      Edit cma input
+    </h2>
+
+    <form action="/modify_cma_input/<%= @the_cma_input.id %>"  method="post" >
+      <div>
+        <label for="cma_id_box">
+          Cma
+        </label>
+
+        <input type="text" id="cma_id_box" name="query_cma_id" value="<%= @the_cma_input.cma_id %>">
+      </div>
+
+      <div>
+        <label for="exp_ret_box">
+          Exp ret
+        </label>
+
+        <input type="text" id="exp_ret_box" name="query_exp_ret" value="<%= @the_cma_input.exp_ret %>">
+      </div>
+
+      <div>
+        <label for="std_dev_box">
+          Std dev
+        </label>
+
+        <input type="text" id="std_dev_box" name="query_std_dev" value="<%= @the_cma_input.std_dev %>">
+      </div>
+
+      <div>
+        <label for="skew_box">
+          Skew
+        </label>
+
+        <input type="text" id="skew_box" name="query_skew" value="<%= @the_cma_input.skew %>">
+      </div>
+
+      <div>
+        <label for="kurt_box">
+          Kurt
+        </label>
+
+        <input type="text" id="kurt_box" name="query_kurt" value="<%= @the_cma_input.kurt %>">
+      </div>
+
+      <div>
+        <label for="yield_box">
+          Yield
+        </label>
+
+        <input type="text" id="yield_box" name="query_yield" value="<%= @the_cma_input.yield %>">
+      </div>
+
+      <div>
+        <label for="asset_class_id_box">
+          Asset class
+        </label>
+
+        <input type="text" id="asset_class_id_box" name="query_asset_class_id" value="<%= @the_cma_input.asset_class_id %>">
+      </div>
+
+      <button>
+        Update cma input
+      </button>
+    </form>
+  </div>
+</div>
+
+<hr>

@@ -1,0 +1,102 @@
+<div>
+  <div>
+    <h1>
+      List of all forecasts
+    </h1>
+  </div>
+</div>
+
+<hr>
+
+<div>
+  <div>
+    <h2>
+      Add a new forecast
+    </h2>
+
+    <form action="/insert_forecast" method="post">
+      <div>
+        <label for="user_id_box">
+          User
+        </label>
+
+        <input type="text" id="user_id_box" name="query_user_id">
+      </div>
+
+      <div>
+        <label for="name_box">
+          Name
+        </label>
+
+        <input type="text" id="name_box" name="query_name">
+      </div>
+
+      <button>
+        Create forecast
+      </button>
+    </form>
+  </div>
+</div>
+
+<hr>
+<div>
+  <div>
+    <table>
+      <tr>
+        <th>
+          ID
+        </th>
+
+        <th>
+          User
+        </th>
+
+        <th>
+          Name
+        </th>
+
+        <th>
+          Created at
+        </th>
+
+        <th>
+          Updated at
+        </th>
+
+        <th>
+        </th>
+      </tr>
+
+      <% @list_of_forecasts.each do |a_forecast| %>
+      <tr>
+        <td>
+          <%= a_forecast.id %>
+        </td>
+
+        <td>
+          <%= a_forecast.user_id %>
+        </td>
+
+        <td>
+          <%= a_forecast.name %>
+        </td>
+
+        <td>
+          <%= time_ago_in_words(a_forecast.created_at) %> ago
+        </td>
+        <td>
+          <%= time_ago_in_words(a_forecast.updated_at) %> ago
+        </td>
+
+        <td>
+          <a href="/forecasts/<%= a_forecast.id %>">
+            Show details
+          </a>
+        </td>
+      </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+
+<hr>

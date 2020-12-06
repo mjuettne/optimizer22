@@ -1,0 +1,86 @@
+<div>
+  <div>
+    <h1>
+      Forecast #<%= @the_forecast.id %> details
+    </h1>
+
+    <div>
+      <div>
+        <a href="/forecasts">
+          Go back
+        </a>
+      </div>
+
+      <div>
+        <a href="/delete_forecast/<%= @the_forecast.id %>">
+          Delete forecast
+        </a>
+      </div>
+    </div>
+
+    <dl>
+      <dt>
+        User
+      </dt>
+      <dd>
+        <%= @the_forecast.user_id %>
+      </dd>
+
+      <dt>
+        Name
+      </dt>
+      <dd>
+        <%= @the_forecast.name %>
+      </dd>
+
+      <dt>
+        Created at
+      </dt>
+      <dd>
+        <%= time_ago_in_words(@the_forecast.created_at) %> ago
+      </dd>
+
+      <dt>
+        Updated at
+      </dt>
+      <dd>
+        <%= time_ago_in_words(@the_forecast.updated_at) %> ago
+      </dd>
+    </dl>
+  </div>
+</div>
+
+<hr>
+
+
+<div>
+  <div>
+    <h2>
+      Edit forecast
+    </h2>
+
+    <form action="/modify_forecast/<%= @the_forecast.id %>"  method="post" >
+      <div>
+        <label for="user_id_box">
+          User
+        </label>
+
+        <input type="text" id="user_id_box" name="query_user_id" value="<%= @the_forecast.user_id %>">
+      </div>
+
+      <div>
+        <label for="name_box">
+          Name
+        </label>
+
+        <input type="text" id="name_box" name="query_name" value="<%= @the_forecast.name %>">
+      </div>
+
+      <button>
+        Update forecast
+      </button>
+    </form>
+  </div>
+</div>
+
+<hr>

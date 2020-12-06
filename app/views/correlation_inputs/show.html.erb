@@ -1,0 +1,116 @@
+<div>
+  <div>
+    <h1>
+      Correlation input #<%= @the_correlation_input.id %> details
+    </h1>
+
+    <div>
+      <div>
+        <a href="/correlation_inputs">
+          Go back
+        </a>
+      </div>
+
+      <div>
+        <a href="/delete_correlation_input/<%= @the_correlation_input.id %>">
+          Delete correlation input
+        </a>
+      </div>
+    </div>
+
+    <dl>
+      <dt>
+        Correlation
+      </dt>
+      <dd>
+        <%= @the_correlation_input.correlation_id %>
+      </dd>
+
+      <dt>
+        Asset class1
+      </dt>
+      <dd>
+        <%= @the_correlation_input.asset_class1_id %>
+      </dd>
+
+      <dt>
+        Asset class2
+      </dt>
+      <dd>
+        <%= @the_correlation_input.asset_class2_id %>
+      </dd>
+
+      <dt>
+        Correl
+      </dt>
+      <dd>
+        <%= @the_correlation_input.correl %>
+      </dd>
+
+      <dt>
+        Created at
+      </dt>
+      <dd>
+        <%= time_ago_in_words(@the_correlation_input.created_at) %> ago
+      </dd>
+
+      <dt>
+        Updated at
+      </dt>
+      <dd>
+        <%= time_ago_in_words(@the_correlation_input.updated_at) %> ago
+      </dd>
+    </dl>
+  </div>
+</div>
+
+<hr>
+
+
+<div>
+  <div>
+    <h2>
+      Edit correlation input
+    </h2>
+
+    <form action="/modify_correlation_input/<%= @the_correlation_input.id %>"  method="post" >
+      <div>
+        <label for="correlation_id_box">
+          Correlation
+        </label>
+
+        <input type="text" id="correlation_id_box" name="query_correlation_id" value="<%= @the_correlation_input.correlation_id %>">
+      </div>
+
+      <div>
+        <label for="asset_class1_id_box">
+          Asset class1
+        </label>
+
+        <input type="text" id="asset_class1_id_box" name="query_asset_class1_id" value="<%= @the_correlation_input.asset_class1_id %>">
+      </div>
+
+      <div>
+        <label for="asset_class2_id_box">
+          Asset class2
+        </label>
+
+        <input type="text" id="asset_class2_id_box" name="query_asset_class2_id" value="<%= @the_correlation_input.asset_class2_id %>">
+      </div>
+
+      <div>
+        <label for="correl_box">
+          Correl
+        </label>
+
+        <input type="text" id="correl_box" name="query_correl" value="<%= @the_correlation_input.correl %>">
+      </div>
+
+      <button>
+        Update correlation input
+      </button>
+    </form>
+  </div>
+</div>
+
+<hr>

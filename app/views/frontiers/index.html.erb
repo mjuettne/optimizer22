@@ -1,0 +1,102 @@
+<div>
+  <div>
+    <h1>
+      List of all frontiers
+    </h1>
+  </div>
+</div>
+
+<hr>
+
+<div>
+  <div>
+    <h2>
+      Add a new frontier
+    </h2>
+
+    <form action="/insert_frontier" method="post">
+      <div>
+        <label for="user_id_box">
+          User
+        </label>
+
+        <input type="text" id="user_id_box" name="query_user_id">
+      </div>
+
+      <div>
+        <label for="name_box">
+          Name
+        </label>
+
+        <input type="text" id="name_box" name="query_name">
+      </div>
+
+      <button>
+        Create frontier
+      </button>
+    </form>
+  </div>
+</div>
+
+<hr>
+<div>
+  <div>
+    <table>
+      <tr>
+        <th>
+          ID
+        </th>
+
+        <th>
+          User
+        </th>
+
+        <th>
+          Name
+        </th>
+
+        <th>
+          Created at
+        </th>
+
+        <th>
+          Updated at
+        </th>
+
+        <th>
+        </th>
+      </tr>
+
+      <% @list_of_frontiers.each do |a_frontier| %>
+      <tr>
+        <td>
+          <%= a_frontier.id %>
+        </td>
+
+        <td>
+          <%= a_frontier.user_id %>
+        </td>
+
+        <td>
+          <%= a_frontier.name %>
+        </td>
+
+        <td>
+          <%= time_ago_in_words(a_frontier.created_at) %> ago
+        </td>
+        <td>
+          <%= time_ago_in_words(a_frontier.updated_at) %> ago
+        </td>
+
+        <td>
+          <a href="/frontiers/<%= a_frontier.id %>">
+            Show details
+          </a>
+        </td>
+      </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+
+<hr>

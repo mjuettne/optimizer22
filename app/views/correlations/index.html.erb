@@ -1,0 +1,86 @@
+<div>
+  <div>
+    <h1>
+      List of all correlations
+    </h1>
+  </div>
+</div>
+
+<hr>
+
+<div>
+  <div>
+    <h2>
+      Add a new correlation
+    </h2>
+
+    <form action="/insert_correlation" method="post">
+      <div>
+        <label for="name_box">
+          Name
+        </label>
+
+        <input type="text" id="name_box" name="query_name">
+      </div>
+
+      <button>
+        Create correlation
+      </button>
+    </form>
+  </div>
+</div>
+
+<hr>
+<div>
+  <div>
+    <table>
+      <tr>
+        <th>
+          ID
+        </th>
+
+        <th>
+          Name
+        </th>
+
+        <th>
+          Created at
+        </th>
+
+        <th>
+          Updated at
+        </th>
+
+        <th>
+        </th>
+      </tr>
+
+      <% @list_of_correlations.each do |a_correlation| %>
+      <tr>
+        <td>
+          <%= a_correlation.id %>
+        </td>
+
+        <td>
+          <%= a_correlation.name %>
+        </td>
+
+        <td>
+          <%= time_ago_in_words(a_correlation.created_at) %> ago
+        </td>
+        <td>
+          <%= time_ago_in_words(a_correlation.updated_at) %> ago
+        </td>
+
+        <td>
+          <a href="/correlations/<%= a_correlation.id %>">
+            Show details
+          </a>
+        </td>
+      </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+
+<hr>

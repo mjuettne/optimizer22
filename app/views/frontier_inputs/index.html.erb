@@ -1,0 +1,166 @@
+<div>
+  <div>
+    <h1>
+      List of all frontier inputs
+    </h1>
+  </div>
+</div>
+
+<hr>
+
+<div>
+  <div>
+    <h2>
+      Add a new frontier input
+    </h2>
+
+    <form action="/insert_frontier_input" method="post">
+      <div>
+        <label for="asset_class_id_box">
+          Asset class
+        </label>
+
+        <input type="text" id="asset_class_id_box" name="query_asset_class_id">
+      </div>
+
+      <div>
+        <label for="frontier_id_box">
+          Frontier
+        </label>
+
+        <input type="text" id="frontier_id_box" name="query_frontier_id">
+      </div>
+
+      <div>
+        <label for="cma_id_box">
+          Cma
+        </label>
+
+        <input type="text" id="cma_id_box" name="query_cma_id">
+      </div>
+
+      <div>
+        <label for="correlation_id_box">
+          Correlation
+        </label>
+
+        <input type="text" id="correlation_id_box" name="query_correlation_id">
+      </div>
+
+      <div>
+        <label for="min_box">
+          Min
+        </label>
+
+        <input type="text" id="min_box" name="query_min">
+      </div>
+
+      <div>
+        <label for="max_box">
+          Max
+        </label>
+
+        <input type="text" id="max_box" name="query_max">
+      </div>
+
+      <button>
+        Create frontier input
+      </button>
+    </form>
+  </div>
+</div>
+
+<hr>
+<div>
+  <div>
+    <table>
+      <tr>
+        <th>
+          ID
+        </th>
+
+        <th>
+          Asset class
+        </th>
+
+        <th>
+          Frontier
+        </th>
+
+        <th>
+          Cma
+        </th>
+
+        <th>
+          Correlation
+        </th>
+
+        <th>
+          Min
+        </th>
+
+        <th>
+          Max
+        </th>
+
+        <th>
+          Created at
+        </th>
+
+        <th>
+          Updated at
+        </th>
+
+        <th>
+        </th>
+      </tr>
+
+      <% @list_of_frontier_inputs.each do |a_frontier_input| %>
+      <tr>
+        <td>
+          <%= a_frontier_input.id %>
+        </td>
+
+        <td>
+          <%= a_frontier_input.asset_class_id %>
+        </td>
+
+        <td>
+          <%= a_frontier_input.frontier_id %>
+        </td>
+
+        <td>
+          <%= a_frontier_input.cma_id %>
+        </td>
+
+        <td>
+          <%= a_frontier_input.correlation_id %>
+        </td>
+
+        <td>
+          <%= a_frontier_input.min %>
+        </td>
+
+        <td>
+          <%= a_frontier_input.max %>
+        </td>
+
+        <td>
+          <%= time_ago_in_words(a_frontier_input.created_at) %> ago
+        </td>
+        <td>
+          <%= time_ago_in_words(a_frontier_input.updated_at) %> ago
+        </td>
+
+        <td>
+          <a href="/frontier_inputs/<%= a_frontier_input.id %>">
+            Show details
+          </a>
+        </td>
+      </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+
+<hr>

@@ -1,0 +1,101 @@
+<div>
+  <div>
+    <h1>
+      Weight #<%= @the_weight.id %> details
+    </h1>
+
+    <div>
+      <div>
+        <a href="/weights">
+          Go back
+        </a>
+      </div>
+
+      <div>
+        <a href="/delete_weight/<%= @the_weight.id %>">
+          Delete weight
+        </a>
+      </div>
+    </div>
+
+    <dl>
+      <dt>
+        Portfolio
+      </dt>
+      <dd>
+        <%= @the_weight.portfolio_id %>
+      </dd>
+
+      <dt>
+        Weight
+      </dt>
+      <dd>
+        <%= @the_weight.weight %>
+      </dd>
+
+      <dt>
+        Asset class
+      </dt>
+      <dd>
+        <%= @the_weight.asset_class_id %>
+      </dd>
+
+      <dt>
+        Created at
+      </dt>
+      <dd>
+        <%= time_ago_in_words(@the_weight.created_at) %> ago
+      </dd>
+
+      <dt>
+        Updated at
+      </dt>
+      <dd>
+        <%= time_ago_in_words(@the_weight.updated_at) %> ago
+      </dd>
+    </dl>
+  </div>
+</div>
+
+<hr>
+
+
+<div>
+  <div>
+    <h2>
+      Edit weight
+    </h2>
+
+    <form action="/modify_weight/<%= @the_weight.id %>"  method="post" >
+      <div>
+        <label for="portfolio_id_box">
+          Portfolio
+        </label>
+
+        <input type="text" id="portfolio_id_box" name="query_portfolio_id" value="<%= @the_weight.portfolio_id %>">
+      </div>
+
+      <div>
+        <label for="weight_box">
+          Weight
+        </label>
+
+        <input type="text" id="weight_box" name="query_weight" value="<%= @the_weight.weight %>">
+      </div>
+
+      <div>
+        <label for="asset_class_id_box">
+          Asset class
+        </label>
+
+        <input type="text" id="asset_class_id_box" name="query_asset_class_id" value="<%= @the_weight.asset_class_id %>">
+      </div>
+
+      <button>
+        Update weight
+      </button>
+    </form>
+  </div>
+</div>
+
+<hr>

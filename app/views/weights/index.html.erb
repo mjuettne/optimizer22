@@ -1,0 +1,118 @@
+<div>
+  <div>
+    <h1>
+      List of all weights
+    </h1>
+  </div>
+</div>
+
+<hr>
+
+<div>
+  <div>
+    <h2>
+      Add a new weight
+    </h2>
+
+    <form action="/insert_weight" method="post">
+      <div>
+        <label for="portfolio_id_box">
+          Portfolio
+        </label>
+
+        <input type="text" id="portfolio_id_box" name="query_portfolio_id">
+      </div>
+
+      <div>
+        <label for="weight_box">
+          Weight
+        </label>
+
+        <input type="text" id="weight_box" name="query_weight">
+      </div>
+
+      <div>
+        <label for="asset_class_id_box">
+          Asset class
+        </label>
+
+        <input type="text" id="asset_class_id_box" name="query_asset_class_id">
+      </div>
+
+      <button>
+        Create weight
+      </button>
+    </form>
+  </div>
+</div>
+
+<hr>
+<div>
+  <div>
+    <table>
+      <tr>
+        <th>
+          ID
+        </th>
+
+        <th>
+          Portfolio
+        </th>
+
+        <th>
+          Weight
+        </th>
+
+        <th>
+          Asset class
+        </th>
+
+        <th>
+          Created at
+        </th>
+
+        <th>
+          Updated at
+        </th>
+
+        <th>
+        </th>
+      </tr>
+
+      <% @list_of_weights.each do |a_weight| %>
+      <tr>
+        <td>
+          <%= a_weight.id %>
+        </td>
+
+        <td>
+          <%= a_weight.portfolio_id %>
+        </td>
+
+        <td>
+          <%= a_weight.weight %>
+        </td>
+
+        <td>
+          <%= a_weight.asset_class_id %>
+        </td>
+
+        <td>
+          <%= time_ago_in_words(a_weight.created_at) %> ago
+        </td>
+        <td>
+          <%= time_ago_in_words(a_weight.updated_at) %> ago
+        </td>
+
+        <td>
+          <a href="/weights/<%= a_weight.id %>">
+            Show details
+          </a>
+        </td>
+      </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+
+<hr>
