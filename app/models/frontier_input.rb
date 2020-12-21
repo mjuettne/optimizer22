@@ -3,6 +3,7 @@
 # Table name: frontier_inputs
 #
 #  id             :integer          not null, primary key
+#  inclusion      :string
 #  max            :integer
 #  min            :integer
 #  created_at     :datetime         not null

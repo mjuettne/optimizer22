@@ -1,71 +1,97 @@
+
+
+
+
+
 <div>
   <div>
-    <h1>
-      Cma #<%= @the_cma.id %> details
-    </h1>
+    <h2> <%= @thecma.name %> Details </h2>
 
     <div>
       <div>
-        <a href="/cmas">
-          Go back
-        </a>
-      </div>
-
-      <div>
-        <a href="/delete_cma/<%= @the_cma.id %>">
-          Delete cma
-        </a>
+        <a href="/cmas">  Go back </a>
       </div>
     </div>
-
-    <dl>
-      <dt>
-        Name
-      </dt>
-      <dd>
-        <%= @the_cma.name %>
-      </dd>
-
-      <dt>
-        Created at
-      </dt>
-      <dd>
-        <%= time_ago_in_words(@the_cma.created_at) %> ago
-      </dd>
-
-      <dt>
-        Updated at
-      </dt>
-      <dd>
-        <%= time_ago_in_words(@the_cma.updated_at) %> ago
-      </dd>
-    </dl>
-  </div>
-</div>
-
-<hr>
-
-
-<div>
-  <div>
-    <h2>
-      Edit cma
-    </h2>
-
-    <form action="/modify_cma/<%= @the_cma.id %>"  method="post" >
-      <div>
-        <label for="name_box">
-          Name
-        </label>
-
-        <input type="text" id="name_box" name="query_name" value="<%= @the_cma.name %>">
+    <div>
+    <form action="/modify_cma/<%= @thecma.id %>"  method="post" >
+      <div class="row">
+        <div class="col-1"> <label  class="col-form-label" for="query_name"> Edit Name </label> </div>
+        <div class="col-2"> <input class="form-control" type="text" id="query_name" name="query_name" value="<%= @thecma.name %>"> </div>
+        <div class="col-2"> <input type="submit" value="Update Name" class="btn btn-primary"> </div>
       </div>
+     </form>
+  </div>
 
-      <button>
-        Update cma
-      </button>
-    </form>
   </div>
 </div>
 
 <hr>
+
+<table class="table table-hover">
+ <thead>
+    <tr class="table-info">
+      <th scope="col">Asset Class</th>
+      <th scope="col">Expected Return (Arith)</th>
+      <th scope="col">Standard Deviation</th>
+      <th scope="col">Skewness</th>
+      <th scope="col">Kurtosis</th>
+      <th scope="col">Yield</th>
+      <th scope="col"></th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+   <tbody>
+   <% @asset_class.each do |assetclass| %>
+    <tr class = "table-light">
+      <th scope="row"> <%= assetclass.name %> </th>
+      <td> <%= (@cma_inputs.where(:cma_id => @thecma.id).where(:asset_class => assetclass.id)[0].exp_ret*100).round(1)%>%</td>
+      <td> <%= (@cma_inputs.where(:cma_id => @thecma.id).where(:asset_class => assetclass.id)[0].std_dev*100).round(1) %>%</td>
+      <td> <%= @cma_inputs.where(:cma_id => @thecma.id).where(:asset_class => assetclass.id)[0].skew %></td>
+      <td> <%= @cma_inputs.where(:cma_id => @thecma.id).where(:asset_class => assetclass.id)[0].kurt %></td>
+      <td> <%= (@cma_inputs.where(:cma_id => @thecma.id).where(:asset_class => assetclass.id)[0].yield*100).round(2) %>%</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+        <%# <label for="cma_id_box"> CMA ID </label>
+        <%# <label for="asset_class_id_box"> Asset class ID </label> %>
+        <%# <label for="exp_ret_box"> Expected Return (Arith) </label>
+        <label for="std_dev_box"> Standard Dev </label>
+        <label for="skew_box"> Skewness</label>
+        <label for="kurt_box"> Kurtosis</label>
+        <label for="yield_box"> Yield</label> %> 
+        
+      <% end %>
+    </tbody>
+  </table>
+ 
+    <form action = "/cma_inputs" method = "get">
+            <input type="text" id="cma_id" name="cma_id" value = "<%= @thecma.id %>" hidden>
+             <input type="submit" value="Edit Inputs" class="btn btn-success btn-lg"> 
+    </form> <br>
+    
+    <div> <%= link_to 'Export to Excel', "download/#{@thecma.id}", format: :xlsx, :class=> "btn btn-info btn-lg"%> </div>
+    
+    <%# <form action = "/cmas/import/"> 
+      <label for="myfile">Select files:</label>
+      <input type="file" id="myfile" name="myfile" multiple><br><br>
+     <input type="submit">
+    </form> %>
+  <hr>
+     <h3>Excel Import</h3>
+     <div>Update all values at once </div>
+
+     <ol>
+      <li>Export Excel Template Above </li>
+      <li>Update Input Values in Excel </li>
+      <li>Save File on Desktop </li>
+      <li>Choose File below </li>
+      <li>Click IMPORT once File has been selected </li>
+      </ol>
+      <div>
+      <%= form_tag cmas_import_path, multipart: true do %>
+          <%= file_field_tag :file %>
+          <%= submit_tag "IMPORT", :class=> "btn btn-warning btn-lg"%>
+        <% end %>
+      </div>
+    
+

@@ -1,0 +1,18 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Asset Classes") do |sheet|
+  # Create the header row
+  sheet.add_row ["Import ID", "Name", "Exp Ret", "Std Dev", "Skew", "Kurt", "Yield"]
+  # Create entries for each item
+ @asset_class.each do |assetclass| 
+   
+    sheet.add_row [
+    @cma_inputs.where(:cma_id => @thecma.id).where(:asset_class => assetclass.id)[0].id, 
+    assetclass.name,
+    (@cma_inputs.where(:cma_id => @thecma.id).where(:asset_class => assetclass.id)[0].exp_ret*1).round(3), 
+    @cma_inputs.where(:cma_id => @thecma.id).where(:asset_class => assetclass.id)[0].std_dev, 
+    @cma_inputs.where(:cma_id => @thecma.id).where(:asset_class => assetclass.id)[0].skew,
+    @cma_inputs.where(:cma_id => @thecma.id).where(:asset_class => assetclass.id)[0].kurt,
+    @cma_inputs.where(:cma_id => @thecma.id).where(:asset_class => assetclass.id)[0].yield]
+  end
+end

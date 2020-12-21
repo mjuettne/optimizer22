@@ -18,21 +18,23 @@ std = json.loads(sys.argv[2]) ##### FROM RUBY
 skew = json.loads(sys.argv[3]) ##### FROM RUBY
 kurt = json.loads(sys.argv[4]) ##### FROM RUBY
 correlation = json.loads(sys.argv[5]) ##### FROM RUBY
+bnds = tuple(json.loads(sys.argv[6])) ##### FROM RUBY
+
 
 Year1 = fleishman_opt.output(mean, std, skew, kurt, correlation)
 
 """ Define Asset Class Constraints """
-b1 = tuple(json.loads(sys.argv[6]))
-b2 = tuple(json.loads(sys.argv[7]))
-b3 = tuple(json.loads(sys.argv[8]))
-b4 = tuple(json.loads(sys.argv[9]))
-b5 = tuple(json.loads(sys.argv[10]))
-b6 = tuple(json.loads(sys.argv[11]))
-b7 = tuple(json.loads(sys.argv[12]))
-b8 = tuple(json.loads(sys.argv[13]))
-b9 = tuple(json.loads(sys.argv[14]))
-b10 = tuple(json.loads(sys.argv[15]))
-bnds = (b1,b2,b3,b4,b5,b6,b7,b8,b9,b10)
+# b1 = tuple(json.loads(sys.argv[6]))
+# b2 = tuple(json.loads(sys.argv[7]))
+# b3 = tuple(json.loads(sys.argv[8]))
+# b4 = tuple(json.loads(sys.argv[9]))
+# b5 = tuple(json.loads(sys.argv[10]))
+# b6 = tuple(json.loads(sys.argv[11]))
+# b7 = tuple(json.loads(sys.argv[12]))
+# b8 = tuple(json.loads(sys.argv[13]))
+# b9 = tuple(json.loads(sys.argv[14]))
+# b10 = tuple(json.loads(sys.argv[15]))
+# bnds = (b1,b2,b3,b4,b5,b6,b7,b8,b9,b10)
 # print(bnds)
 
 

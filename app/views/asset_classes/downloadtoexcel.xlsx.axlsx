@@ -1,0 +1,10 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Asset Classes") do |sheet|
+  # Create the header row
+  sheet.add_row ["Name", "Broad Type", "Sub-Type", "Goal"]
+  # Create entries for each item
+  @list_of_asset_classes.each do |item|
+    sheet.add_row [item.name, item.broad_type, item.subtype, item.goal]
+  end
+end

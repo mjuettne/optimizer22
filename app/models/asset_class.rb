@@ -3,7 +3,10 @@
 # Table name: asset_classes
 #
 #  id         :integer          not null, primary key
+#  broad_type :string
+#  goal       :string
 #  name       :string
+#  subtype    :string
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #

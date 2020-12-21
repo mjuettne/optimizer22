@@ -16,119 +16,70 @@
 
     <form action="/insert_correlation_input" method="post">
       <div>
-        <label for="correlation_id_box">
-          Correlation
-        </label>
-
+        <label for="correlation_id_box">  Correlation   </label>
         <input type="text" id="correlation_id_box" name="query_correlation_id">
       </div>
 
       <div>
-        <label for="asset_class1_id_box">
-          Asset class1
-        </label>
-
+        <label for="asset_class1_id_box">  Asset class1 </label>
         <input type="text" id="asset_class1_id_box" name="query_asset_class1_id">
       </div>
 
       <div>
-        <label for="asset_class2_id_box">
-          Asset class2
-        </label>
-
+        <label for="asset_class2_id_box"> Asset class2 </label>
         <input type="text" id="asset_class2_id_box" name="query_asset_class2_id">
       </div>
 
       <div>
-        <label for="correl_box">
-          Correl
-        </label>
-
+        <label for="correl_box"> Correl</label>
         <input type="text" id="correl_box" name="query_correl">
       </div>
 
-      <button>
-        Create correlation input
-      </button>
+      <button> Create correlation input </button>
     </form>
   </div>
 </div>
-
 <hr>
-<div>
-  <div>
-    <table>
-      <tr>
-        <th>
-          ID
-        </th>
 
-        <th>
-          Correlation
-        </th>
 
-        <th>
-          Asset class1
-        </th>
-
-        <th>
-          Asset class2
-        </th>
-
-        <th>
-          Correl
-        </th>
-
-        <th>
-          Created at
-        </th>
-
-        <th>
-          Updated at
-        </th>
-
-        <th>
-        </th>
-      </tr>
-
-      <% @list_of_correlation_inputs.each do |a_correlation_input| %>
-      <tr>
-        <td>
-          <%= a_correlation_input.id %>
-        </td>
-
-        <td>
-          <%= a_correlation_input.correlation_id %>
-        </td>
-
-        <td>
-          <%= a_correlation_input.asset_class1_id %>
-        </td>
-
-        <td>
-          <%= a_correlation_input.asset_class2_id %>
-        </td>
-
-        <td>
-          <%= a_correlation_input.correl %>
-        </td>
-
-        <td>
-          <%= time_ago_in_words(a_correlation_input.created_at) %> ago
-        </td>
-        <td>
-          <%= time_ago_in_words(a_correlation_input.updated_at) %> ago
-        </td>
-
-        <td>
-          <a href="/correlation_inputs/<%= a_correlation_input.id %>">
-            Show details
-          </a>
-        </td>
-      </tr>
+<form action="/modify_correlation_input" method="post">
+<table class="table table-hover">
+ <thead>
+  
+     <tr class="table">
+      <th class="table-info" scope="col">Asset Class</th>
+      <% @asset_class.each do |assetclass| %>
+            <th scope="col"><%= assetclass.name %></th>
       <% end %>
-    </table>
-  </div>
-</div>
+    </thead>    
+    </tr>
+     <% for i in 1...@length%>
+    <tr>
+      <th scope="row"> <%= @asset_class[i-1].name %> </th>
+         <% for j in 0...i%>
+           <td class="table-light"><input  type="number" min="-1" max="1" step="0.005" id="correl_box" name="query_correl[]" value =<%= @list_of_correlation_inputs.where(:correlation_id => @the_correlation.id).where(:asset_class1 => @asset_class[i-1].id).where(:asset_class2 => @asset_class[j].id)[0].correl %>></td>
+         <% end %>
+     <% end %>  
+    </tr>
+ 
+      <th class="table-info" scope="col"></th>
+      <% @asset_class.each do |assetclass| %>
+            <th scope="col"> <input type = "text" value =<%= assetclass.name %> hidden> </th>
+      <% end %>
+    </thead>    
+    </tr>
+    
+   <% for i in 1...@length%>
+    <tr hidden>
+      <th> <input type = "text" value =<%= @asset_class[i-1].name %> hidden> </th>
+         <% for j in 0...i%>
+           <td class="table-light"><input  type="number" id="correl_input_box" name="query_correlation_input_id[]" hidden value =<%= @list_of_correlation_inputs.where(:correlation_id => @the_correlation.id).where(:asset_class1 => @asset_class[i-1].id).where(:asset_class2 => @asset_class[j].id)[0].id %>></td>
+         <% end %>
+     <% end %>  
+    </tr>
 
+</table>
+  <input type="submit" value="Update Correlations" class="btn btn-success btn-lg"> 
+</form>
 <hr>
+

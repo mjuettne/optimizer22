@@ -1,8 +1,6 @@
 <div>
   <div>
-    <h1>
-      List of all correlations
-    </h1>
+    <h3>List of Correlations</h3>
   </div>
 </div>
 
@@ -10,77 +8,76 @@
 
 <div>
   <div>
-    <h2>
-      Add a new correlation
-    </h2>
 
+<div class="row">
+  <div class="col-6">
+    <table class="table table-hover">
+      <thead>
+        <tr class="table-info">
+          <th>Name</th>
+          <th>Details</th>
+          <th>Delete</th>
+        </tr>
+      <tbody>
+      <% @list_of_correlations.each do |a_correlation| %>
+      <tr class="table-light">
+        <th><%= a_correlation.name %></th>
+        <td> <a  href="/correlations/<%= a_correlation.id %>">Show Details</a> </td>
+        <td> <button data-toggle="modal" data-target="#exampleModal" type="button" class="btn btn-light text-danger">Delete </button>  </td>
+      </tr>
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-white">
+        <h5 class="modal-title" id="exampleModalLabel">Warning!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-info" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-danger"><a class="text-light" href="/delete_correlation/<%= a_correlation.id %>">Yes, delete </a> </button>
+      </div>
+    </div>
+  </div>
+</div>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<hr>
+<h4> Add a new Correlation Table</h4>
     <form action="/insert_correlation" method="post">
-      <div>
-        <label for="name_box">
-          Name
-        </label>
-
+      <div class="form-group">
+        <label for="name_box">Name</label>
         <input type="text" id="name_box" name="query_name">
       </div>
-
-      <button>
-        Create correlation
-      </button>
+      <input type="submit" class="btn btn-success" value = "Create Correlation">
     </form>
   </div>
 </div>
 
-<hr>
-<div>
-  <div>
-    <table>
-      <tr>
-        <th>
-          ID
-        </th>
 
-        <th>
-          Name
-        </th>
-
-        <th>
-          Created at
-        </th>
-
-        <th>
-          Updated at
-        </th>
-
-        <th>
-        </th>
-      </tr>
-
-      <% @list_of_correlations.each do |a_correlation| %>
-      <tr>
-        <td>
-          <%= a_correlation.id %>
-        </td>
-
-        <td>
-          <%= a_correlation.name %>
-        </td>
-
-        <td>
-          <%= time_ago_in_words(a_correlation.created_at) %> ago
-        </td>
-        <td>
-          <%= time_ago_in_words(a_correlation.updated_at) %> ago
-        </td>
-
-        <td>
-          <a href="/correlations/<%= a_correlation.id %>">
-            Show details
-          </a>
-        </td>
-      </tr>
-      <% end %>
-    </table>
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-white">
+        <h5 class="modal-title" id="exampleModalLabel">Warning!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-info" data-dismiss="modal">No</button>
+        <button type="button" class="btn btn-danger">Yes, delete</button>
+      </div>
+    </div>
   </div>
 </div>
-
-<hr>

@@ -17,8 +17,13 @@ gem 'groupdate' # added
 gem 'bootstrap-sass' # added
 gem 'httparty' # added
 gem 'hashie'  # added
-gem 'rubypython', '~> 0.6.3' #added
-gem 'faker'
+
+gem 'rubyzip'
+gem 'axlsx' # excel export
+gem 'axlsx_rails' # excel export
+gem 'roo' # excel import
+
+gem 'faker' 
 
 group :development do
   gem 'listen', '~> 3.2'

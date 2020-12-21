@@ -1,0 +1,42 @@
+wb = xlsx_package.workbook
+
+
+
+wb.add_worksheet(name: "Correlations") do |sheet|
+  # Create the header row
+  sheet.add_row [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
+                 " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
+                 " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
+                 " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
+                 " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
+                 " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
+                 " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
+                 " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
+                 " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
+                 " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",]
+  
+  # Create entries for each item
+ for i in 1...100
+     sheet.add_row [" ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
+                    " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
+                    " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
+                    " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
+                    " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
+                    " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
+                    " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
+                    " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
+                    " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
+                    " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",] 
+      end
+  for i in 0...@length
+      for j in 0...i
+          sheet.rows[i].cells[0].value = @asset_class[i-1].name
+          sheet.rows[i].cells[j+1].value = @correlation_inputs.where(:correlation_id => @the_correlation.id).where(:asset_class1 => @asset_class[i-1].id).where(:asset_class2 => @asset_class[j].id)[0].correl
+      end
+      for k in 0...i
+          sheet.rows[i+@length].cells[0].value = @asset_class[i-1].id
+          sheet.rows[i+ @length].cells[k+1].value = @correlation_inputs.where(:correlation_id => @the_correlation.id).where(:asset_class1 => @asset_class[i-1].id).where(:asset_class2 => @asset_class[k].id)[0].id
+      end
+  end    
+        
+end

@@ -5,6 +5,8 @@ import numpy as np
 from numpy.linalg import solve
 import logging
 logging.basicConfig(level = logging.DEBUG)
+import scipy
+import scipy.stats
 from scipy.stats import moment,norm
 import statistics as stat
 from scipy.stats import kurtosis

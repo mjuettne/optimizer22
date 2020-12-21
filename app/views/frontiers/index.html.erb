@@ -1,8 +1,6 @@
 <div>
   <div>
-    <h1>
-      List of all frontiers
-    </h1>
+    <h3>List of all Efficient Frontiers</h3>
   </div>
 </div>
 
@@ -10,89 +8,21 @@
 
 <div>
   <div>
-    <h2>
-      Add a new frontier
-    </h2>
-
-    <form action="/insert_frontier" method="post">
-      <div>
-        <label for="user_id_box">
-          User
-        </label>
-
-        <input type="text" id="user_id_box" name="query_user_id">
-      </div>
-
-      <div>
-        <label for="name_box">
-          Name
-        </label>
-
-        <input type="text" id="name_box" name="query_name">
-      </div>
-
-      <button>
-        Create frontier
-      </button>
-    </form>
-  </div>
-</div>
-
-<hr>
-<div>
-  <div>
-    <table>
-      <tr>
-        <th>
-          ID
-        </th>
-
-        <th>
-          User
-        </th>
-
-        <th>
-          Name
-        </th>
-
-        <th>
-          Created at
-        </th>
-
-        <th>
-          Updated at
-        </th>
-
-        <th>
-        </th>
+    
+<div class="row">
+  <div class="col-6">
+    <table class="table table-hover">
+      <tr class="table-info">
+        <th>Name </th>
+        <th>Details</th>
+        <th>Delete</th>
       </tr>
 
-      <% @list_of_frontiers.each do |a_frontier| %>
-      <tr>
-        <td>
-          <%= a_frontier.id %>
-        </td>
-
-        <td>
-          <%= a_frontier.user_id %>
-        </td>
-
-        <td>
-          <%= a_frontier.name %>
-        </td>
-
-        <td>
-          <%= time_ago_in_words(a_frontier.created_at) %> ago
-        </td>
-        <td>
-          <%= time_ago_in_words(a_frontier.updated_at) %> ago
-        </td>
-
-        <td>
-          <a href="/frontiers/<%= a_frontier.id %>">
-            Show details
-          </a>
-        </td>
+      <% @current_user.frontiers.each do |a_frontier| %>
+      <tr class="table-light">
+        <td> <%= a_frontier.name %>  </td>
+        <td> <a href="/frontiers/<%= a_frontier.id %>"> Show details </a> </td>
+        <td> <a class="text-danger" href="/delete_frontier/<%= a_frontier.id %>">Delete</a> </td>
       </tr>
       <% end %>
     </table>
@@ -100,3 +30,62 @@
 </div>
 
 <hr>
+
+<h4> Add a new Efficient Frontier Analysis</h4>
+<div class="row">
+  <div class="col-4">
+     <form action="/insert_frontier" method="post">
+      <div class="form-group">
+        <label for="user_id_box" hidden> </label>
+        <input type="text" id="user_id_box" name="query_user_id" value = <%= @current_user.id%> hidden>
+      </div>
+      <div class="form-group">
+        <label for="name_box">Name</label>
+        <input type="text" id="name_box" name="query_name" class="form-control">
+      </div>
+      <div class="form-group">
+        <label for="cma_box">Capital Market Assumptions</label>
+        <select type="text" id="cma_box" name="query_cma" class="form-control">
+            <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+            <%end%>
+        <select>
+      </div>
+      <div class="form-group">
+        <label for="correlation_box">Correlation Assumptions</label>
+        <select type="text" id="correlation_box" name="query_correlation" class="form-control">
+            <%@correlations.each do |the_correl|%>
+            <option> <%=the_correl.name%> </option>
+            <%end%>
+         <select>
+      </div>  
+      <table class="table table-hover">
+
+
+      <tr class="table-info">
+        <th>Name</th>
+        <th>Check to Include</th>
+        <th>Min</th>
+        <th>Max</th>
+        <th></th>
+      </tr>
+
+      <% @list_of_asset_classes.each do |an_asset_class| %>
+      <tr class="table-light">
+        <th> <%= an_asset_class.name %> </th>
+        <td> <div class="form-check"> <input class="form-check-input" type="checkbox" value=<%= an_asset_class.id %>  name = "include[]"> </div> </td>
+        <td>  <input class="form-control" type="number" min="0" max="100" step="1" id="min_box" name="query_min[]" value = "0">    </td>
+        <td>  <input class="form-control" type="number" min="0" max="100" step="1" id="max_box" name="query_max[]" value = "100">    </td>
+        <td>  <input class="form-control" type="number" id="max_box" name="query_asset_class_id[]" value = <%= an_asset_class.id %> hidden>    </td>
+      
+      </tr>
+      <% end %>
+    </form>
+    </table>
+
+      <input type="submit" value="Create New Efficient Frontier" class="btn btn-success btn-lg"> 
+    </form>
+      </div>
+    </div>
+  </div>
+</div>

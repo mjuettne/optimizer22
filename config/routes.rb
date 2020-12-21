@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
 
 
+  #Home
+  get("/", { :controller => "application", :action => "index" })
 
   # Routes for the Forecast input resource:
 
@@ -32,7 +34,7 @@ Rails.application.routes.draw do
   get("/correlation_inputs/:path_id", { :controller => "correlation_inputs", :action => "show" })
   
   # UPDATE
-  
+  post("/modify_correlation_input/", { :controller => "correlation_inputs", :action => "update_all" })
   post("/modify_correlation_input/:path_id", { :controller => "correlation_inputs", :action => "update" })
   
   # DELETE
@@ -44,12 +46,15 @@ Rails.application.routes.draw do
 
   # CREATE
   post("/insert_correlation", { :controller => "correlations", :action => "create" })
-          
+  get("/insert_correlation_new", { :controller => "correlations", :action => "create_new" })        
   # READ
   get("/correlations", { :controller => "correlations", :action => "index" })
-  
+
   get("/correlations/:path_id", { :controller => "correlations", :action => "show" })
-  
+
+  get("/correlations/download/:path_id", { :controller => "correlations", :action => "download" }) # download to excel
+  post("/correlations/import/:path_id", { :controller => "correlations", :action => "import" }) # import from excel
+
   # UPDATE
   
   post("/modify_correlation/:path_id", { :controller => "correlations", :action => "update" })
@@ -58,7 +63,26 @@ Rails.application.routes.draw do
   get("/delete_correlation/:path_id", { :controller => "correlations", :action => "destroy" })
 
   #------------------------------
+  # Routes for the Cma resource:
 
+  # CREATE
+  post("/insert_cma", { :controller => "cmas", :action => "create" })
+  get("/insert_cma_new", { :controller => "cmas", :action => "create_new" })        
+  # READ
+  get("/cmas", { :controller => "cmas", :action => "index" })
+  get("/cmas/download/:path_id", { :controller => "cmas", :action => "download" }) # download to excel
+  post("/cmas/import/", { :controller => "cmas", :action => "import" }) # import from excel
+  
+  get("/cmas/:path_id", { :controller => "cmas", :action => "show" })
+  
+  # UPDATE
+  
+  post("/modify_cma/:path_id", { :controller => "cmas", :action => "update" })
+  
+  # DELETE
+  get("/delete_cma/:path_id", { :controller => "cmas", :action => "destroy" })
+
+  #------------------------------
   # Routes for the Cma input resource:
 
   # CREATE
@@ -71,6 +95,7 @@ Rails.application.routes.draw do
   
   # UPDATE
   
+  post("/modify_cma_input", { :controller => "cma_inputs", :action => "update_all" })
   post("/modify_cma_input/:path_id", { :controller => "cma_inputs", :action => "update" })
   
   # DELETE
@@ -78,24 +103,7 @@ Rails.application.routes.draw do
 
   #------------------------------
 
-  # Routes for the Cma resource:
-
-  # CREATE
-  post("/insert_cma", { :controller => "cmas", :action => "create" })
-          
-  # READ
-  get("/cmas", { :controller => "cmas", :action => "index" })
-  
-  get("/cmas/:path_id", { :controller => "cmas", :action => "show" })
-  
-  # UPDATE
-  
-  post("/modify_cma/:path_id", { :controller => "cmas", :action => "update" })
-  
-  # DELETE
-  get("/delete_cma/:path_id", { :controller => "cmas", :action => "destroy" })
-
-  #------------------------------
+ 
 
   # Routes for the Asset class resource:
 
@@ -104,7 +112,8 @@ Rails.application.routes.draw do
           
   # READ
   get("/asset_classes", { :controller => "asset_classes", :action => "index" })
-  
+  get("/asset_class_download", { :controller => "asset_classes", :action => "downloadtoexcel" }) #ADDED
+
   get("/asset_classes/:path_id", { :controller => "asset_classes", :action => "show" })
   
   # UPDATE
@@ -183,9 +192,13 @@ Rails.application.routes.draw do
   
   get("/frontiers/:path_id", { :controller => "frontiers", :action => "show" })
   
+  post("/frontiers/:path_id/calculate", { :controller => "frontiers", :action => "calculate" })
+  get("/edit_frontiers/:path_id", { :controller => "frontiers", :action => "edit" })
+
   # UPDATE
   
   post("/modify_frontier/:path_id", { :controller => "frontiers", :action => "update" })
+  post("/modify_frontier_assets/:path_id", { :controller => "frontiers", :action => "update_all" })
   
   # DELETE
   get("/delete_frontier/:path_id", { :controller => "frontiers", :action => "destroy" })

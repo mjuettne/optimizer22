@@ -1,86 +1,144 @@
 <div>
   <div>
-    <h1>
-      Frontier #<%= @the_frontier.id %> details
-    </h1>
-
-    <div>
-      <div>
-        <a href="/frontiers">
-          Go back
-        </a>
-      </div>
-
-      <div>
-        <a href="/delete_frontier/<%= @the_frontier.id %>">
-          Delete frontier
-        </a>
-      </div>
-    </div>
-
-    <dl>
-      <dt>
-        User
-      </dt>
-      <dd>
-        <%= @the_frontier.user_id %>
-      </dd>
-
-      <dt>
-        Name
-      </dt>
-      <dd>
-        <%= @the_frontier.name %>
-      </dd>
-
-      <dt>
-        Created at
-      </dt>
-      <dd>
-        <%= time_ago_in_words(@the_frontier.created_at) %> ago
-      </dd>
-
-      <dt>
-        Updated at
-      </dt>
-      <dd>
-        <%= time_ago_in_words(@the_frontier.updated_at) %> ago
-      </dd>
-    </dl>
+    <h3><%= @the_frontier.name %> Details </h3>
+    <div><a href="/frontiers">Go back</a></div>
   </div>
 </div>
 
 <hr>
 
+<h3>Edit Frontier Settings</h3>
+
+  <div class="col-12"> 
+    <form class="form-group row" action="/modify_frontier/<%= @the_frontier.id %>"  method="post" >
+      <div class="form-group row col-2">
+        <label class="form-label" for="name_box">Name</label>
+         <input type="text" id="name_box" name="query_name" class="form-control" value="<%= @the_frontier.name %>"> 
+      </div>
+      
+      <div class="form-group row col-2">
+        <label class="form-label" for="cma_box">Capital Market Assumptions</label>
+        <select type="text" id="cma_box" name="query_cma" class="form-control">
+              <optgroup label="Curren Selection">
+              <option><%= @cmas.where({:id => @the_frontier.cma_id}).at(0).name %> </option>
+              <optgroup label="Capital Market Assumptions">
+               <%@cmas.each do |the_cma|%>
+                <option> <%=the_cma.name%> </option>
+              <%end%>
+         </select>
+      </div>
+      
+      <div class="form-group row col-2"> 
+        <label class="form-label" for="correlation_box">Correlation Assumption</label>
+        <select type="text" id="correlation_box" name="query_correlation" class="form-control">
+         <optgroup label="Curren Selection">
+        <option> <%= @correlations.where({:id => @the_frontier.correlation_id}).at(0).name %> </option>
+        <optgroup label="Correlation Assumptions">
+          <%@correlations.each do |the_correl|%>
+                <option> <%=the_correl.name%> </option>
+              <%end%>
+        </select>
+      </div>
+      </div>
+      <div class = "form-group "> 
+      <button type="submit" class="btn btn-success">Update Frontier</button>
+        </div>
+    </form>
+
+<hr>
 
 <div>
-  <div>
-    <h2>
-      Edit frontier
-    </h2>
+<table class="table table-hover">
+<form action="/frontiers/<%= @the_frontier.id %>/calculate" method="post">
 
-    <form action="/modify_frontier/<%= @the_frontier.id %>"  method="post" >
-      <div>
-        <label for="user_id_box">
-          User
-        </label>
+      <tr class="table-info">
+        <th>Name</th>
+        <th>Min</th>
+        <th>Max</th>
+        <th style ="background-color:#2C3E50; border-bottom: 1px solid #2C3E50"> </th>
+        <th>Exp Ret</th>
+        <th>Std Dev</th>
+        <th>Skew</th>
+        <th>Kurt</th>
+        <th>Yield</th>
+        <th hidden >ID</th>
+      </tr>
 
-        <input type="text" id="user_id_box" name="query_user_id" value="<%= @the_frontier.user_id %>">
-      </div>
-
-      <div>
-        <label for="name_box">
-          Name
-        </label>
-
-        <input type="text" id="name_box" name="query_name" value="<%= @the_frontier.name %>">
-      </div>
-
-      <button>
-        Update frontier
-      </button>
-    </form>
+      <% @the_frontier_inputs.where(:inclusion => "yes").each do |input| %>
+      <tr class="table-light">
+        <th>  <%= @list_of_asset_classes.where({:id => input.asset_class_id}).at(0).name %> </th>
+        <td> <input class="form-control" readonly="" type="number"  name="query_min[]" value = <%= input.min %>>   </td>
+        <td>  <input class="form-control" readonly=""  type="number"  name="query_max[]" value = <%= input.max %>>  </td>
+        <td style ="background-color:#2C3E50; border-bottom: 1px solid #2C3E50"> </td>
+        <td>  <input class="form-control" readonly=""  type="number"  name="query_mean[]" value = <%= (@cma_inputs.where({:cma_id => @the_frontier.cma_id}).where({:asset_class_id => input.asset_class_id}).at(0).exp_ret*100).round(2) %> >    </td>
+        <td>  <input class="form-control" readonly=""  type="number"  name="query_std_dev[]" value = <%= (@cma_inputs.where({:cma_id => @the_frontier.cma_id}).where({:asset_class_id => input.asset_class_id}).at(0).std_dev*100).round(2) %> >  </td>
+        <td>  <input class="form-control" readonly=""  type="number"  name="query_skew[]" value = <%= @cma_inputs.where({:cma_id => @the_frontier.cma_id}).where({:asset_class_id => input.asset_class_id}).at(0).skew %> >   </td>
+        <td>  <input class="form-control" readonly=""  type="number"  name="query_kurt[]" value = <%= @cma_inputs.where({:cma_id => @the_frontier.cma_id}).where({:asset_class_id => input.asset_class_id}).at(0).kurt %> >   </td>
+        <td>  <input class="form-control" readonly=""  type="number"  name="query_yield[]" value = <%= (@cma_inputs.where({:cma_id => @the_frontier.cma_id}).where({:asset_class_id => input.asset_class_id}).at(0).yield*100).round(2) %> >  </td>
+        <th hidden>  <input class="form-control"   type="number"  name="query_asset_id[]" value = <%= @list_of_asset_classes.where({:id => input.asset_class_id}).at(0).id %>> </th>
+        <th hidden>  <input class="form-control"   type="number"  name="coreltation_id" value = <%= @correlations.where({:id => @the_frontier.correlation_id}).at(0).id %>> </th>
+      </tr>
+     
+      <% end %>
+      </table>
+      <button type="submit" class="btn-lg btn-success">Caclulate Efficient Frontier</button>
+      </form>
   </div>
-</div>
-
 <hr>
+<div class = col-8>
+<form class="form-group" action="/modify_frontier_assets/<%= @the_frontier.id %>"  method="post" >
+<div class="panel-group" id="accordion">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <button type = "button" class="btn btn-primary btn-lg">
+        <a class = "text-light" data-toggle="collapse" data-parent="#accordion" href="#collapse1">Edit Asset Classes</a>
+      </button>
+    </div>
+<div id="collapse1" class="panel-collapse collapse in">
+    <table class="table table-hover">
+      <tr class="table-info">
+        <th>Name</th>
+        <th>Include?</th>
+        <th>Min</th>
+        <th>Max</th>
+        <th style ="background-color:#2C3E50; border-bottom: 1px solid #2C3E50"> </th>
+        <th>Exp Ret</th>
+        <th>Std Dev</th>
+        <th>Skew</th>
+        <th>Kurt</th>
+        <th>Yield</th>
+        <th hidden >ID </th>
+      </tr>
+
+      <% @the_frontier_inputs.each do |input| %>
+      <tr class="table-light">
+        <th>  <%= @list_of_asset_classes.where({:id => input.asset_class_id}).at(0).name %> </th>
+        
+        <td> <% if input.inclusion  == "yes"  %>
+            <div class="form-check"> <input class="form-check-input" type="checkbox" value= <%= input.asset_class_id %> checked="" name = "include[]"> </div> 
+            <% else%>
+            <div class="form-check"> <input class="form-check-input" type="checkbox" value= <%= input.asset_class_id %> name = "include[]"> </div>
+            <% end%>
+        </td>
+        <td>  <input class="form-control" type="number" min="0" max="100" step="1" id="min_box" name="query_min[]" value = "0">  </td>
+        <td> <input class="form-control" type="number" min="0" max="100" step="1" id="max_box" name="query_max[]" value = "100">   </td>
+        <td style ="background-color:#2C3E50; border-bottom: 1px solid #2C3E50"> </td>
+        <td>  <%= (@cma_inputs.where({:cma_id => @the_frontier.cma_id}).where({:asset_class_id => input.asset_class_id}).at(0).exp_ret*100).round(1) %>%    </td>
+        <td>  <%= (@cma_inputs.where({:cma_id => @the_frontier.cma_id}).where({:asset_class_id => input.asset_class_id}).at(0).std_dev*100).round(1) %>%  </td>
+        <td>  <%= @cma_inputs.where({:cma_id => @the_frontier.cma_id}).where({:asset_class_id => input.asset_class_id}).at(0).skew %>  </td>
+        <td>  <%= @cma_inputs.where({:cma_id => @the_frontier.cma_id}).where({:asset_class_id => input.asset_class_id}).at(0).kurt %>  </td>
+        <td>  <%= (@cma_inputs.where({:cma_id => @the_frontier.cma_id}).where({:asset_class_id => input.asset_class_id}).at(0).yield*100).round(1) %>%  </td>
+        <td hidden>  <input   class="form-control"  id="query_id" name="query_id[]" value = <%= input.id %>> </td>
+        <td hidden>  <input class="form-control" type="number" id="max_box" name="query_asset_class_id[]" value = <%= input.asset_class_id %> hidden>    </td>
+        
+      </tr>
+     
+      <% end %>
+      </table>
+  <div class = "form-group "> 
+      <button type="submit" class="btn btn-success">Update Asset Class Settings</button>
+  </div>
+</form>
+</div>
+    </div>
+    

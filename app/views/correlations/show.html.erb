@@ -1,45 +1,12 @@
 <div>
   <div>
     <h1>
-      Correlation #<%= @the_correlation.id %> details
+      <%= @the_correlation.name %> Details
     </h1>
 
     <div>
-      <div>
-        <a href="/correlations">
-          Go back
-        </a>
-      </div>
-
-      <div>
-        <a href="/delete_correlation/<%= @the_correlation.id %>">
-          Delete correlation
-        </a>
-      </div>
+      <div> <a href="/correlations"> Go back </a></div>
     </div>
-
-    <dl>
-      <dt>
-        Name
-      </dt>
-      <dd>
-        <%= @the_correlation.name %>
-      </dd>
-
-      <dt>
-        Created at
-      </dt>
-      <dd>
-        <%= time_ago_in_words(@the_correlation.created_at) %> ago
-      </dd>
-
-      <dt>
-        Updated at
-      </dt>
-      <dd>
-        <%= time_ago_in_words(@the_correlation.updated_at) %> ago
-      </dd>
-    </dl>
   </div>
 </div>
 
@@ -48,24 +15,46 @@
 
 <div>
   <div>
-    <h2>
-      Edit correlation
-    </h2>
+    <h3> Edit Correlation </h3>
 
     <form action="/modify_correlation/<%= @the_correlation.id %>"  method="post" >
       <div>
-        <label for="name_box">
-          Name
-        </label>
-
+        <label for="name_box">Name </label>
         <input type="text" id="name_box" name="query_name" value="<%= @the_correlation.name %>">
       </div>
-
-      <button>
-        Update correlation
-      </button>
+      <button> Update Name</button>
     </form>
   </div>
 </div>
 
 <hr>
+<table class="table table-hover">
+ <thead>
+    <tr class="table">
+      <th class="table-info" scope="col">Asset Class</th>
+      <% @asset_class.each do |assetclass| %>
+            <th scope="col"><%= assetclass.name %></th>
+      <% end %>
+    </tr>
+     <% for i in 1...@length%>
+    <tr>
+       <th scope="row"> <%= @asset_class[i-1].name%> </th>
+    
+        <% for j in 0...i%>
+            <td class="table-light"><%= @list_of_correlation_inputs.where(:correlation_id => @the_correlation.id).where(:asset_class1 => @asset_class[i-1].id).where(:asset_class2 => @asset_class[j].id)[0].correl %></td>
+        <% end %>
+     <% end %>     
+  </thead>
+</table>
+<form action = "/correlation_inputs" method = "get">
+  <input type="text" id="correlation_id" name="correlation_id" value = "<%= @the_correlation.id %>" hidden>
+  <input type="submit" value="Edit Inputs" class="btn btn-success btn-lg"> 
+</form> 
+
+<hr>
+<div> <%= link_to 'Export to Excel', "download/#{@the_correlation.id}", format: :xlsx, :class=> "btn btn-info btn-lg" %> </div>
+<hr>
+  <%= form_tag "/correlations/import/#{@the_correlation.id}", multipart: true do %>
+          <%= file_field_tag :file %>
+          <%= submit_tag "IMPORT", :class=> "btn btn-warning btn-lg"%>
+  <% end %>

@@ -10,12 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_05_221910) do
+ActiveRecord::Schema.define(version: 2020_12_18_175932) do
 
   create_table "asset_classes", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "broad_type"
+    t.string "subtype"
+    t.string "goal"
   end
 
   create_table "cma_inputs", force: :cascade do |t|
@@ -175,6 +178,7 @@ ActiveRecord::Schema.define(version: 2020_12_05_221910) do
     t.integer "max"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "inclusion"
   end
 
   create_table "frontiers", force: :cascade do |t|
@@ -182,6 +186,8 @@ ActiveRecord::Schema.define(version: 2020_12_05_221910) do
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "cma_id"
+    t.integer "correlation_id"
   end
 
   create_table "portfolios", force: :cascade do |t|

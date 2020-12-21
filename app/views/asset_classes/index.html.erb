@@ -1,86 +1,42 @@
 <div>
   <div>
-    <h1>
-      List of all asset classes
-    </h1>
+    <h3>List of Asset Classes</h3>
   </div>
 </div>
 
 <hr>
 
-<div>
-  <div>
-    <h2>
-      Add a new asset class
-    </h2>
-
-    <form action="/insert_asset_class" method="post">
-      <div>
-        <label for="name_box">
-          Name
-        </label>
-
-        <input type="text" id="name_box" name="query_name">
-      </div>
-
-      <button>
-        Create asset class
-      </button>
-    </form>
-  </div>
-</div>
-
-<hr>
-<div>
-  <div>
-    <table>
-      <tr>
-        <th>
-          ID
-        </th>
-
-        <th>
-          Name
-        </th>
-
-        <th>
-          Created at
-        </th>
-
-        <th>
-          Updated at
-        </th>
-
-        <th>
-        </th>
+  <div class="row">
+    <div class="col-6">
+    <table class="table table-hover">
+      <tr class="table-info">
+        <th>Name</th>
+        <th>Broad Asset Class</th>
+        <th>Sub-Asset Class</th>
+        <th>Goal</th>
+        <th>Details</th>
       </tr>
 
       <% @list_of_asset_classes.each do |an_asset_class| %>
-      <tr>
-        <td>
-          <%= an_asset_class.id %>
-        </td>
-
-        <td>
-          <%= an_asset_class.name %>
-        </td>
-
-        <td>
-          <%= time_ago_in_words(an_asset_class.created_at) %> ago
-        </td>
-        <td>
-          <%= time_ago_in_words(an_asset_class.updated_at) %> ago
-        </td>
-
-        <td>
-          <a href="/asset_classes/<%= an_asset_class.id %>">
-            Show details
-          </a>
-        </td>
+      <tr class="table-light">
+        <th>  <%= an_asset_class.name %> </th>
+        <td>  <%= an_asset_class.broad_type %>    </td>
+        <td>  <%= an_asset_class.subtype %>  </td>
+        <td>  <%= an_asset_class.goal %>  </td>
+        <td>  <a href="/asset_classes/<%= an_asset_class.id %>">Show details</a></td>
       </tr>
       <% end %>
     </table>
   </div>
 </div>
-
+<%= link_to('Export to Excel', asset_class_download_path(format: :xlsx), :class=> "btn btn-info btn-lg") %>
 <hr>
+ <h4> Add a new Asset Class</h4>
+    <form action="/insert_asset_class" method="post">
+      <div class="form-group">
+        <label for="name_box">Name</label>
+        <input type="text" id="name_box" name="query_name">
+      </div>
+      <input type="submit" class="btn btn-success" value = "Create Asset Class">
+    </form>
+

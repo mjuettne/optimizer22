@@ -1,86 +1,51 @@
+
+
 <div>
   <div>
-    <h1>
-      List of all cmas
-    </h1>
+    <h3> List of Capital Market Assumptions </h3>
   </div>
 </div>
 
 <hr>
 
+  <div class="row">
+    <div class="col-6">
+        <table class="table table-hover">
+          <thead>
+            <tr class="table-info">
+              <th>Name</th>
+              <th>Details </th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @list_of_cmas.each do |a_cma| %>
+            <tr class="table-light">
+              <th> <%= a_cma.name %> </th>
+              <td> <a href="/cmas/<%= a_cma.id %>"> View details </a> </td>
+              <td>  <a class="text-danger" href="/delete_cma/<%= a_cma.id %>"> Delete CMA  </a>  </td>
+            </tr>
+            <% end %>
+            </tbody>
+          </table>
+    </div>
+    <div class="col-6"> 
+    </div>    
+  </div>
+
+
+<hr>
+
 <div>
   <div>
-    <h2>
-      Add a new cma
-    </h2>
-
+    <h4> Add a new CMA Group</h4>
     <form action="/insert_cma" method="post">
-      <div>
-        <label for="name_box">
-          Name
-        </label>
-
+      <div class="form-group">
+        <label for="name_box"> Name </label>
         <input type="text" id="name_box" name="query_name">
       </div>
-
-      <button>
-        Create cma
-      </button>
+      <input type="submit" class="btn btn-success" value = "Create CMA">
     </form>
   </div>
 </div>
 
-<hr>
-<div>
-  <div>
-    <table>
-      <tr>
-        <th>
-          ID
-        </th>
-
-        <th>
-          Name
-        </th>
-
-        <th>
-          Created at
-        </th>
-
-        <th>
-          Updated at
-        </th>
-
-        <th>
-        </th>
-      </tr>
-
-      <% @list_of_cmas.each do |a_cma| %>
-      <tr>
-        <td>
-          <%= a_cma.id %>
-        </td>
-
-        <td>
-          <%= a_cma.name %>
-        </td>
-
-        <td>
-          <%= time_ago_in_words(a_cma.created_at) %> ago
-        </td>
-        <td>
-          <%= time_ago_in_words(a_cma.updated_at) %> ago
-        </td>
-
-        <td>
-          <a href="/cmas/<%= a_cma.id %>">
-            Show details
-          </a>
-        </td>
-      </tr>
-      <% end %>
-    </table>
-  </div>
-</div>
-
-<hr>
