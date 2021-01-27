@@ -12,7 +12,7 @@
     <div class="col-6">
         <table class="table table-hover">
           <thead>
-            <tr class="table-info">
+            <tr class="table" style = "background-color: #5445FF">
               <th>Name</th>
               <th>Details </th>
               <th>Delete</th>
@@ -20,7 +20,7 @@
           </thead>
           <tbody>
             <% @list_of_cmas.each do |a_cma| %>
-            <tr class="table-light">
+            <tr class="table">
               <th> <%= a_cma.name %> </th>
               <td> <a href="/cmas/<%= a_cma.id %>"> View details </a> </td>
               <td>  <a class="text-danger" href="/delete_cma/<%= a_cma.id %>"> Delete CMA  </a>  </td>

@@ -1,98 +1,19 @@
-<div>
-  <div>
-    <h1>
-      List of all portfolios
-    </h1>
-  </div>
-</div>
+<h3>List of all Portfolios</h3>
 
-<hr>
-
-<div>
-  <div>
-    <h2>
-      Add a new portfolio
-    </h2>
-
-    <form action="/insert_portfolio" method="post">
-      <div>
-        <label for="user_id_box">
-          User
-        </label>
-
-        <input type="text" id="user_id_box" name="query_user_id">
-      </div>
-
-      <div>
-        <label for="name_box">
-          Name
-        </label>
-
-        <input type="text" id="name_box" name="query_name">
-      </div>
-
-      <button>
-        Create portfolio
-      </button>
-    </form>
-  </div>
-</div>
-
-<hr>
-<div>
-  <div>
-    <table>
-      <tr>
-        <th>
-          ID
-        </th>
-
-        <th>
-          User
-        </th>
-
-        <th>
-          Name
-        </th>
-
-        <th>
-          Created at
-        </th>
-
-        <th>
-          Updated at
-        </th>
-
-        <th>
-        </th>
+<div class="row">
+  <div class="col-6">
+    <table class="table table-hover">
+      <tr class="table" style = "background-color: #5445FF">
+        <th>Name </th>
+        <th>Details</th>
+        <th>Delete</th>
       </tr>
 
-      <% @list_of_portfolios.each do |a_portfolio| %>
-      <tr>
-        <td>
-          <%= a_portfolio.id %>
-        </td>
-
-        <td>
-          <%= a_portfolio.user_id %>
-        </td>
-
-        <td>
-          <%= a_portfolio.name %>
-        </td>
-
-        <td>
-          <%= time_ago_in_words(a_portfolio.created_at) %> ago
-        </td>
-        <td>
-          <%= time_ago_in_words(a_portfolio.updated_at) %> ago
-        </td>
-
-        <td>
-          <a href="/portfolios/<%= a_portfolio.id %>">
-            Show details
-          </a>
-        </td>
+      <% @current_user.portfolios.order(name: :asc).each do |a_portfolio| %>
+      <tr class="table" >
+        <td> <%= a_portfolio.name %>  </td>
+        <td> <a href="/portfolios/<%= a_portfolio.id %>"> Show details </a> </td>
+        <td> <a class="text-danger" href="/delete_portfolio/<%= a_portfolio.id %>">Delete</a> </td>
       </tr>
       <% end %>
     </table>
@@ -100,3 +21,70 @@
 </div>
 
 <hr>
+<h4> Add a new Portfolio</h4>
+<div class="row col-12">
+  <div class="col-4">
+     <form action="/insert_portfolio" method="post">
+      <div class="form-group">
+        <label for="user_id_box" hidden> </label>
+        <input type="text" id="user_id_box" name="query_user_id" value = <%= @current_user.id%> hidden>
+      </div>
+      <div class="form-group">
+        <label for="name_box">Name</label>
+        <input type="text" id="name_box" name="query_name" class="form-control">
+      </div>
+       <div class="form-group">
+        <label for="cma_box">Capital Market Assumptions</label>
+        <select type="text" id="cma_box" name="query_cma" class="form-control">
+            <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+            <%end%>
+        <select>
+      </div>
+      <div class="form-group">
+        <label for="correlation_box">Correlation Assumptions</label>
+        <select type="text" id="correlation_box" name="query_correlation" class="form-control">
+            <%@correlations.each do |the_correl|%>
+            <option> <%=the_correl.name%> </option>
+            <%end%>
+         <select>
+      </div>  
+
+
+    <div>
+      <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+              <button type = "button" class="btn btn-secondary btn-lg">
+                  <a class = "text-white" data-toggle="collapse" data-parent="#accordion" href="#collapse1">Add Asset Classes</a>
+              </button>
+          </div>
+<div id="collapse1" class="panel-collapse collapse in">
+  <table class="table table-hover">
+      <tr class="table-info">
+        <th>Name</th>
+        <th>Check to Include</th>
+        <th>Weight</th>
+        <th></th>
+      </tr>
+
+      <% @list_of_asset_classes.each do |an_asset_class| %>
+      <tr class="table-light">
+        <th> <%= an_asset_class.name %> </th>
+        <td> <div class="form-check"> <input class="form-check-input" type="checkbox" value=<%= an_asset_class.id %>  name = "include[]"> </div> </td>
+        <td>  <input class="form-control" type="number" min="0" max="100" step="0.01" id="min_box" name="query_weights[]" value = "0">    </td>
+        <td>  <input class="form-control" type="number" id="max_box" name="query_asset_class_id[]" value = <%= an_asset_class.id %> hidden>    </td>
+      
+      </tr>
+      <% end %>
+    </form>
+    </table>
+     <input type="submit" value="Create New Portfolio" class="btn btn-success btn-lg"> 
+      </div>
+    </div>
+  </div>
+    </form>
+      </div>
+    </div>
+  </div>
+</div>

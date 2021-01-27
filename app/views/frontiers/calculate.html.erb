@@ -1,9 +1,460 @@
-<%= @mean %>
+<h3>Efficient Frontier: <%= @the_frotnier.name %> </h3>
+<div>
+  <div>
+     <div><a href="/frontiers/<%=@frontier_id%>">Go back</a></div>
 
-<%= @std_dev %>
+  </div>
+</div>
 
 
-<%= @correlation %>
+<hr>
 
-<%= @min_max %>
+<!-- LINE GRAPH!!!!!! --> <!-- LINE GRAPH!!!!!! -->
+<!-- LINE GRAPH!!!!!! --> <!-- LINE GRAPH!!!!!! -->
+<!-- LINE GRAPH!!!!!! --> <!-- LINE GRAPH!!!!!! -->
+<!-- LINE GRAPH!!!!!! --> <!-- LINE GRAPH!!!!!! -->
+<!-- LINE GRAPH!!!!!! --> <!-- LINE GRAPH!!!!!! -->
+<!-- LINE GRAPH!!!!!! --> <!-- LINE GRAPH!!!!!! -->
+
+
+<meta charset="utf-8">
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+
+
+
+<!-- Circle are black when hovered-->
+<style>
+.myCircle:hover {
+  stroke: black;
+}
+.right {
+  float: right;
+}
+.left {
+  float: left;
+}
+</style>
+
+<!-- Create a div where the graph will take place -->
+<div class = "left col-12" id="my_dataviz4"></div>
+
+
+<script>
+// set the dimensions and margins of the graph
+var margin = {top: 10, right: 30, bottom: 30, left: 60},
+    width = 900 - margin.left - margin.right,
+    height = 900 - margin.top - margin.bottom;
+// append the svg object to the body of the page
+var svg = d3.select("#my_dataviz4")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+//Read the data
+var data = <%=  JSON.parse(@python_optimizer.fetch("array").to_json) %>;
+
+  // When reading the csv, I must format variables:
+  // function(d){
+  //   return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
+  // },
+  // Now I can use this dataset:
+  // function(data) {
+    // Add X axis --> it is a date format
+    var x = d3.scaleLinear()
+      .domain( [d3.min(data, function (d) { return d[0] - 5; }), d3.max(data, function (d) { return d[0] + 5; })])
+      .range([ 0, width ]);
+    svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x))
+      .selectAll("text")
+        .style("font-size", 12)
+        .style("fill", "white");
+    // Add Y axis
+    var y = d3.scaleLinear()
+      .domain( [d3.min(data, function (d) { return d[1] - 2; }), d3.max(data, function (d) { return d[1] + 2; })])
+      .range([ height, 0 ]);
+    svg.append("g")
+      .call(d3.axisLeft(y))
+      .selectAll("text")
+        .style("text-anchor", "end")
+        .style("font-size", 12)
+        .style("fill", "white");
+
+      // Add X axis label:
+svg.append("text")
+    .attr("text-anchor", "end")
+    .attr("x", width)
+    .attr("y", height + margin.top + 20)
+    .text("CVAR")
+    .style("fill", "white");
+// Y axis label:
+svg.append("text")
+    .attr("text-anchor", "end")
+    .attr("transform", "rotate(-90)")
+    .attr("y", -margin.left+20)
+    .attr("x", -margin.top)
+    .text("Return")
+    .style("fill", "white");
+    
+    // Add the line
+    svg.append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", "black")
+      .attr("stroke-width", 2)
+      .attr("d", d3.line()
+        .x(function(d) { return x(d[0]) })
+        .y(function(d) { return y(d[1]) })
+        )
+
+        // create a tooltip
+// create a tooltip
+  var Tooltip = d3.select("#my_dataviz4")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "2px")
+    .style("border-radius", "5px")
+    .style("padding", "5px")
+
+  // Three function that change the tooltip when user hover / move / leave a cell
+  var mouseover = function(d) {
+    Tooltip
+      .style("opacity", 1)
+    d3.select(this)
+      .style("stroke", "black")
+      .style("stroke-width", 3)
+  }
+  var mousemove = function(d) {
+    Tooltip
+      .html("Return: " + Number((d[1]).toFixed(1)) +"%;" + " CVAR: " + Number((d[0]).toFixed(1)) +"%")
+      .style("top", (event.pageY)+"px")
+      .style("left",(event.pageX)+"px")
+      .style("stroke", "black")
+      .style("stroke-width", 5)
+      .style("fill", "#53D5FF")
+  }
+  var mouseleave = function(d) {
+    Tooltip
+      .style("opacity", 0)
+    d3.select(this)
+      .style("stroke", "#53D5FF")
+      // .style("opacity", 0.8)
+  }
+    
+    // Add the points
+    // Add the points
+    svg
+      .append("g")
+      .selectAll("dot")
+      .data(data)
+      .enter()
+      .append("circle")
+        .attr("class", "myCircle")
+        .attr("cx", function(d) { return x(d[0]) } )
+        .attr("cy", function(d) { return y(d[1]) } )
+        .attr("r", 8)
+        .attr("stroke", "#5445FF")
+        .attr("stroke-width", 1)
+        .attr("fill", "#5445FF")
+        .on("mouseover", mouseover)
+        .on("mousemove", mousemove)
+        .on("mouseleave", mouseleave)
+</script>
+
+
+<html>
+<head>
+<style>
+table, td, th {  
+  
+  text-align: left;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  padding: 15px;
+}
+</style>
+</head>
+
+</html>
+
+<%# <div class = "right col-7"> %>
+<h4>Summary Table</h4>
+<form id="createPort1" action="/insert_portfolio_frontier" method="post"></form>
+<form id="createPort2" action="/insert_portfolio_frontier" method="post"></form>
+<form id="createPort3" action="/insert_portfolio_frontier" method="post"></form>
+<form id="createPort4" action="/insert_portfolio_frontier" method="post"></form>
+<form id="createPort5" action="/insert_portfolio_frontier" method="post"></form>
+<form id="createPort6" action="/insert_portfolio_frontier" method="post"></form>
+<form id="createPort7" action="/insert_portfolio_frontier" method="post"></form>
+
+<form action = "calculate/download">
+<table class="table table-hover">
+  <tr class="table" style = "background-color: #5445FF">
+    <th>Asset Class</th>
+    <th>Portfolio 1</th>
+    <th>Portfolio 2</th>
+    <th>Portfolio 3</th>
+    <th>Portfolio 4</th>
+    <th>Portfolio 5</th>
+    <th>Portfolio 6</th>
+    <th>Portfolio 7</th>
+    <th hidden></th>
+  </tr>
+
+
+<% for i in 0...@length  %>
+
+  <tr>
+  
+    <td> <%= @all_asset_class.where({:id => @query_asset_id[i]})[0].name %> </td>
+    <td> <input class="form-control" readonly="" type="number"  name="weights_col1[]" value = <%= (@python_optimizer.fetch("array2")[0][i]).round(1) %>> </td>
+    <td> <input class="form-control" readonly="" type="number"  name="weights_col2[]" value = <%= (@python_optimizer.fetch("array2")[1][i]).round(1) %>> </td>
+    <td> <input class="form-control" readonly="" type="number"  name="weights_col3[]" value = <%= (@python_optimizer.fetch("array2")[2][i]).round(1) %>> </td>
+    <td> <input class="form-control" readonly="" type="number"  name="weights_col4[]" value = <%= (@python_optimizer.fetch("array2")[3][i]).round(1) %>> </td>
+    <td> <input class="form-control" readonly="" type="number"  name="weights_col5[]" value = <%= (@python_optimizer.fetch("array2")[4][i]).round(1) %>> </td>
+    <td> <input class="form-control" readonly="" type="number"  name="weights_col6[]" value = <%= (@python_optimizer.fetch("array2")[5][i]).round(1) %>> </td>
+    <td> <input class="form-control" readonly="" type="number"  name="weights_col7[]" value = <%= (@python_optimizer.fetch("array2")[6][i]).round(1) %>> </td>
+    <td> <input class="form-control" readonly="" hidden  name="assets[]" value = <%= @query_asset_id[i] %>> </td>
+  </tr>
+
+  <tr hidden>
+    <td> <%= @all_asset_class.where({:id => @query_asset_id[i]})[0].name %> </td>
+    <td> <input form="createPort1" class="form-control" readonly="" type="number"  name="query_weights[]" value = <%= (@python_optimizer.fetch("array2")[0][i]) %>> </td>
+    <td> <input form="createPort2" class="form-control" readonly="" type="number"  name="query_weights[]" value = <%= (@python_optimizer.fetch("array2")[1][i]) %>> </td>
+    <td> <input form="createPort3" class="form-control" readonly="" type="number"  name="query_weights[]" value = <%= (@python_optimizer.fetch("array2")[2][i]) %>> </td>
+    <td> <input form="createPort4" class="form-control" readonly="" type="number"  name="query_weights[]" value = <%= (@python_optimizer.fetch("array2")[3][i]) %>> </td>
+    <td> <input form="createPort5" class="form-control" readonly="" type="number"  name="query_weights[]" value = <%= (@python_optimizer.fetch("array2")[4][i]) %>> </td>
+    <td> <input form="createPort6" class="form-control" readonly="" type="number"  name="query_weights[]" value = <%= (@python_optimizer.fetch("array2")[5][i]) %>> </td>
+    <td> <input form="createPort7" class="form-control" readonly="" type="number"  name="query_weights[]" value = <%= (@python_optimizer.fetch("array2")[6][i]) %>> </td>
+    <td> <input form="createPort1" class="form-control" readonly="" hidden  name="query_asset_class_id[]" value = <%= @query_asset_id[i] %>> </td>
+    <td> <input form="createPort2" class="form-control" readonly="" hidden  name="query_asset_class_id[]" value = <%= @query_asset_id[i] %>> </td>
+    <td> <input form="createPort3" class="form-control" readonly="" hidden  name="query_asset_class_id[]" value = <%= @query_asset_id[i] %>> </td>
+    <td> <input form="createPort4" class="form-control" readonly="" hidden  name="query_asset_class_id[]" value = <%= @query_asset_id[i] %>> </td>
+    <td> <input form="createPort5" class="form-control" readonly="" hidden  name="query_asset_class_id[]" value = <%= @query_asset_id[i] %>> </td>
+    <td> <input form="createPort6" class="form-control" readonly="" hidden  name="query_asset_class_id[]" value = <%= @query_asset_id[i] %>> </td>
+    <td> <input form="createPort7" class="form-control" readonly="" hidden  name="query_asset_class_id[]" value = <%= @query_asset_id[i] %>> </td>
+    <td> <input form="createPort1" class="form-control" readonly="" hidden  name="query_cma_id" type="text" value = <%= @the_frotnier.cma_id %>> </td>
+    <td> <input form="createPort2" class="form-control" readonly="" hidden  name="query_cma_id" type="text" value = <%= @the_frotnier.cma_id %>> </td>
+    <td> <input form="createPort3" class="form-control" readonly="" hidden  name="query_cma_id" type="text" value = <%= @the_frotnier.cma_id %>> </td>
+    <td> <input form="createPort4" class="form-control" readonly="" hidden  name="query_cma_id" type="text" value = <%= @the_frotnier.cma_id %>> </td>
+    <td> <input form="createPort5" class="form-control" readonly="" hidden  name="query_cma_id" type="text" value = <%= @the_frotnier.cma_id %>> </td>
+    <td> <input form="createPort6" class="form-control" readonly="" hidden  name="query_cma_id" type="text" value = <%= @the_frotnier.cma_id %>> </td>
+    <td> <input form="createPort7" class="form-control" readonly="" hidden  name="query_cma_id" type="text" value = <%= @the_frotnier.cma_id %>> </td>
+    <td> <input form="createPort1" class="form-control" readonly="" hidden  name="query_correlation_id" type="text" value = <%= @the_frotnier.correlation_id %>> </td>
+    <td> <input form="createPort2" class="form-control" readonly="" hidden  name="query_correlation_id" type="text" value = <%= @the_frotnier.correlation_id %>> </td>
+    <td> <input form="createPort3" class="form-control" readonly="" hidden  name="query_correlation_id" type="text" value = <%= @the_frotnier.correlation_id %>> </td>
+    <td> <input form="createPort4" class="form-control" readonly="" hidden  name="query_correlation_id" type="text" value = <%= @the_frotnier.correlation_id %>> </td>
+    <td> <input form="createPort5" class="form-control" readonly="" hidden  name="query_correlation_id" type="text" value = <%= @the_frotnier.correlation_id %>> </td>
+    <td> <input form="createPort6" class="form-control" readonly="" hidden  name="query_correlation_id" type="text" value = <%= @the_frotnier.correlation_id %>> </td>
+    <td> <input form="createPort7" class="form-control" readonly="" hidden  name="query_correlation_id" type="text" value = <%= @the_frotnier.correlation_id %>> </td>
+    <td> <input form="createPort1" class="form-control" readonly="" hidden  name="include[]" value = <%= @query_asset_id[i] %>> </td>
+    <td> <input form="createPort2" class="form-control" readonly="" hidden  name="include[]" value = <%= @query_asset_id[i] %>> </td>
+    <td> <input form="createPort3" class="form-control" readonly="" hidden  name="include[]" value = <%= @query_asset_id[i] %>> </td>
+    <td> <input form="createPort4" class="form-control" readonly="" hidden  name="include[]" value = <%= @query_asset_id[i] %>> </td>
+    <td> <input form="createPort5" class="form-control" readonly="" hidden  name="include[]" value = <%= @query_asset_id[i] %>> </td>
+    <td> <input form="createPort6" class="form-control" readonly="" hidden  name="include[]" value = <%= @query_asset_id[i] %>> </td>
+    <td> <input form="createPort7" class="form-control" readonly="" hidden  name="include[]" value = <%= @query_asset_id[i] %>> </td>
+    <td> <input form="createPort1" class="form-control" readonly="" hidden  name="query_user_id" value = <%= @current_user.id %>> </td>
+    <td> <input form="createPort2" class="form-control" readonly="" hidden  name="query_user_id" value = <%= @current_user.id %>> </td>
+    <td> <input form="createPort3" class="form-control" readonly="" hidden  name="query_user_id" value = <%= @current_user.id %>> </td>
+    <td> <input form="createPort4" class="form-control" readonly="" hidden  name="query_user_id" value = <%= @current_user.id %>> </td>
+    <td> <input form="createPort5" class="form-control" readonly="" hidden  name="query_user_id" value = <%= @current_user.id %>> </td>
+    <td> <input form="createPort6" class="form-control" readonly="" hidden  name="query_user_id" value = <%= @current_user.id %>> </td>
+    <td> <input form="createPort7" class="form-control" readonly="" hidden  name="query_user_id" value = <%= @current_user.id %>> </td>
+    <td> <input form="createPort1" class="form-control" readonly="" hidden  name="query_name" value = "<%= @the_frotnier.name %>: Portfolio 1" > </td>
+    <td> <input form="createPort2" class="form-control" readonly="" hidden  name="query_name" value = "<%= @the_frotnier.name %>: Portfolio 2" > </td>
+    <td> <input form="createPort3" class="form-control" readonly="" hidden  name="query_name" value = "<%= @the_frotnier.name %>: Portfolio 3" > </td>
+    <td> <input form="createPort4" class="form-control" readonly="" hidden  name="query_name" value = "<%= @the_frotnier.name %>: Portfolio 4" > </td>
+    <td> <input form="createPort5" class="form-control" readonly="" hidden  name="query_name" value = "<%= @the_frotnier.name %>: Portfolio 5" > </td>
+    <td> <input form="createPort6" class="form-control" readonly="" hidden  name="query_name" value = "<%= @the_frotnier.name %>: Portfolio 6" > </td>
+    <td> <input form="createPort7" class="form-control" readonly="" hidden  name="query_name" value = "<%= @the_frotnier.name %>: Portfolio 7" > </td>
+
+  </tr>
+<% end%>
+ 
+<tr class="table" style = "background-color: #626278">
+    <td>Return</td>
+    <td> <input class="form-control" readonly="" name="return_col1" value = <%= (@python_optimizer.fetch("array")[0][1]).round(1) %>> </td>
+    <td> <input class="form-control" readonly="" name="return_col2" value = <%= (@python_optimizer.fetch("array")[1][1]).round(1) %>>  </td>
+    <td> <input class="form-control" readonly="" name="return_col3" value = <%= (@python_optimizer.fetch("array")[2][1]).round(1) %>>  </td>
+    <td> <input class="form-control" readonly="" name="return_col4" value = <%= (@python_optimizer.fetch("array")[3][1]).round(1) %>>   </td>
+    <td> <input class="form-control" readonly="" name="return_col5" value = <%= (@python_optimizer.fetch("array")[4][1]).round(1) %>>  </td>
+    <td> <input class="form-control" readonly="" name="return_col6" value = <%= (@python_optimizer.fetch("array")[5][1]).round(1) %>>   </td>
+    <td> <input class="form-control" readonly="" name="return_col7" value = <%= (@python_optimizer.fetch("array")[6][1]).round(1) %>>  </td>
+  </tr>
+  <tr class="table" style = "background-color: #626278">
+    <td>CVAR (5%)</td>
+    <td> <input class="form-control" readonly="" name="cvar_col1" value = <%= (@python_optimizer.fetch("array")[0][0]).round(1) %>> </td>
+    <td> <input class="form-control" readonly="" name="cvar_col2" value = <%= (@python_optimizer.fetch("array")[1][0]).round(1) %>>  </td>
+    <td> <input class="form-control" readonly="" name="cvar_col3" value = <%= (@python_optimizer.fetch("array")[2][0]).round(1) %>>  </td>
+    <td> <input class="form-control" readonly="" name="cvar_col4" value = <%= (@python_optimizer.fetch("array")[3][0]).round(1) %>>   </td>
+    <td> <input class="form-control" readonly="" name="cvar_col5" value = <%= (@python_optimizer.fetch("array")[4][0]).round(1) %>>  </td>
+    <td> <input class="form-control" readonly="" name="cvar_col6" value = <%= (@python_optimizer.fetch("array")[5][0]).round(1) %>>   </td>
+    <td> <input class="form-control" readonly="" name="cvar_col7" value = <%= (@python_optimizer.fetch("array")[6][0]).round(1) %>>  </td>
+  </tr>
+  <tr class="table" style = "background-color: #626278">
+    <td>Sharpe Ratio</td>
+    <td> <input class="form-control" readonly="" name="sharpe_col1" value = <%= (@python_optimizer.fetch("array")[0][1]/@python_optimizer.fetch("array")[0][0]).round(3) %>> </td>
+    <td> <input class="form-control" readonly="" name="sharpe_col2" value = <%= (@python_optimizer.fetch("array")[1][1]/@python_optimizer.fetch("array")[1][0]).round(3) %>>  </td>
+    <td> <input class="form-control" readonly="" name="sharpe_col3" value = <%= (@python_optimizer.fetch("array")[2][1]/@python_optimizer.fetch("array")[2][0]).round(3) %>>  </td>
+    <td> <input class="form-control" readonly="" name="sharpe_col4" value = <%= (@python_optimizer.fetch("array")[3][1]/@python_optimizer.fetch("array")[3][0]).round(3) %>>   </td>
+    <td> <input class="form-control" readonly="" name="sharpe_col5" value = <%= (@python_optimizer.fetch("array")[4][1]/@python_optimizer.fetch("array")[4][0]).round(3) %>>  </td>
+    <td> <input class="form-control" readonly="" name="sharpe_col6" value = <%= (@python_optimizer.fetch("array")[5][1]/@python_optimizer.fetch("array")[5][0]).round(3) %>>   </td>
+    <td> <input class="form-control" readonly="" name="sharpe_col7" value = <%= (@python_optimizer.fetch("array")[6][1]/@python_optimizer.fetch("array")[6][0]).round(3) %>>  </td>
+  </tr>
+  
+  <tr class="table" style = "background-color: #626278">
+    <td>Yield</td>
+    <td> <input class="form-control" readonly="" name="yield_col1" value = <%= (@python_optimizer.fetch("yields")[0]).round(1) %>> </td>
+    <td> <input class="form-control" readonly="" name="yield_col2" value = <%= (@python_optimizer.fetch("yields")[1]).round(1) %>>  </td>
+    <td> <input class="form-control" readonly="" name="yield_col3" value = <%= (@python_optimizer.fetch("yields")[2]).round(1) %>>  </td>
+    <td> <input class="form-control" readonly="" name="yield_col4" value = <%= (@python_optimizer.fetch("yields")[3]).round(1) %>>   </td>
+    <td> <input class="form-control" readonly="" name="yield_col5" value = <%= (@python_optimizer.fetch("yields")[4]).round(1) %>>  </td>
+    <td> <input class="form-control" readonly="" name="yield_col6" value = <%= (@python_optimizer.fetch("yields")[5]).round(1) %>>   </td>
+    <td> <input class="form-control" readonly="" name="yield_col7" value = <%= (@python_optimizer.fetch("yields")[6]).round(1) %>>  </td>
+  </tr>
+ 
+
+   <tr class="table" style = "background-color: #5445FF">
+    <th>Probability Table</th>
+    <th> </th>
+    <th> </th>
+    <th> </th>
+    <th> </th>
+    <th> </th>
+    <th> </th>
+    <th> </th>
+  </tr>
+
+  <tr >
+    <td>1-Year</td>
+    <td> <input class="form-control" readonly="" name="year1_col1" value = <%= (@python_optimizer.fetch("year1_probability")[0][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year1_col2" value = <%= (@python_optimizer.fetch("year1_probability")[1][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year1_col3" value = <%= (@python_optimizer.fetch("year1_probability")[2][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year1_col4" value = <%= (@python_optimizer.fetch("year1_probability")[3][0]*100).round(1) %>%>   </td>
+    <td> <input class="form-control" readonly="" name="year1_col5" value = <%= (@python_optimizer.fetch("year1_probability")[4][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year1_col6" value = <%= (@python_optimizer.fetch("year1_probability")[5][0]*100).round(1) %>%>   </td>
+    <td> <input class="form-control" readonly="" name="year1_col7" value = <%= (@python_optimizer.fetch("year1_probability")[6][0]*100).round(1) %>%>  </td>
+  </tr>
+  <tr>
+    <td>2-Years</td>
+    <td> <input class="form-control" readonly="" name="year2_col1" value = <%= (@python_optimizer.fetch("year2_probability")[0][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year2_col2" value = <%= (@python_optimizer.fetch("year2_probability")[1][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year2_col3" value = <%= (@python_optimizer.fetch("year2_probability")[2][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year2_col4" value = <%= (@python_optimizer.fetch("year2_probability")[3][0]*100).round(1) %>%>   </td>
+    <td> <input class="form-control" readonly="" name="year2_col5" value = <%= (@python_optimizer.fetch("year2_probability")[4][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year2_col6" value = <%= (@python_optimizer.fetch("year2_probability")[5][0]*100).round(1) %>%>   </td>
+    <td> <input class="form-control" readonly="" name="year2_col7" value = <%= (@python_optimizer.fetch("year2_probability")[6][0]*100).round(1) %>%>  </td>
+  </tr>
+  <tr >
+    <td>3-Years</td>
+    <td> <input class="form-control" readonly="" name="year3_col1" value = <%= (@python_optimizer.fetch("year3_probability")[0][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year3_col2" value = <%= (@python_optimizer.fetch("year3_probability")[1][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year3_col3" value = <%= (@python_optimizer.fetch("year3_probability")[2][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year3_col4" value = <%= (@python_optimizer.fetch("year3_probability")[3][0]*100).round(1) %>%>   </td>
+    <td> <input class="form-control" readonly="" name="year3_col5" value = <%= (@python_optimizer.fetch("year3_probability")[4][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year3_col6" value = <%= (@python_optimizer.fetch("year3_probability")[5][0]*100).round(1) %>%>   </td>
+    <td> <input class="form-control" readonly="" name="year3_col7" value = <%= (@python_optimizer.fetch("year3_probability")[6][0]*100).round(1) %>%>  </td>
+  </tr>
+  <tr >
+    <td>4-Years</td>
+    <td> <input class="form-control" readonly="" name="year4_col1" value = <%= (@python_optimizer.fetch("year4_probability")[0][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year4_col2" value = <%= (@python_optimizer.fetch("year4_probability")[1][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year4_col3" value = <%= (@python_optimizer.fetch("year4_probability")[2][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year4_col4" value = <%= (@python_optimizer.fetch("year4_probability")[3][0]*100).round(1) %>%>   </td>
+    <td> <input class="form-control" readonly="" name="year4_col5" value = <%= (@python_optimizer.fetch("year4_probability")[4][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year4_col6" value = <%= (@python_optimizer.fetch("year4_probability")[5][0]*100).round(1) %>%>   </td>
+    <td> <input class="form-control" readonly="" name="year4_col7" value = <%= (@python_optimizer.fetch("year4_probability")[6][0]*100).round(1) %>%>  </td>
+  </tr>
+  <tr >
+    <td>5-Years</td>
+    <td> <input class="form-control" readonly="" name="year5_col1" value = <%= (@python_optimizer.fetch("year5_probability")[0][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year5_col2" value = <%= (@python_optimizer.fetch("year5_probability")[1][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year5_col3" value = <%= (@python_optimizer.fetch("year5_probability")[2][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year5_col4" value = <%= (@python_optimizer.fetch("year5_probability")[3][0]*100).round(1) %>%>   </td>
+    <td> <input class="form-control" readonly="" name="year5_col5" value = <%= (@python_optimizer.fetch("year5_probability")[4][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year5_col6" value = <%= (@python_optimizer.fetch("year5_probability")[5][0]*100).round(1) %>%>   </td>
+    <td> <input class="form-control" readonly="" name="year5_col7" value = <%= (@python_optimizer.fetch("year5_probability")[6][0]*100).round(1) %>%>  </td>
+  </tr>
+  <tr>
+    <td>6-Years</td>
+    <td> <input class="form-control" readonly="" name="year6_col1" value = <%= (@python_optimizer.fetch("year6_probability")[0][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year6_col2" value = <%= (@python_optimizer.fetch("year6_probability")[1][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year6_col3" value = <%= (@python_optimizer.fetch("year6_probability")[2][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year6_col4" value = <%= (@python_optimizer.fetch("year6_probability")[3][0]*100).round(1) %>%>   </td>
+    <td> <input class="form-control" readonly="" name="year6_col5" value = <%= (@python_optimizer.fetch("year6_probability")[4][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year6_col6" value = <%= (@python_optimizer.fetch("year6_probability")[5][0]*100).round(1) %>%>   </td>
+    <td> <input class="form-control" readonly="" name="year6_col7" value = <%= (@python_optimizer.fetch("year6_probability")[6][0]*100).round(1) %>%>  </td>
+  </tr>
+  <tr >
+    <td>7-Years</td>
+    <td> <input class="form-control" readonly="" name="year7_col1" value = <%= (@python_optimizer.fetch("year7_probability")[0][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year7_col2" value = <%= (@python_optimizer.fetch("year7_probability")[1][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year7_col3" value = <%= (@python_optimizer.fetch("year7_probability")[2][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year7_col4" value = <%= (@python_optimizer.fetch("year7_probability")[3][0]*100).round(1) %>%>   </td>
+    <td> <input class="form-control" readonly="" name="year7_col5" value = <%= (@python_optimizer.fetch("year7_probability")[4][0]*100).round(1) %>%>  </td>
+    <td> <input class="form-control" readonly="" name="year7_col6" value = <%= (@python_optimizer.fetch("year7_probability")[5][0]*100).round(1) %>%>   </td>
+    <td> <input class="form-control" readonly="" name="year7_col7" value = <%= (@python_optimizer.fetch("year7_probability")[6][0]*100).round(1) %>%>  </td>
+  </tr>
+  <tr >
+    <td>8-Years</td>
+    <td> <input class="form-control" readonly="" name="year8_col1" value = <%= (@python_optimizer.fetch("year8_probability")[0][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year8_col2" value = <%= (@python_optimizer.fetch("year8_probability")[1][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year8_col3" value = <%= (@python_optimizer.fetch("year8_probability")[2][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year8_col4" value = <%= (@python_optimizer.fetch("year8_probability")[3][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year8_col5" value = <%= (@python_optimizer.fetch("year8_probability")[4][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year8_col6" value = <%= (@python_optimizer.fetch("year8_probability")[5][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year8_col7" value = <%= (@python_optimizer.fetch("year8_probability")[6][0]*100).round(1) %>%> </td>
+  </tr>
+  <tr >
+    <td>9-Years</td>
+    <td> <input class="form-control" readonly="" name="year9_col1" value = <%= (@python_optimizer.fetch("year9_probability")[0][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year9_col2" value = <%= (@python_optimizer.fetch("year9_probability")[1][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year9_col3" value = <%= (@python_optimizer.fetch("year9_probability")[2][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year9_col4" value = <%= (@python_optimizer.fetch("year9_probability")[3][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year9_col5" value = <%= (@python_optimizer.fetch("year9_probability")[4][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year9_col6" value = <%= (@python_optimizer.fetch("year9_probability")[5][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year9_col7" value = <%= (@python_optimizer.fetch("year9_probability")[6][0]*100).round(1) %>%> </td>
+  </tr>
+  <tr>
+    <td>10-Years</td>
+    <td> <input class="form-control" readonly="" name="year10_col1" value = <%= (@python_optimizer.fetch("year10_probability")[0][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year10_col2" value = <%= (@python_optimizer.fetch("year10_probability")[1][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year10_col3" value = <%= (@python_optimizer.fetch("year10_probability")[2][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year10_col4" value = <%= (@python_optimizer.fetch("year10_probability")[3][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year10_col5" value = <%= (@python_optimizer.fetch("year10_probability")[4][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year10_col6" value = <%= (@python_optimizer.fetch("year10_probability")[5][0]*100).round(1) %>%> </td>
+    <td> <input class="form-control" readonly="" name="year10_col7" value = <%= (@python_optimizer.fetch("year10_probability")[6][0]*100).round(1) %>%> </td>
+  </tr>
+  <tr>
+    <td> </td>
+    <td> <button form="createPort1" type="submit" class="btn btn-sm" style = "background-color: #5445FF">Create Portfolio 1</button> </td>
+    <td> <button form="createPort2" type="submit" class="btn btn-sm" style = "background-color: #5445FF">Create Portfolio 2</button> </td>
+    <td> <button form="createPort3" type="submit" class="btn btn-sm" style = "background-color: #5445FF">Create Portfolio 3</button> </td>
+    <td> <button form="createPort4" type="submit" class="btn btn-sm" style = "background-color: #5445FF">Create Portfolio 4</button> </td>
+    <td> <button form="createPort5" type="submit" class="btn btn-sm" style = "background-color: #5445FF">Create Portfolio 5</button> </td>
+    <td> <button form="createPort6" type="submit" class="btn btn-sm" style = "background-color: #5445FF">Create Portfolio 6</button> </td>
+    <td> <button form="createPort7" type="submit" class="btn btn-sm" style = "background-color: #5445FF">Create Portfolio 7</button> </td>
+  </tr>
+  
+  
+</table>
+<button type="submit"  style = "background-color: #5445FF" class="btn btn-lg">Export to Excel </button>
+<%# <div> <%= link_to 'Export to Excel', "calculate/download", format: :xlsx, :class=> "btn btn-info btn-lg"%> 
+</div>
+</body>
+</html>
+
 

@@ -32,11 +32,11 @@
    <% @asset_class.each do |asset_class| %>
     <tr class="table-light">
       <th scope="row"> <%= asset_class.name %> </th>
-      <td> <input class="form-control" type="number" min="0" max="1" step="0.0001" id="exp_ret_box" name="query_exp_ret[]" value = <%= @list_of_cma_inputs.where(:cma_id => @the_cma.id).where(:asset_class => asset_class.id)[0].exp_ret%> > </td>
-      <td> <input class="form-control" type="number" min="0" max="1" step="0.0001" id="std_dev_box" name="query_std_dev[]" value = <%= @list_of_cma_inputs.where(:cma_id => @the_cma.id).where(:asset_class => asset_class.id)[0].std_dev%>></td>
+      <td> <input class="form-control" type="number" min="0" max="1" step="0.0001" id="exp_ret_box" name="query_exp_ret[]" value = <%= @list_of_cma_inputs.where(:cma_id => @the_cma.id).where(:asset_class => asset_class.id)[0].exp_ret.round(4)%> > </td>
+      <td> <input class="form-control" type="number" min="0" max="1" step="0.0001" id="std_dev_box" name="query_std_dev[]" value = <%= @list_of_cma_inputs.where(:cma_id => @the_cma.id).where(:asset_class => asset_class.id)[0].std_dev.round(4)%>></td>
       <td> <input class="form-control" type="number" min="-100" max="100" step="0.01" id="skew_box" name="query_skew[]" value = <%= @list_of_cma_inputs.where(:cma_id => @the_cma.id).where(:asset_class => asset_class.id)[0].skew%>></td>
       <td> <input class="form-control" type="number" min="0" max="100" step="0.01" id="kurt_box" name="query_kurt[]" value = <%= @list_of_cma_inputs.where(:cma_id => @the_cma.id).where(:asset_class => asset_class.id)[0].kurt%>> </td>
-      <td> <input class="form-control" type="number" min="0" max="1" step="0.005" id="yield_box" name="query_yield[]" value = <%= @list_of_cma_inputs.where(:cma_id => @the_cma.id).where(:asset_class => asset_class.id)[0].yield%>> </td>
+      <td> <input class="form-control" type="number" min="0" max="1" step="0.0001" id="yield_box" name="query_yield[]" value = <%= @list_of_cma_inputs.where(:cma_id => @the_cma.id).where(:asset_class => asset_class.id)[0].yield.round(4)%>> </td>
       <td> <input class="form-control"  type="hidden" id="asset_class_id_box" name="query_asset_class_id[]" value = <%= asset_class.id %>></td>
       <td> <input class="form-control"  type="hidden" id="cma_id_box" name="query_cma_id[]" value = <%= @the_cma.id %>></td>
       <td> <input class="form-control"  type="hidden" id="cma_id_box" name="query_cma_input_id[]" value = <%= @list_of_cma_inputs.where(:cma_id => @the_cma.id).where(:asset_class => asset_class.id)[0].id%>></td>

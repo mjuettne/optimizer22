@@ -1,0 +1,314 @@
+<h3>Simulation: <%= @the_portfolio.name %> </h3>
+<div>
+  <div>
+     <div><a href="/portfolios/<%=@the_portfolio.id%>">Go back</a></div>
+
+  </div>
+</div>
+
+
+<hr>
+<div class="row">
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<!-- Create a div where the graph will take place -->
+<div class = "left col-5" id="my_dataviz"></div>
+<script>
+
+// set the dimensions and margins of the graph
+var margin = {top: 10, right: 30, bottom: 30, left: 40},
+    width = 700 - margin.left - margin.right,
+    height = 800 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3.select("#my_dataviz")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+// get the data
+var data = <%=  JSON.parse(@python_simulation.fetch("returns_year1").to_json) %>;
+
+// d3.json(myJson , function(data) {
+
+  // X axis: scale and draw:
+  var x = d3.scaleLinear()
+      .domain([<%= ((@python_simulation.fetch("returns_year1").min)*1).round(2) %>, <%= ((@python_simulation.fetch("returns_year1").max)*1).round(2) %>])     // can use this instead of 1000 to have the max of data: d3.max(data, function(d) { return +d.price })
+      .range([0, width]);
+  svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+  // set the parameters for the histogram
+  var histogram = d3.histogram()
+      // .value(function(d) { return d.price; })   // I need to give the vector of value
+      .domain(x.domain())  // then the domain of the graphic
+      .thresholds(x.ticks(70)); // then the numbers of bins
+
+  // And apply this function to data to get the bins
+  var bins = histogram(data);
+
+  // Y axis: scale and draw:
+  var y = d3.scaleLinear()
+      .range([height, 0]);
+      y.domain([0, d3.max(bins, function(d) { return d.length; })]);   // d3.hist has to be called before the Y axis obviously
+  svg.append("g")
+      .call(d3.axisLeft(y));
+
+  // Add a tooltip div. Here I define the general feature of the tooltip: stuff that do not depend on the data point.
+  // Its opacity is set to 0: we don't see it by default.
+  var tooltip = d3.select("#my_dataviz")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "black")
+    .style("color", "white")
+    .style("border-radius", "5px")
+    .style("padding", "10px")
+
+  // A function that change this tooltip when the user hover a point.
+  // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
+  var showTooltip = function(d) {
+    tooltip
+      .transition()
+      .duration(100)
+      .style("opacity", 1)
+    tooltip
+      .html("Range: " + d.x0 + " - " + d.x1)
+      .style("top", (event.pageY)+"px")
+      .style("left",(event.pageX)+"px")
+  }
+  var moveTooltip = function(d) {
+    tooltip
+      .style("top", (event.pageY)+"px")
+      .style("left",(event.pageX)+"px")
+  }
+  // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+  var hideTooltip = function(d) {
+    tooltip
+      .transition()
+      .duration(100)
+      .style("opacity", 0)
+  }
+
+  // append the bar rectangles to the svg element
+  svg.selectAll("rect")
+      .data(bins)
+      .enter()
+      .append("rect")
+        .attr("x", 1)
+        .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
+        .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
+        .attr("height", function(d) { return height - y(d.length); })
+        .style("fill", "#69b3a2")
+        // Show tooltip on hover
+        .on("mouseover", showTooltip )
+        .on("mousemove", moveTooltip )
+        .on("mouseleave", hideTooltip )
+
+            // Append a vertical line to highlight the separation
+  svg
+    .append("line")
+      .attr("x1", x(<%= (@python_simulation.fetch("returns_year1")).sum/(@python_simulation.fetch("returns_year1")).count  %>) )
+      .attr("x2", x(<%= (@python_simulation.fetch("returns_year1")).sum/(@python_simulation.fetch("returns_year1")).count %>) )
+      .attr("y1", y(0))
+      .attr("y2", y(1600))
+      .attr("stroke", "grey")
+      .attr("stroke-dasharray", "4")
+  svg
+    .append("text")
+    .attr("x", x(<%= ((@python_simulation.fetch("returns_year1").min)*1).round(2) %>))
+    .attr("y", y(10))
+    .text("Average: " + <%=  (((@python_simulation.fetch("returns_year1")).sum/(@python_simulation.fetch("returns_year1")).count).to_f*100).round(2) %> +"%")
+    .style("font-size", "15px")
+
+;
+</script>
+
+<div class = "right col-7">
+<h4>Summary Table</h4>
+
+<table class="table table-hover">
+  <tr class="table-info">
+    <th> </th>
+    <th>Year 1</th>
+    <th>Year 2</th>
+    <th>Year 3</th>
+    <th>Year 4</th>
+    <th>Year 5</th>
+    <th>Year 6</th>
+    <th>Year 7</th>
+    <th>Year 8</th>
+    <th>Year 9</th>
+    <th>Year 10</th>
+  </tr>
+  <tr>
+    <td>Growth of $1M </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_50th")[0], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_50th")[1], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_50th")[2], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_50th")[3], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_50th")[4], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_50th")[5], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_50th")[6], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_50th")[7], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_50th")[8], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_50th")[9], precision: 0)  %> </td>
+  </tr>
+
+  <tr>
+    <td>Average Cumulative Return </td>
+    <td> <%= (((@python_simulation.fetch("dollar_50th")[0])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("dollar_50th")[1])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("dollar_50th")[2])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("dollar_50th")[3])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("dollar_50th")[4])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("dollar_50th")[5])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("dollar_50th")[6])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("dollar_50th")[7])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("dollar_50th")[8])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("dollar_50th")[9])/1000000)*100 -100).round(1)%>% </td>
+  </tr>
+
+  <tr>
+    <td>Average CVAR (5%%) </td>
+    <td> <%= (@python_simulation.fetch("CVAR_year1")*100).round(1) %>% </td>
+    <td> <%= (@python_simulation.fetch("CVAR_year2")*100).round(1) %>% </td>
+    <td> <%= (@python_simulation.fetch("CVAR_year3")*100).round(1) %>% </td>
+    <td> <%= (@python_simulation.fetch("CVAR_year4")*100).round(1) %>% </td>
+    <td> <%= (@python_simulation.fetch("CVAR_year5")*100).round(1) %>% </td>
+    <td> <%= (@python_simulation.fetch("CVAR_year6")*100).round(1) %>% </td>
+    <td> <%= (@python_simulation.fetch("CVAR_year7")*100).round(1) %>% </td>
+    <td> <%= (@python_simulation.fetch("CVAR_year8")*100).round(1) %>% </td>
+    <td> <%= (@python_simulation.fetch("CVAR_year9")*100).round(1) %>% </td>
+    <td> <%= (@python_simulation.fetch("CVAR_year10")*100).round(1) %>% </td>
+  </tr>
+  <tr>
+    <td>Probabilty of Success </td>
+    <td> <%= (@python_simulation.fetch("year1_probability")*100).round(1)%>% </td>
+    <td> <%= (@python_simulation.fetch("year2_probability")*100).round(1)%>% </td>
+    <td> <%= (@python_simulation.fetch("year3_probability")*100).round(1)%>% </td>
+    <td> <%= (@python_simulation.fetch("year4_probability")*100).round(1)%>% </td>
+    <td> <%= (@python_simulation.fetch("year5_probability")*100).round(1)%>% </td>
+    <td> <%= (@python_simulation.fetch("year6_probability")*100).round(1)%>% </td>
+    <td> <%= (@python_simulation.fetch("year7_probability")*100).round(1)%>% </td>
+    <td> <%= (@python_simulation.fetch("year8_probability")*100).round(1)%>% </td>
+    <td> <%= (@python_simulation.fetch("year9_probability")*100).round(1)%>% </td>
+    <td> <%= (@python_simulation.fetch("year10_probability")*100).round(1)%>% </td>
+  </tr>
+  <tr>
+    <td>Yield</td>
+    <td> <%= (@python_simulation.fetch("port_yield")*100).round(1)%>% </td>
+    <td> <%= (@python_simulation.fetch("port_yield")*100).round(1)%>% </td>
+    <td> <%= (@python_simulation.fetch("port_yield")*100).round(1)%>% </td>
+    <td> <%= (@python_simulation.fetch("port_yield")*100).round(1)%>% </td>
+    <td> <%= (@python_simulation.fetch("port_yield")*100).round(1)%>% </td>
+    <td> <%= (@python_simulation.fetch("port_yield")*100).round(1)%>% </td>
+    <td> <%= (@python_simulation.fetch("port_yield")*100).round(1)%>% </td>
+    <td> <%= (@python_simulation.fetch("port_yield")*100).round(1)%>% </td>
+    <td> <%= (@python_simulation.fetch("port_yield")*100).round(1)%>% </td>
+    <td> <%= (@python_simulation.fetch("port_yield")*100).round(1)%>% </td>
+  </tr>
+  <tr>
+    <td>Growth of $1M (10th Percentile) </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_10th")[0], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_10th")[1], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_10th")[2], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_10th")[3], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_10th")[4], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_10th")[5], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_10th")[6], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_10th")[7], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_10th")[8], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_10th")[9], precision: 0)  %> </td>
+
+  </tr>
+  <tr>
+    <td>Growth of $1M (90th Percentile) </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_90th")[0], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_90th")[1], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_90th")[2], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_90th")[3], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_90th")[4], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_90th")[5], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_90th")[6], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_90th")[7], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_90th")[8], precision: 0)  %> </td>
+    <td> <%= number_to_currency(@python_simulation.fetch("dollar_90th")[9], precision: 0)  %> </td>
+
+  </tr>
+
+</table>  
+</div>
+</div>
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<!-- Create a div where the graph will take place -->
+<div id="my_dataviz2"></div>
+
+<script>
+
+// set the dimensions and margins of the graph
+var margin = {top: 10, right: 30, bottom: 30, left: 60},
+    width = 460 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3.select("#my_dataviz")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+//Read the data
+var data = <%=  JSON.parse(@python_simulation.fetch("dollar_50th").to_json) %>;
+
+  // // When reading the csv, I must format variables:
+  // function(d){
+  //   return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
+  // },
+
+  // Now I can use this dataset:
+  function(data) {
+
+    // Add X axis --> it is a date format
+    var x = d3.scaleTime()
+      .domain(d3.extent(data, function(d) { return d.date; }))
+      .range([ 0, width ]);
+    svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+    // Add Y axis
+    var y = d3.scaleLinear()
+      .domain([0, d3.max(data, function(d) { return +d.value; })])
+      .range([ height, 0 ]);
+    svg.append("g")
+      .call(d3.axisLeft(y));
+
+    // Add the line
+    svg.append("path")
+      .datum(data)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("d", d3.line()
+        .x(function(d) { return x(d.date) })
+        .y(function(d) { return y(d.value) })
+        )
+
+)
+
+</script>

@@ -90,23 +90,15 @@
 
 <div>
   <div>
-    <h2>
-      Edit cma input
-    </h2>
+    <h2>Edit cma input </h2>
 
     <form action="/modify_cma_input/<%= @the_cma_input.id %>"  method="post" >
       <div>
-        <label for="cma_id_box">
-          Cma
-        </label>
-
+        <label for="cma_id_box"> Cma</label>
         <input type="text" id="cma_id_box" name="query_cma_id" value="<%= @the_cma_input.cma_id %>">
       </div>
-
       <div>
-        <label for="exp_ret_box">
-          Exp ret
-        </label>
+         <label for="exp_ret_box">Exp ret</label>
 
         <input type="text" id="exp_ret_box" name="query_exp_ret" value="<%= @the_cma_input.exp_ret %>">
       </div>

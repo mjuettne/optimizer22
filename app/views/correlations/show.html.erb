@@ -54,6 +54,16 @@
 <hr>
 <div> <%= link_to 'Export to Excel', "download/#{@the_correlation.id}", format: :xlsx, :class=> "btn btn-info btn-lg" %> </div>
 <hr>
+     <h3>Excel Import</h3>
+     <div>Update all values at once </div>
+
+     <ol>
+      <li>Export Excel Template Above </li>
+      <li>Update Input Values in Excel </li>
+      <li>Save File on Desktop </li>
+      <li>Choose File below </li>
+      <li>Click IMPORT once File has been selected </li>
+      </ol>
   <%= form_tag "/correlations/import/#{@the_correlation.id}", multipart: true do %>
           <%= file_field_tag :file %>
           <%= submit_tag "IMPORT", :class=> "btn btn-warning btn-lg"%>

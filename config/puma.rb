@@ -25,6 +25,7 @@ environment ENV.fetch("RAILS_ENV") { "development" }
 #
 workers ENV.fetch("WEB_CONCURRENCY") { 1 }
 
+
 # Use the `preload_app!` method when specifying a `workers` number.
 # This directive tells Puma to first boot the application and load code
 # before forking the application. This takes advantage of Copy On Write
@@ -32,11 +33,19 @@ workers ENV.fetch("WEB_CONCURRENCY") { 1 }
 #
 preload_app!
 
+
+
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
+
+worker_timeout ENV.fetch('WORKER_TIMEOUT') { 3600 }
+
+worker_timeout 3600
+worker_boot_timeout 3600
 
 on_worker_boot do
   # Worker specific setup for Rails 4.1+
   # See: https://devcenter.heroku.com/articles/deploying-rails-applications-with-the-puma-web-server#on-worker-boot
   ActiveRecord::Base.establish_connection
 end
+

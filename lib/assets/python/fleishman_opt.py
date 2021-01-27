@@ -197,51 +197,81 @@ def output(mean, std, skew, kurt, correlation):
   kurt = kurt ##### FROM RUBY
   correlation = correlation ##### FROM RUBY
 
-  N = 10000
+  N = 30000
 
   X = np.size(mean)
 
-  coeff1 = fit_fleishman_from_sk(skew[0],kurt[0])
-  coeff2 = fit_fleishman_from_sk(skew[1],kurt[1])
-  coeff3 = fit_fleishman_from_sk(skew[2],kurt[2])
-  coeff4 = fit_fleishman_from_sk(skew[3],kurt[3])
-  coeff5 = fit_fleishman_from_sk(skew[4],kurt[4])
-  coeff6 = fit_fleishman_from_sk(skew[5],kurt[5])
-  coeff7 = fit_fleishman_from_sk(skew[6],kurt[6])
-  coeff8 = fit_fleishman_from_sk(skew[7],kurt[7])
-  coeff9 = fit_fleishman_from_sk(skew[8],kurt[8])
-  coeff10 = fit_fleishman_from_sk(skew[9],kurt[9])
+  
+  # coeff1 = fit_fleishman_from_sk(skew[0],kurt[0])
+  # coeff2 = fit_fleishman_from_sk(skew[1],kurt[1])
+  # coeff3 = fit_fleishman_from_sk(skew[2],kurt[2])
+  # coeff4 = fit_fleishman_from_sk(skew[3],kurt[3])
+  # coeff5 = fit_fleishman_from_sk(skew[4],kurt[4])
+  # coeff6 = fit_fleishman_from_sk(skew[5],kurt[5])
+  # coeff7 = fit_fleishman_from_sk(skew[6],kurt[6])
+  # coeff8 = fit_fleishman_from_sk(skew[7],kurt[7])
+  # coeff9 = fit_fleishman_from_sk(skew[8],kurt[8])
+  # coeff10 = fit_fleishman_from_sk(skew[9],kurt[9])
+
+  # B = np.array([coeff1[0], coeff2[0], coeff3[0], coeff4[0], coeff5[0], coeff6[0], coeff7[0], coeff8[0], coeff9[0], coeff10[0] ])
+  # C = np.array([coeff1[1], coeff2[1], coeff3[1], coeff4[1], coeff5[1], coeff6[1], coeff7[1], coeff8[1], coeff9[1], coeff10[1] ])
+  # D = np.array([coeff1[2], coeff2[2], coeff3[2], coeff4[2], coeff5[2], coeff6[2], coeff7[2], coeff8[2], coeff9[2], coeff10[2] ])
+  # A = np.array([-coeff1[1], -coeff2[1], -coeff3[1], coeff4[1], coeff5[1], coeff6[1], coeff7[1], coeff8[1], coeff9[1], coeff10[1] ])
+
+  B = np.empty(shape=(X,1))
+  C = np.empty(shape=(X,1))
+  D = np.empty(shape=(X,1))
+  A = np.empty(shape=(X,1))
+
+  coeff = np.empty(shape=(X,3))
+  for i in range(X):
+    coeff[i] = fit_fleishman_from_sk(skew[i],kurt[i])
+
+  for i in range(X):
+    B[i] = coeff[i][0]
+
+  for i in range(X):
+    C[i] = coeff[i][1]
+
+  for i in range(X):
+    D[i] = coeff[i][2]
+
+  for i in range(X):
+    A[i] = -coeff[i][1]
 
 
 
-  B = np.array([coeff1[0], coeff2[0], coeff3[0], coeff4[0], coeff5[0], coeff6[0], coeff7[0], coeff8[0], coeff9[0], coeff10[0] ])
-  C = np.array([coeff1[1], coeff2[1], coeff3[1], coeff4[1], coeff5[1], coeff6[1], coeff7[1], coeff8[1], coeff9[1], coeff10[1] ])
-  D = np.array([coeff1[2], coeff2[2], coeff3[2], coeff4[2], coeff5[2], coeff6[2], coeff7[2], coeff8[2], coeff9[2], coeff10[2] ])
-  A = np.array([-coeff1[1], -coeff2[1], -coeff3[1], coeff4[1], coeff5[1], coeff6[1], coeff7[1], coeff8[1], coeff9[1], coeff10[1] ])
-
-  #### Code
+    #### Code
   r = np.array(correlation)
 
   r_pd = nearPD(r)
   x = norm.rvs(size=(X, N))
   if method == 'cholesky':
-          # Compute the Cholesky decomposition.
-          c = cholesky(r_pd, lower=True)
+            # Compute the Cholesky decomposition.
+    c = cholesky(r_pd, lower=True)
   else:
-          # Compute the eigenvalues and eigenvectors.
-          evals, evecs = eigh(r_pd)
-          # Construct c, so c*c^T = r.
-          c = np.dot(evecs, np.diag(np.sqrt(evals)))
+    # Compute the eigenvalues and eigenvectors.
+    evals, evecs = eigh(r_pd)
+    # Construct c, so c*c^T = r.
+    c = np.dot(evecs, np.diag(np.sqrt(evals)))
 
   Z = np.dot(c, x)  
   P = np.zeros((X,N))
 
 
   for i in range(X):
-      P[i] = (A[i] + Z[i]*(B[i] +Z[i]*(C[i]+ Z[i]*D[i])))*std[i]+mean[i]
+    P[i] = (A[i] + Z[i]*(B[i] +Z[i]*(C[i]+ Z[i]*D[i])))*std[i]+mean[i]
+
+  for i in range(X):
+    for j in range(N):
+      if P[i][j] < -1 or P[i][j] > 1:
+        P[i][j] = mean[i]
+  
+        
 
   numpyData = {"array": P}    
   encodedNumpyData = json.dumps(numpyData, cls=NumpyArrayEncoder)  # use dump() to write array into file
+
   return P
 # print(encodedNumpyData)
 # print(Z)

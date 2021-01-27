@@ -100,7 +100,7 @@ class CorrelationsController < ApplicationController
     # render({ :template => "correlations/import.html.erb" })
     for i in 0...@length
       for j in 1...i
-          input = spreadsheet.row(i+1)[1]
+          input = spreadsheet.row(i+1)[j]
           input_id = spreadsheet.row(i+1+ @length)[j]
           the_correlation = CorrelationInput.where({ :id => input_id }).at(0)
           the_correlation.correl = input

@@ -1,0 +1,173 @@
+
+wb = xlsx_package.workbook
+
+length = @weights_col1.length.to_i
+wb.add_worksheet(name: "Frontier Table") do |sheet|
+wb.styles do |style|
+  header = style.add_style(bg_color: "3498DB", fg_color: "FFFFFF", alignment: { horizontal: :left }, :sz => 10, :font_name => 'Montserrat', :b => true)
+  row = style.add_style(bg_color: "FFFFFF", alignment: { horizontal: :left }, :sz => 10, :font_name => 'Montserrat', :number => true)
+  summary_row = style.add_style(bg_color: "C0C0C0", alignment: { horizontal: :left }, :sz => 10, :font_name => 'Montserrat', :b => true, :number => true)
+
+  # Create the header row
+  sheet.add_row ["Asset Class", "Portfolio 1", "Portfolio 2", "Portfolio 3", "Portfolio 4", "Portfolio 5", "Portfolio 6", "Portfolio 7", 
+                 @cvar_col1,   @cvar_col2,  @cvar_col3,  @cvar_col4, @cvar_col5, @cvar_col6, @cvar_col7], style: header
+
+  # Create entries for each item
+ for i in 0...length
+    sheet.add_row [
+    @assets[i].name ,
+    @weights_col1[i], 
+    @weights_col2[i], 
+    @weights_col3[i],
+    @weights_col4[i],
+    @weights_col5[i],
+    @weights_col6[i],
+    @weights_col7[i]], style: row
+  end
+sheet.add_row [
+  "Return",
+  @return_col1,
+  @return_col2,
+  @return_col3,
+  @return_col4,
+  @return_col5,
+  @return_col6,
+  @return_col7], style: summary_row
+sheet.add_row [
+  "CVAR (5%)",
+  @cvar_col1,
+  @cvar_col2,
+  @cvar_col3,
+  @cvar_col4,
+  @cvar_col5,
+  @cvar_col6,
+  @cvar_col7], style: summary_row
+sheet.add_row [
+  "Sharpe",
+  @sharpe_col1,
+  @sharpe_col2,
+  @sharpe_col3,
+  @sharpe_col4,
+  @sharpe_col5,
+  @sharpe_col6,
+  @sharpe_col7], style: summary_row
+ sheet.add_row [
+  "Yield",
+  @yield_col1,
+  @yield_col2,
+  @yield_col3,
+  @yield_col4,
+  @yield_col5,
+  @yield_col6,
+  @yield_col7], style: summary_row
+sheet.add_row [
+  "Probability Table",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",
+  "",], style: header
+sheet.add_row [
+  "Year 1",
+  @year1_col1,
+  @year1_col2,
+  @year1_col3,
+  @year1_col4,
+  @year1_col5,
+  @year1_col6,
+  @year1_col7], style: row  
+sheet.add_row [
+  "Year 2",
+  @year2_col1,
+  @year2_col2,
+  @year2_col3,
+  @year2_col4,
+  @year2_col5,
+  @year2_col6,
+  @year2_col7], style: row
+sheet.add_row [
+  "Year 3",
+  @year3_col1,
+  @year3_col2,
+  @year3_col3,
+  @year3_col4,
+  @year3_col5,
+  @year3_col6,
+  @year3_col7], style: row
+sheet.add_row [
+  "Year 4",
+  @year4_col1,
+  @year4_col2,
+  @year4_col3,
+  @year4_col4,
+  @year4_col5,
+  @year4_col6,
+  @year4_col7], style: row
+sheet.add_row [
+  "Year 5",
+  @year5_col1,
+  @year5_col2,
+  @year5_col3,
+  @year5_col4,
+  @year5_col5,
+  @year5_col6,
+  @year5_col7], style: row    
+sheet.add_row [
+  "Year 6",
+  @year6_col1,
+  @year6_col2,
+  @year6_col3,
+  @year6_col4,
+  @year6_col5,
+  @year6_col6,
+  @year6_col7], style: row
+sheet.add_row [
+  "Year 7",
+  @year7_col1,
+  @year7_col2,
+  @year7_col3,
+  @year7_col4,
+  @year7_col5,
+  @year7_col6,
+  @year7_col7], style: row 
+sheet.add_row [
+  "Year 8",
+  @year8_col1,
+  @year8_col2,
+  @year8_col3,
+  @year8_col4,
+  @year8_col5,
+  @year8_col6,
+  @year8_col7], style: row 
+ sheet.add_row [
+  "Year 9",
+  @year9_col1,
+  @year9_col2,
+  @year9_col3,
+  @year9_col4,
+  @year9_col5,
+  @year9_col6,
+  @year9_col7], style: row
+sheet.add_row [
+  "Year 10",
+  @year10_col1,
+  @year10_col2,
+  @year10_col3,
+  @year10_col4,
+  @year10_col5,
+  @year10_col6,
+  @year10_col7], style: row
+sheet.add_chart(Axlsx::ScatterChart, :start_at => "I1", :end_at => "S23", :title => "Efficient Frontier", :font_name => 'Montserrat') do |chart|
+          chart.add_series :yData => [@return_col1,  @return_col2,  @return_col3,  @return_col4,  @return_col5,  @return_col6,  @return_col7], :xData => sheet["I1:O1"], title: "Frontier", :font_name => 'Montserrat', :color => "3498DB"
+          chart.x_val_axis.scaling.min = (@cvar_col1.to_f).round(0) - 1.0
+          chart.x_val_axis.scaling.max = (@cvar_col7.to_f).round(0) + 1.0
+          chart.y_val_axis.scaling.min = (@return_col1.to_f).round(0) - 1.0
+          chart.y_val_axis.scaling.max = (@return_col7.to_f).round(0) + 1.0
+          chart.x_val_axis.title = 'CVAR (5%)'
+          chart.y_val_axis.title = 'Return'
+          chart.x_val_axis.gridlines = false
+    end
+  end            
+end

@@ -193,6 +193,7 @@ Rails.application.routes.draw do
   get("/frontiers/:path_id", { :controller => "frontiers", :action => "show" })
   
   post("/frontiers/:path_id/calculate", { :controller => "frontiers", :action => "calculate" })
+  get("/frontiers/:path_id/calculate/download", { :controller => "frontiers", :action => "download" })
   get("/edit_frontiers/:path_id", { :controller => "frontiers", :action => "edit" })
 
   # UPDATE
@@ -209,15 +210,18 @@ Rails.application.routes.draw do
 
   # CREATE
   post("/insert_portfolio", { :controller => "portfolios", :action => "create" })
+  post("/insert_portfolio_frontier", { :controller => "portfolios", :action => "create_frontier" })
           
   # READ
   get("/portfolios", { :controller => "portfolios", :action => "index" })
   
   get("/portfolios/:path_id", { :controller => "portfolios", :action => "show" })
+  post("/portfolios/:path_id/calculate", { :controller => "portfolios", :action => "calculate" })
   
   # UPDATE
   
   post("/modify_portfolio/:path_id", { :controller => "portfolios", :action => "update" })
+  post("/modify_portfolio_weights/:path_id", { :controller => "portfolios", :action => "update_all" })
   
   # DELETE
   get("/delete_portfolio/:path_id", { :controller => "portfolios", :action => "destroy" })

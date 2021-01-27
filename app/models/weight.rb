@@ -3,6 +3,7 @@
 # Table name: weights
 #
 #  id             :integer          not null, primary key
+#  inclusion      :string
 #  weight         :float
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
