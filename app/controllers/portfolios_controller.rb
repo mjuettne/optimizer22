@@ -120,6 +120,7 @@ class PortfoliosController < ApplicationController
     the_portfolio.name = params.fetch("query_name")
     the_portfolio.cma_id = Cma.all.where({:name => params.fetch("query_cma")}).at(0).id
     the_portfolio.correlation_id = Correlation.all.where({:name => params.fetch("query_correlation")}).at(0).id
+    the_portfolio.benchmark = AssetClass.all.where({:name => params.fetch("query_benchmark")}).at(0).id
 
     if the_portfolio.valid?
       the_portfolio.save
@@ -178,6 +179,7 @@ class PortfoliosController < ApplicationController
   def calculate
     require 'json'
     require 'matrix'
+
     @portfolio_id = params.fetch("portfolio_id")
     @the_portfolio = Portfolio.all.where({:id => @portfolio_id }).at(0)
     @all_asset_class = AssetClass.all
@@ -187,9 +189,27 @@ class PortfoliosController < ApplicationController
     query_skew = params.fetch("query_skew")
     query_kurt = params.fetch("query_kurt")
     query_yield = params.fetch("query_yield")
-    @query_asset_id = params.fetch("query_asset_id")
-
+    query_asset_id_all = params.fetch("query_asset_id")
+    query_asset_id_bench = query_asset_id_all[-1]
     @query_weights = params.fetch("query_weights")
+
+    if query_asset_id_all.uniq.length == query_asset_id_all.length
+      @query_asset_id = query_asset_id_all
+      length = @query_asset_id.length.to_i
+      @query_weights[length-1] = 0      
+    else
+      @query_asset_id = query_asset_id_all.first query_asset_id_all.size - 1
+      query_mean = query_mean.first query_mean.size - 1
+      query_std_dev = query_std_dev.first query_std_dev.size - 1
+      query_skew = query_skew.first query_skew.size - 1
+      query_kurt = query_kurt.first query_kurt.size - 1
+      query_yield = query_yield.first query_yield.size - 1
+      @query_weights = @query_weights.first @query_weights.size - 1
+      length = @query_asset_id.length.to_i
+      @query_weights[length-1] = 0
+    end
+
+    @bench_location = @query_asset_id.index(query_asset_id_bench)
 
     coreltation_id = params.fetch("coreltation_id")
     correlation_inputs = CorrelationInput.all.where({:correlation_id => coreltation_id})
@@ -276,7 +296,7 @@ class PortfoliosController < ApplicationController
     # @correlation = @correlation.to_json
     # @weights = @weights.to_json
   
-    @python_simulation = JSON.parse(`python3 lib/assets/python/simulation.py "#{@mean}" "#{@std_dev}" "#{@skew}" "#{@kurt}" "#{@correlation}" "#{@weights}" "#{@yields}" `)
+    @python_simulation = JSON.parse(`python3 lib/assets/python/simulation.py "#{@mean}" "#{@std_dev}" "#{@skew}" "#{@kurt}" "#{@correlation}" "#{@weights}" "#{@yields}" "#{@bench_location}"`)
  
     render({ :template => "portfolios/calculate.html.erb" })
   end

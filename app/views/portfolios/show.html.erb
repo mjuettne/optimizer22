@@ -29,14 +29,38 @@
         <label class="form-label" for="correlation_box">Correlation Assumption</label>
         <select type="text" id="correlation_box" name="query_correlation" class="form-control">
          <optgroup label="Curren Selection">
+        <% if Correlation.all.where({:id => @the_portfolio.correlation_id }).at(0).nil? %>
+        <option>  </option>
+        <optgroup label="Correlation Assumptions">
+          <%@correlations.each do |the_correl|%>
+                <option> <%=the_correl.name%> </option>
+              <%end%>
+          </select>
+        <% else%>
         <option> <%= @correlations.where({:id => @the_portfolio.correlation_id}).at(0).name %> </option>
         <optgroup label="Correlation Assumptions">
           <%@correlations.each do |the_correl|%>
                 <option> <%=the_correl.name%> </option>
               <%end%>
-        </select>
+          </select>
+        <% end %>  
       </div>
-      </div>
+      <div class="form-group row col-2"> 
+        <label class="form-label" for="benchmark_box">Benchmark</label>
+        <select type="text" id="benchmark_box" name="query_benchmark" class="form-control">
+         <optgroup label="Curren Selection">
+        <% if @the_portfolio.benchmark.nil? %>
+        <option>  </option>
+        <% else%>
+        <option> <%= @list_of_asset_classes.where({:id => @the_portfolio.benchmark}).at(0).name %> </option>
+        <% end %>
+        <optgroup label="Asset Classes">
+          <%@list_of_asset_classes.each do |the_bench|%>
+                <option> <%=the_bench.name%> </option>
+              <%end%>
+          </select>
+      </div>    
+    </div>
 
   
       <button type="submit" class="btn btn-success">Update Portfolio</button>
@@ -54,7 +78,7 @@
         <th>Name</th>
         <th>Weight</th>
         <th hidden >ID</th>
-        <th style ="background-color:#39394B; border-bottom: 1px solid #39394B"> </th>
+        <th style ="background-color:#5445FF; border-bottom: 1px solid #39394B"> </th>
         <th>Exp Ret</th>
         <th>Std Dev</th>
         <th>Skew</th>
@@ -64,7 +88,7 @@
       </tr>
 
       <% @weights.where(:inclusion => "yes").each do |input| %>
-      <tr class="table" style = "background-color: #626278">
+      <tr class="table">
         <th>  <%= @list_of_asset_classes.where({:id => input.asset_class_id}).at(0).name %> </th>
         <td> <input class="form-control" readonly="" type="number"  name="query_weights[]" value = <%= input.weight %>>   </td>
         <th hidden>  <input class="form-control"   type="number"  name="portfolio_id" value = <%= @the_portfolio.id %>> </th>
@@ -75,11 +99,48 @@
         <td>  <input class="form-control" readonly=""  type="number"  name="query_kurt[]" value = <%= @cma_inputs.where({:cma_id => @the_portfolio.cma_id}).where({:asset_class_id => input.asset_class_id}).at(0).kurt %> >   </td>
         <td>  <input class="form-control" readonly=""  type="number"  name="query_yield[]" value = <%= (@cma_inputs.where({:cma_id => @the_portfolio.cma_id}).where({:asset_class_id => input.asset_class_id}).at(0).yield*100).round(2) %> >  </td>
         <th hidden>  <input class="form-control"   type="number"  name="query_asset_id[]" value = <%= @list_of_asset_classes.where({:id => input.asset_class_id}).at(0).id %>> </th>
+        <% if Correlation.all.where({:id => @the_portfolio.correlation_id }).at(0).nil? %>
+        <th hidden>  <input class="form-control"   type="number"  name="coreltation_id" value = 0>> </th>        <option>  </option>
+        <% else%>
         <th hidden>  <input class="form-control"   type="number"  name="coreltation_id" value = <%= @correlations.where({:id => @the_portfolio.correlation_id}).at(0).id %>> </th>
-
+        <% end%>
       </tr>
      
       <% end %>
+      <tr class="table" style ="background-color:#5445FF">
+        <th>Benchmark </th>
+        <th>Weight</th>
+        <td> </td>
+        <th>Exp Ret</th>
+        <th>Std Dev</th>
+        <th>Skew</th>
+        <th>Kurt</th>
+        <th>Yield</th>
+       
+      </tr>
+      <% if @the_portfolio.benchmark.nil? %>
+      <tr class="table">
+        <td>No Benchmark </td>
+      </tr>
+      <% else%>  
+      <tr class="table">
+        <th>  <%= @list_of_asset_classes.where({:id => @the_portfolio.benchmark}).at(0).name %> </th>
+        <td> <input class="form-control" readonly="" type="number"  name="query_weights[]" value = 100 >   </td>
+        <th hidden>  <input class="form-control"   type="number"  name="portfolio_id" value = <%= @the_portfolio.id %>> </th>
+        <td style ="background-color:#39394B; border-bottom: 1px solid #39394B"> </td>
+        <td>  <input class="form-control" readonly=""  type="number"  name="query_mean[]" value = <%= (@cma_inputs.where({:cma_id => @the_portfolio.cma_id}).where({:asset_class_id => @the_portfolio.benchmark}).at(0).exp_ret*100).round(2) %> >    </td>
+        <td>  <input class="form-control" readonly=""  type="number"  name="query_std_dev[]" value = <%= (@cma_inputs.where({:cma_id => @the_portfolio.cma_id}).where({:asset_class_id => @the_portfolio.benchmark}).at(0).std_dev*100).round(2) %> >  </td>
+        <td>  <input class="form-control" readonly=""  type="number"  name="query_skew[]" value = <%= @cma_inputs.where({:cma_id => @the_portfolio.cma_id}).where({:asset_class_id => @the_portfolio.benchmark}).at(0).skew %> >   </td>
+        <td>  <input class="form-control" readonly=""  type="number"  name="query_kurt[]" value = <%= @cma_inputs.where({:cma_id => @the_portfolio.cma_id}).where({:asset_class_id => @the_portfolio.benchmark}).at(0).kurt %> >   </td>
+        <td>  <input class="form-control" readonly=""  type="number"  name="query_yield[]" value = <%= (@cma_inputs.where({:cma_id => @the_portfolio.cma_id}).where({:asset_class_id => @the_portfolio.benchmark}).at(0).yield*100).round(2) %> >  </td>
+        <th hidden>  <input class="form-control"   type="number"  name="query_asset_id[]" value = <%= @list_of_asset_classes.where({:id => @the_portfolio.benchmark}).at(0).id %>> </th>
+        <% if Correlation.all.where({:id => @the_portfolio.correlation_id }).at(0).nil? %>
+        <th hidden>  <input class="form-control"   type="number"  name="coreltation_id" value = 0>> </th>        <option>  </option>
+        <% else%>
+        <th hidden>  <input class="form-control"   type="number"  name="coreltation_id" value = <%= @correlations.where({:id => @the_portfolio.correlation_id}).at(0).id %>> </th>
+        <% end%>
+      </tr>
+      <% end%>
       </table>
       <button type="submit" class="btn btn-lg btn-success">Run Simulation</button>
       </form>
@@ -92,10 +153,9 @@
   <%# <div class="panel panel-default">
     <div class="panel-heading"> %>
       <button type = "button" style = "background-color: #5445FF" class="btn btn-lg">
-        <a class = "text-white" data-toggle="collapse" data-parent="#accordion" href="#collapse1">Edit Asset Classes</a>
+        <a class = "text-white" data-toggle="collapse" data-parent="#accordion" href="#collapse1">Edit Portfolio</a>
       </button>
     </div>
-
 
 <div id="collapse1" class="panel-collapse collapse in">
     <table class="table table-hover">

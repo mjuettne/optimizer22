@@ -13,6 +13,9 @@
   grid-gap: 20px;
   background-color: #1C1B29;
   padding: 20px;
+  
+
+
 }
 
 .grid-container > div {
@@ -21,6 +24,34 @@
   text-align: left;
   padding: 20px 0;
   color: #FFFFFF;
+  
+
+
+}
+
+.grid-login {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
+  background-color: #1C1B29;
+  padding: 10px;
+  height: 900px;
+}
+
+.grid-login-item {
+  background-color: #1C1B29;
+  border: #1C1B29;
+  padding: 20px;
+  height: 33%;
+  font-size: 30px;
+  text-align: left;
+}
+.grid-login-login {
+  background-color: #39394B;
+  border: #1C1B29;
+  padding: 20px;
+  height: 70%;
+  font-size: 30px;
+  text-align: left;
 }
 .vertical-menu {
   width: 300px;
@@ -67,7 +98,7 @@
 }
 </style>
 
-<title>FinalProject</title>
+<title>JET Optimizer</title>
     <%= csrf_meta_tags %>
      
 
@@ -103,11 +134,33 @@
         <%= javascript_tag 'application', 'data-turbolinks-track': 'reload' %>
       <%= javascript_include_tag "https://www.gstatic.com/charts/loader.js" %>
   </head>
+<body>
 
-  <body>
+<% if @current_user.nil? %>
+ <nav style = "background-color: #39394B" class="navbar navbar-expand-lg navbar-dark ">
 
+  <a class="navbar-brand" href="/">MPJ CO</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav ml-auto">
   
-  <nav style = "background-color: #39394B" class="navbar navbar-expand-lg navbar-dark ">
+      <li class="nav-item">
+         <button type="button" class="btn btn-lg" style = "background-color: #5445FF" type="submit" ><a style="color: #FFFFFF" href="/user_sign_in">Sign In</a></button>
+      </li>
+     
+      
+    </ul>
+   </div>
+</nav>
+
+<div> <%= yield %>  </div>        
+
+<% else %>
+
+<nav style = "background-color: #39394B" class="navbar navbar-expand-lg navbar-dark ">
 
   <a class="navbar-brand" href="#">MPJ CO</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
@@ -133,6 +186,7 @@
     </ul>
    </div>
 </nav>
+
 <div class="grid-container">
   <div class="vertical-menu">
     <a href="/" class="active">Home</a>
@@ -165,8 +219,10 @@
      </div>    
   </div>
   <div> <%= yield %>  </div>
-
-</div>
+  </div>
+ 
+<% end %>
+ 
  <script>
 var acc = document.getElementsByClassName("accordion");
 var i;

@@ -23,12 +23,12 @@
       <tr class="table">
         <th><%= a_correlation.name %></th>
         <td> <a  href="/correlations/<%= a_correlation.id %>">Show Details</a> </td>
-        <td> <button data-toggle="modal" data-target="#exampleModal" type="button" class="btn btn-light text-danger">Delete </button>  </td>
+        <td> <a  class="text-danger" href="/delete_correlation/<%= a_correlation.id %>">Delete</a>   </td>
       </tr>
       <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <div class="modal-header bg-warning text-white">
+      <div delete_correlation>
         <h5 class="modal-title" id="exampleModalLabel">Warning!</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
@@ -39,7 +39,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-info" data-dismiss="modal">No</button>
-        <button type="button" class="btn btn-danger"><a class="text-light" href="/delete_correlation/<%= a_correlation.id %>">Yes, delete </a> </button>
+        <button type="button" class="btn btn-danger"><a class="text-white" href="/delete_correlation/<%= a_correlation.id %>">Yes, delete </a> </button>
       </div>
     </div>
   </div>

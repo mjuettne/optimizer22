@@ -28,14 +28,14 @@ wb.add_worksheet(name: "Correlations") do |sheet|
                     " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",
                     " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",] 
       end
-  for i in 0...@length
-      for j in 0...i
+  for i in 1...@length
+      for j in 1...@length
           sheet.rows[i].cells[0].value = @asset_class[i-1].name
-          sheet.rows[i].cells[j+1].value = @correlation_inputs.where(:correlation_id => @the_correlation.id).where(:asset_class1 => @asset_class[i-1].id).where(:asset_class2 => @asset_class[j].id)[0].correl
+          sheet.rows[i].cells[j].value = @correlation_inputs.where(:correlation_id => @the_correlation.id).where(:asset_class1 => @asset_class[i-1].id).where(:asset_class2 => @asset_class[j-1].id)[0].correl
       end
-      for k in 0...i
+      for k in 1...@length
           sheet.rows[i+@length].cells[0].value = @asset_class[i-1].id
-          sheet.rows[i+ @length].cells[k+1].value = @correlation_inputs.where(:correlation_id => @the_correlation.id).where(:asset_class1 => @asset_class[i-1].id).where(:asset_class2 => @asset_class[k].id)[0].id
+          sheet.rows[i+ @length].cells[k].value = @correlation_inputs.where(:correlation_id => @the_correlation.id).where(:asset_class1 => @asset_class[i-1].id).where(:asset_class2 => @asset_class[k-1].id)[0].id
       end
   end    
         

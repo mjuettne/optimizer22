@@ -3,6 +3,7 @@
 # Table name: portfolios
 #
 #  id             :integer          not null, primary key
+#  benchmark      :integer
 #  name           :string
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null

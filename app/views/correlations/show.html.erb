@@ -31,7 +31,7 @@
 <table class="table table-hover">
  <thead>
     <tr class="table">
-      <th class="table-info" scope="col">Asset Class</th>
+      <th class="table" style = "background-color: #5445FF" scope="col">Asset Class</th>
       <% @asset_class.each do |assetclass| %>
             <th scope="col"><%= assetclass.name %></th>
       <% end %>
@@ -40,8 +40,12 @@
     <tr>
        <th scope="row"> <%= @asset_class[i-1].name%> </th>
     
-        <% for j in 0...i%>
-            <td class="table-light"><%= @list_of_correlation_inputs.where(:correlation_id => @the_correlation.id).where(:asset_class1 => @asset_class[i-1].id).where(:asset_class2 => @asset_class[j].id)[0].correl %></td>
+        <% for j in 1...@length%>
+            <% if @list_of_correlation_inputs.where(:correlation_id => @the_correlation.id).where(:asset_class1 => @asset_class[i-1].id).where(:asset_class2 => @asset_class[j-1].id)[0].correl == 1%>
+            <td class="table" style = "background-color: #5445FF"><%= @list_of_correlation_inputs.where(:correlation_id => @the_correlation.id).where(:asset_class1 => @asset_class[i-1].id).where(:asset_class2 => @asset_class[j-1].id)[0].correl %></td>
+            <% else%>
+            <td class="table" ><%= @list_of_correlation_inputs.where(:correlation_id => @the_correlation.id).where(:asset_class1 => @asset_class[i-1].id).where(:asset_class2 => @asset_class[j-1].id)[0].correl %></td>
+            <% end%>
         <% end %>
      <% end %>     
   </thead>

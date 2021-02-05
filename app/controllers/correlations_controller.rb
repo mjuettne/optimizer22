@@ -34,7 +34,7 @@ class CorrelationsController < ApplicationController
   correlation_id = all_correlations.order('created_at desc')[0].id
   length = asset_class.length.to_i
   length = length +1
-    for i in 1...length
+    for i in 0...length
       for j in 1...i
       the_correlation_input = CorrelationInput.new  
       the_correlation_input.correlation_id = correlation_id
@@ -44,6 +44,17 @@ class CorrelationsController < ApplicationController
       the_correlation_input.save
       end
     end
+    for i in 0...length
+      for j in 1...i
+      the_correlation_input = CorrelationInput.new  
+      the_correlation_input.correlation_id = correlation_id
+      the_correlation_input.asset_class2_id = asset_class[i-1].id
+      the_correlation_input.asset_class1_id = asset_class[j-1].id
+      the_correlation_input.correl = 0.95
+      the_correlation_input.save
+      end
+    end
+    
     for i in 1...length
     the_correlation_input = CorrelationInput.new      
     the_correlation_input.correlation_id = correlation_id
@@ -52,6 +63,7 @@ class CorrelationsController < ApplicationController
     the_correlation_input.correl = 1.0
     the_correlation_input.save
     end
+    
   redirect_to("/correlations", { :notice => "Correlation created successfully." })
   end
   
@@ -98,11 +110,11 @@ class CorrelationsController < ApplicationController
     spreadsheet = (file_ext == ".xls") ? Roo::Excel.new(file.path) : Roo::Excelx.new(file.path)
     # @input = spreadsheet.row(1)
     # render({ :template => "correlations/import.html.erb" })
-    for i in 0...@length
-      for j in 1...i
+    for i in 1...@length
+      for j in 1...@length
           input = spreadsheet.row(i+1)[j]
           input_id = spreadsheet.row(i+1+ @length)[j]
-          the_correlation = CorrelationInput.where({ :id => input_id }).at(0)
+          the_correlation = CorrelationInput.where({:id => input_id }).at(0)
           the_correlation.correl = input
           the_correlation.save
       end
