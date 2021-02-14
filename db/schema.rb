@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_27_211113) do
+ActiveRecord::Schema.define(version: 2021_02_12_204132) do
 
   create_table "asset_classes", force: :cascade do |t|
     t.string "name"
@@ -70,7 +70,7 @@ ActiveRecord::Schema.define(version: 2021_01_27_211113) do
     t.integer "correlation_id"
     t.float "year1_cf"
     t.float "year2_cf"
-    t.string "year3_cf"
+    t.float "year3_cf"
     t.float "year4_cf"
     t.float "year5_cf"
     t.float "year6_cf"
@@ -160,6 +160,38 @@ ActiveRecord::Schema.define(version: 2021_01_27_211113) do
     t.integer "year30_correl_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "name"
+    t.integer "user_id"
+    t.float "year1_exp"
+    t.float "year2_exp"
+    t.float "year3_exp"
+    t.float "year4_exp"
+    t.float "year5_exp"
+    t.float "year6_exp"
+    t.float "year7_exp"
+    t.float "year8_exp"
+    t.float "year9_exp"
+    t.float "year10_exp"
+    t.float "year11_exp"
+    t.float "year12_exp"
+    t.float "year13_exp"
+    t.float "year14_exp"
+    t.float "year15_exp"
+    t.float "year16_exp"
+    t.float "year17_exp"
+    t.float "year18_exp"
+    t.float "year19_exp"
+    t.float "year20_exp"
+    t.float "year21_exp"
+    t.float "year22_exp"
+    t.float "year23_exp"
+    t.float "year24_exp"
+    t.float "year25_exp"
+    t.float "year26_exp"
+    t.float "year27_exp"
+    t.float "year28_exp"
+    t.float "year29_exp"
+    t.float "year30_exp"
   end
 
   create_table "forecasts", force: :cascade do |t|

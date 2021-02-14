@@ -120,8 +120,12 @@ class PortfoliosController < ApplicationController
     the_portfolio.name = params.fetch("query_name")
     the_portfolio.cma_id = Cma.all.where({:name => params.fetch("query_cma")}).at(0).id
     the_portfolio.correlation_id = Correlation.all.where({:name => params.fetch("query_correlation")}).at(0).id
-    the_portfolio.benchmark = AssetClass.all.where({:name => params.fetch("query_benchmark")}).at(0).id
+    query_benchmark = params.fetch("query_benchmark")
+    if query_benchmark == ""
 
+    else
+    the_portfolio.benchmark = AssetClass.all.where({:name => params.fetch("query_benchmark")}).at(0).id
+    end
     if the_portfolio.valid?
       the_portfolio.save
       redirect_to("/portfolios/#{the_portfolio.id}", { :notice => "Portfolio updated successfully."} )

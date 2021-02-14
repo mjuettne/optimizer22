@@ -172,10 +172,12 @@ Rails.application.routes.draw do
   get("/forecasts", { :controller => "forecasts", :action => "index" })
   
   get("/forecasts/:path_id", { :controller => "forecasts", :action => "show" })
+  post("/forecasts/:path_id/calculate", { :controller => "forecasts", :action => "calculate" })
   
   # UPDATE
   
   post("/modify_forecast/:path_id", { :controller => "forecasts", :action => "update" })
+  post("/modify_forecast_settings/:path_id", { :controller => "forecasts", :action => "update_settings" })
   
   # DELETE
   get("/delete_forecast/:path_id", { :controller => "forecasts", :action => "destroy" })

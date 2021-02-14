@@ -74,7 +74,7 @@
   color: #FFFFFF;
 }
 
-.accordion {
+.accordion2 {
   background-color: #39394B;
   color: #FFFFFF;
   cursor: pointer;
@@ -87,7 +87,7 @@
   transition: 0.4s;
 }
 
-.active, .accordion:hover {
+.active, .accordion2:hover {
   background-color: #5445FF; 
 }
 
@@ -190,27 +190,27 @@
 <div class="grid-container">
   <div class="vertical-menu">
     <a href="/" class="active">Home</a>
-    <button class="accordion">Inputs</button>
+    <button class="accordion2">Inputs</button>
      <div class="panel grid-container">   
           <a class="dropdown-item" href="/asset_classes">Asset Classes</a>
           <a class="dropdown-item" href="/cmas">Capital Market Assumptions</a>
           <a class="dropdown-item" href="/correlations">Correlations</a>
      </div>   
-    <button class="accordion">Portfolios</button>
+    <button class="accordion2">Portfolios</button>
     <div class="panel grid-container">
         <a class="dropdown-item active" href="/portfolios">All Portfolios</a>   
            <% @current_user.portfolios.order(name: :asc).each do |a_portfolio| %>
           <a class="dropdown-item" href="/portfolios/<%= a_portfolio.id %>"><%= a_portfolio.name %></a>
           <% end %>
      </div>  
-  <button class="accordion">Frontier Analysis</button>
+  <button class="accordion2">Frontier Analysis</button>
    <div class="panel grid-container">
           <a class="dropdown-item active" href="/frontiers">All Frontiers</a>      
            <% @current_user.frontiers.order(name: :asc).each do |a_frontier| %>
           <a class="dropdown-item" href="/frontiers/<%= a_frontier.id %>"><%= a_frontier.name %></a>
           <% end %>
      </div>
-  <button class="accordion">Forecast Analysis</button>
+  <button class="accordion2">Forecast Analysis</button>
    <div class="panel grid-container">
           <a class="dropdown-item active" href="/forecasts">All Forecasts</a>     
            <% @current_user.forecasts.order(name: :asc).each do |a_forecast| %>
@@ -224,7 +224,7 @@
 <% end %>
  
  <script>
-var acc = document.getElementsByClassName("accordion");
+var acc = document.getElementsByClassName("accordion2");
 var i;
 
 for (i = 0; i < acc.length; i++) {

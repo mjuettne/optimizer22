@@ -39,27 +39,27 @@
               <%end%>
         </select>
       </div>
-      </div>
+    </div>  
       <div class = "form-group "> 
-      <button type="submit" class="btn btn-success">Update Frontier</button>
+            <button type="submit" class="btn btn-success">Update Frontier</button>
         </div>
     </form>
 
 <hr>
 
-<div>
+
 <table class="table table-hover">
 <form action="/frontiers/<%= @the_frontier.id %>/calculate" method="post">
 
       <tr class="table" style = "background-color: #5445FF">
         <th>Name</th>
-        <th>Min</th>
-        <th>Max</th>
-        <th style ="background-color:#39394B; border-bottom: 1px solid #39394B"> </th>
-        <th>Exp Ret</th>
-        <th>Std Dev</th>
-        <th>Skew</th>
-        <th>Kurt</th>
+        <th>Minimum</th>
+        <th>Maximum</th>
+        <th style ="background-color:#5445FF"> </th>
+        <th>Expected Return</th>
+        <th>Standard Deviation</th>
+        <th>Skewness</th>
+        <th>Kurtosis</th>
         <th>Yield</th>
         <th hidden >ID</th>
       </tr>
@@ -99,7 +99,7 @@
         <th>  +  </th>
         <th>Asset Class 3</th>
         <th>   >  </th> 
-        <th> Weight </th> 
+        <th>Weight </th> 
       </tr>
       <tr>
         <td> <input class="form-control" type="number" min="0" max="100" step="1" id="query_left2_constraints1" name="query_left2_constraints1" value = 100>   </td> 
@@ -159,7 +159,7 @@
             </select>
          </td>      
          <td> + </td>
-           <td>         
+         <td>         
             <select type="text" id="query_right_constraints1" name="query_right_constraints1[]" class="form-control">
               <optgroup label="Curren Selection">
               <option>  </option>
@@ -316,36 +316,40 @@
       </tr>
    </table>
     <button type="submit" class="btn btn-lg btn-success">Caclulate Efficient Frontier</button>
-      </form>
-  </div>
+</form>
+ 
+  
 <hr>
 <div class = col-8>
+
+
 <form class="form-group" action="/modify_frontier_assets/<%= @the_frontier.id %>"  method="post" >
-<div class="panel-group" id="accordion">
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <button type = "button" class="btn btn-secondary btn-lg">
+
+  <button type = "button" class="btn btn-lg" style = "background-color: #5445FF">
         <a class = "text-white" data-toggle="collapse" data-parent="#accordion" href="#collapse1">Edit Asset Classes</a>
       </button>
-    </div>
+
+<div class="panel-group" id="accordion">
+ 
+
 <div id="collapse1" class="panel-collapse collapse in">
     <table class="table table-hover">
-      <tr class="table-info">
+      <tr class="table" style = "background-color: #5445FF">
         <th>Name</th>
         <th>Include?</th>
-        <th>Min</th>
-        <th>Max</th>
-        <th style ="background-color:#2C3E50; border-bottom: 1px solid #2C3E50"> </th>
-        <th>Exp Ret</th>
-        <th>Std Dev</th>
-        <th>Skew</th>
-        <th>Kurt</th>
+        <th>Minimum</th>
+        <th>Maximum</th>
+        <th style ="background-color:#5445FF"> </th>
+        <th>Expected Return</th>
+        <th>Standard Deviation</th>
+        <th>Skewness</th>
+        <th>Kurtosis</th>
         <th>Yield</th>
         <th hidden >ID </th>
       </tr>
 
       <% @the_frontier_inputs.each do |input| %>
-      <tr class="table-light">
+      <tr class="table" style = "background-color: #626278">
         <th>  <%= @list_of_asset_classes.where({:id => input.asset_class_id}).at(0).name %> </th>
         
         <td> <% if input.inclusion  == "yes"  %>
@@ -374,5 +378,5 @@
   </div>
 </form>
 </div>
-    </div>
-    
+</div> 
+</div>

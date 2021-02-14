@@ -4,8 +4,32 @@
   </div>
 </div>
 
+
+
 <hr>
-<h4>Add a new Forecast</h4>
+<div class="row">
+  <div class="col-6">
+    <table class="table table-hover">
+      <tr class="table" style = "background-color: #5445FF">
+        <th>Name </th>
+        <th>Details</th>
+        <th>Delete</th>
+      </tr>
+
+      <% @current_user.forecasts.order(name: :asc).each do |a_forecast| %>
+      <tr class="table" >
+        <td> <%= a_forecast.name %>  </td>
+        <td> <a href="/forecasts/<%= a_forecast.id %>"> Show details </a> </td>
+        <td> <a class="text-danger" href="/delete_forecast/<%= a_forecast.id %>">Delete</a> </td>
+      </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+
+
+<hr>
+<h4>Add a New Forecast</h4>
 <div class="row col-12">
   <div class="col-4">
     <form action="/insert_forecast" method="post">
@@ -17,55 +41,153 @@
         <label for="name_box">Name</label>
         <input type="text" id="name_box" name="query_name" class="form-control">
       </div>
-      <input type="submit" value="Create New Forecast" class="btn btn-success btn-lg"> 
-    </form>
-  </div>
+  </div>    
 </div>
 
-<hr>
-<div>
-  <div>
-    <table>
-      <tr>
-        <th>ID</th>
-        <th>User</th>
-        <th>Name</th>
-        <th>Created at</th>
-        <th>Updated at</th>
-        <th> </th>
-      </tr>
-
-      <% @list_of_forecasts.each do |a_forecast| %>
-      <tr>
-        <td>
-          <%= a_forecast.id %>
-        </td>
-
-        <td>
-          <%= a_forecast.user_id %>
-        </td>
-
-        <td>
-          <%= a_forecast.name %>
-        </td>
-
-        <td>
-          <%= time_ago_in_words(a_forecast.created_at) %> ago
-        </td>
-        <td>
-          <%= time_ago_in_words(a_forecast.updated_at) %> ago
-        </td>
-
-        <td>
-          <a href="/forecasts/<%= a_forecast.id %>">
-            Show details
-          </a>
-        </td>
-      </tr>
-      <% end %>
-    </table>
+<div class="row col-12">
+  <div class="col-3">
+      <div class="form-group">
+        <label for="query_starting_value">Starting Value</label>
+   <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">$</span>
+        </div>
+        <input id="query_starting_value" name="query_starting_value" class="form-control" type="number" min="0" step="1000" value = 0> 
+          <div class="input-group-append">
+        <span class="input-group-text">.00</span>
+      </div> 
+      </div>
+     </div> 
   </div>
+  <div class="col-3">    
+      <div class="form-group">
+        <label for="query_income">Annual Income</label>
+      <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">$</span>
+        </div>
+          <input id="query_income" name="query_income" class="form-control" type="number" min="0" step="1000" value = 0>
+          <div class="input-group-append">
+        <span class="input-group-text">.00</span>
+      </div> 
+        </div>
+      </div>  
+  </div>
+  <div class="col-3">    
+      <div class="form-group">
+        <label for="query_spend_value">Annual Expenses</label>
+      <div class="input-group mb-3">
+      <div class="input-group-prepend">
+        <span class="input-group-text">$</span>
+        </div>
+        <input id="query_spend_value" name="query_spend_value" class="form-control" type="number" max="0" step="1000" value = 0>
+         <div class="input-group-append">
+        <span class="input-group-text">.00</span>
+      </div>
+      </div>
+    </div>  
+  </div>      
 </div>
 
-<hr>
+<div class="row col-12">
+  <div class="col-3">
+      <div class="form-group">
+        
+        <label for="query_inflation">Inflation</label>
+        <div class="input-group mb-3">
+        <input id="query_inflation" name="query_inflation" class="form-control" type="number" min="0.01" step="0.01" value = 2.0> 
+      <div class="input-group-append">
+        <span class="input-group-text">%</span>
+      </div> 
+      </div> 
+      </div>
+  </div>
+  <div class="col-3">    
+      <div class="form-group">
+        <label for="query_cma">Capital Market Assumptions</label>
+        <select type="text" id="query_cma" name="query_cma" class="form-control">
+           <optgroup label="Curren Selection">
+          <option> </option>
+          <optgroup label="Capital Market Assumptions">
+              <%@cmas.each do |the_cma|%>
+          <option> <%=the_cma.name%> </option>
+              <%end%>
+        </select>
+
+      </div>
+  </div>
+  <div class="col-3">    
+      <div class="form-group">
+        <label for="query_correlation">Correlation Assumptions</label>
+        <select type="text" id="query_correlation" name="query_correlation" class="form-control">
+           <optgroup label="Curren Selection">
+          <option> </option>
+          <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+          <option> <%=the_correlation.name%> </option>
+              <%end%>
+        </select>
+      </div>
+  </div>      
+</div>
+
+<div class="row col-12">
+  <div class="col-3">
+      <div class="form-group">
+        <label for="query_portfolio1">Portfolio 1</label>
+        <select type="text" id="query_portfolio1" name="query_portfolio1" class="form-control">
+           <optgroup label="Curren Selection">
+          <option> </option>
+          <optgroup label="Portfolios">
+              <%@portfolios.each do |the_portfolio|%>
+          <option> <%=the_portfolio.name%> </option>
+              <%end%>
+        </select>
+      </div>
+  </div>
+  <div class="col-3">    
+      <div class="form-group">
+        <label for="query_weight_port1">Portfolio 1 Weight</label>
+        <div class="input-group mb-3">
+        <input id="query_weight_port1" name="query_weight_port1" class="form-control" type="number" min="0" step="1" value = 50>
+      <div class="input-group-append">
+        <span class="input-group-text">%</span>
+      </div> 
+      </div>
+      </div> 
+  </div>
+
+</div>
+<div class="row col-12">
+  <div class="col-3">
+      <div class="form-group">
+        <label for="query_portfolio2">Portfolio 2</label>
+        <select type="text" id="query_portfolio2" name="query_portfolio2" class="form-control">
+           <optgroup label="Curren Selection">
+          <option> </option>
+          <optgroup label="Portfolios">
+              <%@portfolios.each do |the_portfolio|%>
+          <option> <%=the_portfolio.name%> </option>
+              <%end%>
+        </select>
+      </div>
+  </div>
+  <div class="col-3">    
+      <div class="form-group">
+        <label for="query_weight_port2">Portfolio 2 Weight</label>
+        <div class="input-group mb-3">
+        <input id="query_weight_port2" name="query_weight_port2" class="form-control" type="number" min="0" step="1" value = 50>
+       <div class="input-group-append">
+        <span class="input-group-text">%</span>
+      </div> 
+      </div> 
+      </div>
+  </div>
+
+</div>
+
+  <input type="submit" value="Create New Forecast" class="btn btn-success btn-lg"> 
+</form>
+  
+
 

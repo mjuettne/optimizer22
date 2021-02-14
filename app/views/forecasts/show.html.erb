@@ -1,86 +1,1063 @@
-<div>
-  <div>
-    <h1>
-      Forecast #<%= @the_forecast.id %> details
-    </h1>
+    <h3> <%= @the_forecast.name %> Details </h3>
 
     <div>
-      <div>
-        <a href="/forecasts">
-          Go back
-        </a>
-      </div>
-
-      <div>
-        <a href="/delete_forecast/<%= @the_forecast.id %>">
-          Delete forecast
-        </a>
-      </div>
+      <div> <a href="/forecasts">Go back </a>  </div>
+  
     </div>
 
-    <dl>
-      <dt>
-        User
-      </dt>
-      <dd>
-        <%= @the_forecast.user_id %>
-      </dd>
-
-      <dt>
-        Name
-      </dt>
-      <dd>
-        <%= @the_forecast.name %>
-      </dd>
-
-      <dt>
-        Created at
-      </dt>
-      <dd>
-        <%= time_ago_in_words(@the_forecast.created_at) %> ago
-      </dd>
-
-      <dt>
-        Updated at
-      </dt>
-      <dd>
-        <%= time_ago_in_words(@the_forecast.updated_at) %> ago
-      </dd>
-    </dl>
-  </div>
-</div>
 
 <hr>
 
 
-<div>
-  <div>
-    <h2>
-      Edit forecast
-    </h2>
+<h4>Edit Forecast</h4>
 
+<div class="row col-12">
+  <div class="col-4">
     <form action="/modify_forecast/<%= @the_forecast.id %>"  method="post" >
-      <div>
-        <label for="user_id_box">
-          User
-        </label>
-
-        <input type="text" id="user_id_box" name="query_user_id" value="<%= @the_forecast.user_id %>">
+      <div class="form-group">
+        <input type="text" id="user_id_box" name="query_user_id" hidden value="<%= @the_forecast.user_id %>">
       </div>
-
-      <div>
-        <label for="name_box">
-          Name
-        </label>
-
-        <input type="text" id="name_box" name="query_name" value="<%= @the_forecast.name %>">
+      <div class="form-group">
+        <label for="name_box">Name </label>
+        <input type="text" id="name_box" name="query_name" class="form-control" value="<%= @the_forecast.name %>">
       </div>
-
-      <button>
-        Update forecast
-      </button>
+      <input type="submit" value="Update Forecast" class="btn btn-success btn-lg"> 
     </form>
   </div>
 </div>
 
 <hr>
+
+
+<h4>Forecast Inputs</h4>
+
+<div class = col-8>
+<form action="/forecasts/<%= @the_forecast.id %>/calculate" method="post">
+
+<div class="row col-12">
+ <div class="col-3">
+      <div class="form-group">
+        <label for="query_starting_value">Starting Value</label>
+   <div class="input-group mb-3">
+      <div class="input-group-prepend">
+          <span class="input-group-text">$</span>
+      </div>
+      <input id="query_starting_value" name="query_starting_value" class="form-control" type="number" min="0" step="1000" value = <%= @the_forecast_input.starting_value.round(0)%> > 
+      <div class="input-group-append">
+          <span class="input-group-text">.00</span>
+       </div> 
+    </div>
+  </div> 
+  </div>
+  
+  <div class="col-3">
+      <div class="form-group">
+        <label for="query_portfolio1">Portfolio 1</label>
+        <input type="text" id="query_portfolio1" name="query_portfolio1" class="form-control" value = "<%= Portfolio.all.where({:id => @the_forecast_input.portfolio1_id}).at(0).name%>">
+       </div>
+  </div>
+   <div class="col-3">
+      <div class="form-group">
+        <label for="query_portfolio2">Portfolio 2</label>
+        <input type="text" id="query_portfolio2" name="query_portfolio2" class="form-control" value = "<%= Portfolio.all.where({:id => @the_forecast_input.portfolio2_id}).at(0).name%>">
+       </div>
+  </div>
+</div>
+<table class="table table-hover">
+   <tr class="table" style = "background-color: #5445FF">
+        <th>Year</th>
+        <th>Income</th>
+        <th>Expense</th>
+        <th>Capital Market Assumptions</th>
+        <th>Correlation Assumptions</th>
+    </tr>
+    <tr class="table" >
+        <td> Year 1 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year1" value = <%= @the_forecast_input.year1_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year1" value = <%= @the_forecast_input.year1_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year1" value = "<%= @cmas.where({:id => @the_forecast_input.year1_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year1" value = "<%= @correlations.where({:id => @the_forecast_input.year1_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 2 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year2" value = <%= @the_forecast_input.year2_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year2" value = <%= @the_forecast_input.year2_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year2"  value = "<%= @cmas.where({:id => @the_forecast_input.year2_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year2" value = "<%= @correlations.where({:id => @the_forecast_input.year2_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 3 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year3" value = <%= @the_forecast_input.year3_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year3" value = <%= @the_forecast_input.year3_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year3"  value = "<%= @cmas.where({:id => @the_forecast_input.year3_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year3" value = "<%= @correlations.where({:id => @the_forecast_input.year3_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 4 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year4" value = <%= @the_forecast_input.year4_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year4" value = <%= @the_forecast_input.year4_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year4" value = "<%= @cmas.where({:id => @the_forecast_input.year4_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year4" value = "<%= @correlations.where({:id => @the_forecast_input.year4_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 5 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year5" value = <%= @the_forecast_input.year5_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year5" value = <%= @the_forecast_input.year5_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year5" value = "<%= @cmas.where({:id => @the_forecast_input.year5_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year5" value = "<%= @correlations.where({:id => @the_forecast_input.year5_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 6 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year6" value = <%= @the_forecast_input.year6_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year6" value = <%= @the_forecast_input.year6_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year6" value = "<%= @cmas.where({:id => @the_forecast_input.year6_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year6" value = "<%= @correlations.where({:id => @the_forecast_input.year6_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 7 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year7" value = <%= @the_forecast_input.year7_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year7" value = <%= @the_forecast_input.year7_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year7" value = "<%= @cmas.where({:id => @the_forecast_input.year7_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year7" value = "<%= @correlations.where({:id => @the_forecast_input.year7_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 8 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year8" value = <%= @the_forecast_input.year8_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year8" value = <%= @the_forecast_input.year8_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year8" value = "<%= @cmas.where({:id => @the_forecast_input.year8_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year8" value = "<%= @correlations.where({:id => @the_forecast_input.year8_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 9 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year9" value = <%= @the_forecast_input.year9_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year9" value = <%= @the_forecast_input.year9_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year9" value = "<%= @cmas.where({:id => @the_forecast_input.year9_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year9" value = "<%= @correlations.where({:id => @the_forecast_input.year9_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 10 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year10" value = <%= @the_forecast_input.year10_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year10" value = <%= @the_forecast_input.year10_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year10" value = "<%= @cmas.where({:id => @the_forecast_input.year10_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year10" value = "<%= @correlations.where({:id => @the_forecast_input.year10_correl_id}).at(0).name %>"> </td>
+    </tr>
+        <tr class="table" >
+        <td> Year 11 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year11" value = <%= @the_forecast_input.year11_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year11" value = <%= @the_forecast_input.year11_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year11" value = "<%= @cmas.where({:id => @the_forecast_input.year11_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year11" value = "<%= @correlations.where({:id => @the_forecast_input.year11_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 12 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year12" value = <%= @the_forecast_input.year12_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year12" value = <%= @the_forecast_input.year12_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year12" value = "<%= @cmas.where({:id => @the_forecast_input.year12_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year12" value = "<%= @correlations.where({:id => @the_forecast_input.year12_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 13 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year13" value = <%= @the_forecast_input.year13_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year13" value = <%= @the_forecast_input.year13_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year13" value = "<%= @cmas.where({:id => @the_forecast_input.year13_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year13" value = "<%= @correlations.where({:id => @the_forecast_input.year13_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 14 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year14" value = <%= @the_forecast_input.year14_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year14" value = <%= @the_forecast_input.year14_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year14" value = "<%= @cmas.where({:id => @the_forecast_input.year14_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year14" value = "<%= @correlations.where({:id => @the_forecast_input.year14_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 15 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year15" value = <%= @the_forecast_input.year15_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year15" value = <%= @the_forecast_input.year15_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year15" value = "<%= @cmas.where({:id => @the_forecast_input.year15_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year15" value = "<%= @correlations.where({:id => @the_forecast_input.year15_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 16 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year16" value = <%= @the_forecast_input.year16_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year16" value = <%= @the_forecast_input.year16_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year16" value = "<%= @cmas.where({:id => @the_forecast_input.year16_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year16" value = "<%= @correlations.where({:id => @the_forecast_input.year16_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 17 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year17" value = <%= @the_forecast_input.year17_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year17" value = <%= @the_forecast_input.year17_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year17" value = "<%= @cmas.where({:id => @the_forecast_input.year17_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year17" value = "<%= @correlations.where({:id => @the_forecast_input.year17_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 18 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year18" value = <%= @the_forecast_input.year18_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year18" value = <%= @the_forecast_input.year18_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year18" value = "<%= @cmas.where({:id => @the_forecast_input.year18_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year18" value = "<%= @correlations.where({:id => @the_forecast_input.year18_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 19 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year19" value = <%= @the_forecast_input.year19_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year19" value = <%= @the_forecast_input.year19_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year19" value = "<%= @cmas.where({:id => @the_forecast_input.year19_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year19" value = "<%= @correlations.where({:id => @the_forecast_input.year19_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 20 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year20" value = <%= @the_forecast_input.year20_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year20" value = <%= @the_forecast_input.year20_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year20" value = "<%= @cmas.where({:id => @the_forecast_input.year20_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year20" value = "<%= @correlations.where({:id => @the_forecast_input.year20_correl_id}).at(0).name %>"> </td>
+    </tr>
+       </tr>
+        <tr class="table" >
+        <td> Year 21 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year21" value = <%= @the_forecast_input.year21_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year21" value = <%= @the_forecast_input.year21_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year21" value = "<%= @cmas.where({:id => @the_forecast_input.year21_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year21" value = "<%= @correlations.where({:id => @the_forecast_input.year21_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 22 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year22" value = <%= @the_forecast_input.year22_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year22" value = <%= @the_forecast_input.year22_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year22" value = "<%= @cmas.where({:id => @the_forecast_input.year22_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year22" value = "<%= @correlations.where({:id => @the_forecast_input.year22_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 23 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year23" value = <%= @the_forecast_input.year23_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year23" value = <%= @the_forecast_input.year23_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year23" value = "<%= @cmas.where({:id => @the_forecast_input.year23_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year23" value = "<%= @correlations.where({:id => @the_forecast_input.year23_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 24 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year24" value = <%= @the_forecast_input.year24_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year24" value = <%= @the_forecast_input.year24_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year24" value = "<%= @cmas.where({:id => @the_forecast_input.year24_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year24" value = "<%= @correlations.where({:id => @the_forecast_input.year24_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 25 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year25" value = <%= @the_forecast_input.year25_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year25" value = <%= @the_forecast_input.year25_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year25" value = "<%= @cmas.where({:id => @the_forecast_input.year25_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year25" value = "<%= @correlations.where({:id => @the_forecast_input.year25_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 26 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year26" value = <%= @the_forecast_input.year26_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year26" value = <%= @the_forecast_input.year26_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year26" value = "<%= @cmas.where({:id => @the_forecast_input.year26_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year26" value = "<%= @correlations.where({:id => @the_forecast_input.year26_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 27 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year27" value = <%= @the_forecast_input.year27_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year27" value = <%= @the_forecast_input.year27_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year27" value = "<%= @cmas.where({:id => @the_forecast_input.year27_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year27" value = "<%= @correlations.where({:id => @the_forecast_input.year27_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 28 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year28" value = <%= @the_forecast_input.year28_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year28" value = <%= @the_forecast_input.year28_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year28" value = "<%= @cmas.where({:id => @the_forecast_input.year28_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year28" value = "<%= @correlations.where({:id => @the_forecast_input.year28_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td> Year 29 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year29" value = <%= @the_forecast_input.year29_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year29" value = <%= @the_forecast_input.year29_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year29" value = "<%= @cmas.where({:id => @the_forecast_input.year29_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year29" value = "<%= @correlations.where({:id => @the_forecast_input.year29_correl_id}).at(0).name %>"> </td>
+    </tr>
+    <tr class="table" >
+        <td > Year 30 </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_income_year30" value = <%= @the_forecast_input.year30_cf.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="number"  name="query_expense_year30" value = <%= @the_forecast_input.year30_exp.round(0) %>> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_cma_year30" value = "<%= @cmas.where({:id => @the_forecast_input.year30_cma_id}).at(0).name %>"> </td>
+        <td><input class="form-control" readonly="" type="text"  name="query_correlation_year30" value = "<%= @correlations.where({:id => @the_forecast_input.year30_correl_id}).at(0).name %>"> </td>
+    </tr>                                   
+  </table> 
+        <button type="submit" class="btn btn-lg btn-success">Run Forecast</button>   
+ </form>     
+
+</div>
+<hr>
+<div class = col-8>
+<form class="form-group" action="/modify_forecast_settings/<%= @the_forecast.id %>"  method="post" >
+<div class="panel-group" id="accordion">
+  <%# <div class="panel panel-default">
+    <div class="panel-heading"> %>
+      <button type = "button" style = "background-color: #5445FF" class="btn btn-lg">
+        <a class = "text-white" data-toggle="collapse" data-parent="#accordion" href="#collapse1">Edit Forecast Settings</a>
+      </button>
+</div>
+
+<div id="collapse1" class="panel-collapse collapse in">
+  <table class="table table-hover">
+      <tr class="table" style = "background-color: #5445FF">
+            <th>Year</th>
+            <th>Income</th>
+            <th>Expense</th>
+            <th>Capital Market Assumptions</th>
+            <th>Correlation Assumptions</th>
+        </tr>
+      <tr class="table" >
+        <td> Year 1 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year1" value = <%= @the_forecast_input.year1_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year1" value = <%= @the_forecast_input.year1_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year1" name="query_cma_year1" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year1_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year1" name="query_correlation_year1" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year1_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>
+      <tr class="table" >
+        <td> Year 2 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year2" value = <%= @the_forecast_input.year2_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year2" value = <%= @the_forecast_input.year2_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year2" name="query_cma_year2" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year2_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year2" name="query_correlation_year2" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year2_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>
+      <tr class="table" >
+        <td> Year 3 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year3" value = <%= @the_forecast_input.year3_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year3" value = <%= @the_forecast_input.year3_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year3" name="query_cma_year3" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year3_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year3" name="query_correlation_year3" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year3_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>
+      <tr class="table" >
+        <td> Year 4 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year4" value = <%= @the_forecast_input.year4_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year4" value = <%= @the_forecast_input.year4_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year4" name="query_cma_year4" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year4_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year4" name="query_correlation_year4" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year4_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>
+      <tr class="table" >
+        <td> Year 5 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year5" value = <%= @the_forecast_input.year5_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year5" value = <%= @the_forecast_input.year5_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year5" name="query_cma_year5" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year5_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year5" name="query_correlation_year5" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year5_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>
+      <tr class="table" >
+        <td> Year 6 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year6" value = <%= @the_forecast_input.year6_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year6" value = <%= @the_forecast_input.year6_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year6" name="query_cma_year6" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year6_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year6" name="query_correlation_year6" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year6_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>
+      <tr class="table" >
+        <td> Year 7 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year7" value = <%= @the_forecast_input.year7_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year7" value = <%= @the_forecast_input.year7_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year7" name="query_cma_year7" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year7_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year7" name="query_correlation_year7" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year7_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>  
+      <tr class="table" >
+        <td> Year 8 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year8" value = <%= @the_forecast_input.year8_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year8" value = <%= @the_forecast_input.year8_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year8" name="query_cma_year8" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year8_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year8" name="query_correlation_year8" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year8_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>   
+      <tr class="table" >
+        <td> Year 9 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year9" value = <%= @the_forecast_input.year9_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year9" value = <%= @the_forecast_input.year9_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year9" name="query_cma_year9" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year9_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year9" name="query_correlation_year9" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year9_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>
+      <tr class="table" >
+        <td> Year 10 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year10" value = <%= @the_forecast_input.year10_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year10" value = <%= @the_forecast_input.year10_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year10" name="query_cma_year10" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year10_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year10" name="query_correlation_year10" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year10_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>   
+      <tr class="table" >
+        <td> Year 11 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year11" value = <%= @the_forecast_input.year11_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year11" value = <%= @the_forecast_input.year11_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year11" name="query_cma_year11" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year11_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year11" name="query_correlation_year11" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year11_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>   
+      <tr class="table" >
+        <td> Year 12 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year12" value = <%= @the_forecast_input.year12_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year12" value = <%= @the_forecast_input.year12_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year12" name="query_cma_year12" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year12_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year12" name="query_correlation_year12" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year12_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>
+      <tr class="table" >
+        <td> Year 13 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year13" value = <%= @the_forecast_input.year13_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year13" value = <%= @the_forecast_input.year13_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year13" name="query_cma_year13" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year13_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year13" name="query_correlation_year13" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year13_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr> 
+      <tr class="table" >
+        <td> Year 14 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year14" value = <%= @the_forecast_input.year14_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year14" value = <%= @the_forecast_input.year14_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year14" name="query_cma_year14" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year14_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year14" name="query_correlation_year14" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year14_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>  
+      <tr class="table" >
+        <td> Year 15 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year15" value = <%= @the_forecast_input.year15_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year15" value = <%= @the_forecast_input.year15_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year15" name="query_cma_year15" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year15_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year15" name="query_correlation_year15" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year15_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>
+      <tr class="table" >
+        <td> Year 16 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year16" value = <%= @the_forecast_input.year16_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year16" value = <%= @the_forecast_input.year16_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year16" name="query_cma_year16" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year16_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year16" name="query_correlation_year16" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year16_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr> 
+      <tr class="table" >
+        <td> Year 17 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year17" value = <%= @the_forecast_input.year17_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year17" value = <%= @the_forecast_input.year17_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year17" name="query_cma_year17" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year17_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year17" name="query_correlation_year17" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year17_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>  
+      <tr class="table" >
+        <td> Year 18 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year18" value = <%= @the_forecast_input.year18_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year18" value = <%= @the_forecast_input.year18_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year18" name="query_cma_year18" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year18_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year18" name="query_correlation_year18" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year18_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr> 
+      <tr class="table" >
+        <td> Year 19 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year19" value = <%= @the_forecast_input.year19_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year19" value = <%= @the_forecast_input.year19_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year19" name="query_cma_year19" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year19_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year19" name="query_correlation_year19" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year19_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr> 
+      <tr class="table" >
+        <td> Year 20 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year20" value = <%= @the_forecast_input.year20_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year20" value = <%= @the_forecast_input.year20_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year20" name="query_cma_year20" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year20_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year20" name="query_correlation_year20" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year20_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>
+      <tr class="table" >
+        <td> Year 21 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year21" value = <%= @the_forecast_input.year21_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year21" value = <%= @the_forecast_input.year21_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year21" name="query_cma_year21" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year21_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year21" name="query_correlation_year21" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year21_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>
+      <tr class="table" >
+        <td> Year 22 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year22" value = <%= @the_forecast_input.year22_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year22" value = <%= @the_forecast_input.year22_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year22" name="query_cma_year22" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year22_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year22" name="query_correlation_year22" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year22_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr> 
+      <tr class="table" >
+        <td> Year 23 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year23" value = <%= @the_forecast_input.year23_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year23" value = <%= @the_forecast_input.year23_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year23" name="query_cma_year23" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year23_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year23" name="query_correlation_year23" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year23_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>
+      <tr class="table" >
+        <td> Year 24 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year24" value = <%= @the_forecast_input.year24_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year24" value = <%= @the_forecast_input.year24_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year24" name="query_cma_year24" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year24_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year24" name="query_correlation_year24" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year24_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr> 
+      <tr class="table" >
+        <td> Year 25 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year25" value = <%= @the_forecast_input.year25_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year25" value = <%= @the_forecast_input.year25_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year25" name="query_cma_year25" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year25_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year25" name="query_correlation_year25" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year25_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr> 
+      <tr class="table" >
+        <td> Year 26 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year26" value = <%= @the_forecast_input.year26_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year26" value = <%= @the_forecast_input.year26_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year26" name="query_cma_year26" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year26_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year26" name="query_correlation_year26" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year26_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>
+      <tr class="table" >
+        <td> Year 27 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year27" value = <%= @the_forecast_input.year27_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year27" value = <%= @the_forecast_input.year27_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year27" name="query_cma_year27" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year27_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year27" name="query_correlation_year27" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year27_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr> 
+      <tr class="table" >
+        <td> Year 28 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year28" value = <%= @the_forecast_input.year28_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year28" value = <%= @the_forecast_input.year28_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year28" name="query_cma_year28" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year28_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year28" name="query_correlation_year28" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year28_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>
+      <tr class="table" >
+        <td> Year 29 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year29" value = <%= @the_forecast_input.year29_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year29" value = <%= @the_forecast_input.year29_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year29" name="query_cma_year29" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year29_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year29" name="query_correlation_year29" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year29_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>
+      <tr class="table" >
+        <td> Year 30 </td>
+        <td><input class="form-control" type="number" min="0" step="1000"  name="query_income_year30" value = <%= @the_forecast_input.year30_cf %>> </td>
+        <td><input class="form-control" type="number" max="0" step="1000" name="query_expense_year30" value = <%= @the_forecast_input.year30_exp %>> </td>
+        <td> 
+          <select type="text" id="query_cma_year30" name="query_cma_year30" class="form-control">
+            <optgroup label="Curren Selection">
+              <option> <%= @cmas.where({:id => @the_forecast_input.year30_cma_id}).at(0).name %> </option>
+            <optgroup label="Capital Market Assumptions">
+                <%@cmas.each do |the_cma|%>
+            <option> <%=the_cma.name%> </option>
+                <%end%>
+          </select>
+        </td>
+        <td>
+          <select type="text" id="query_correlation_year30" name="query_correlation_year30" class="form-control">
+           <optgroup label="Curren Selection">
+              <option><%= @correlations.where({:id => @the_forecast_input.year30_correl_id}).at(0).name %> </option>
+            <optgroup label="Correlation Assumptions">
+              <%@correlations.each do |the_correlation|%>
+            <option> <%=the_correlation.name%> </option>
+              <%end%>
+          </select>
+        </td>
+      </tr>                                             
+    </table>   
+    <button type="submit" class="btn btn-success">Update Forecast Settings</button>
+ </div>    
+ </form> 

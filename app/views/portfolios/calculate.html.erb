@@ -143,50 +143,67 @@ var data = <%=  JSON.parse(@python_simulation.fetch("returns_year1").to_json) %>
 
 <div class = "right col-6">
 
-<canvas id="myChart" width="200" height="200"></canvas>
+<canvas id="mixedChart" width="200" height="200"></canvas>
 <script>
-var ctx = document.getElementById('myChart').getContext('2d');
-var myBubbleChart = new Chart(ctx, {
+var ctx = document.getElementById('mixedChart').getContext('2d');
+var mixedChart = new Chart(ctx, {
     type: 'bubble',
     data: {
-        datasets: [{
-            label: 'Return vs. CVAR (5%)',
+        label: 'Portfolio',
+        datasets: [
+          {
+            type: 'bubble',
+            label: 'Portfolio',
             data: [{
-                    type: 'bubble',
                     x: <%= -1*(@python_simulation.fetch("CVAR_year1")*100).round(1) %>,
                     y: <%= (((@python_simulation.fetch("dollar_50th")[0])/1000000)*100 -100).round(1) %>,
                     r: 15
-                }, {
+                    }],
+            backgroundColor: "#5445FF",        
+            order: 1}, 
+          { 
+            type: 'bubble',
+            label: 'Benchmark',    
+            data: [{    
                     x: <%= -1*(@python_simulation.fetch("bench_CVAR")[0]*100).round(1) %>,
                     y: <%= (((@python_simulation.fetch("bench_dollar_50th")[0])/1000000)*100 -100).round(1) %>,
                     r: 15
-                }],
-            
-            backgroundColor: [
-                            '#5445FF',
-                            '#ABADBF'
-                      ]
-            }]          
-    },
+                    }],
+            backgroundColor: "#ABADBF", 
+            order: 2}]},     
     options: {
+        legend: {
+             labels: {
+                  fontColor: "#FFFFFF"
+                 }
+              },
         scales: {
             xAxes: [{
+                  scaleLabel: {
+                            display: true,
+                            fontColor: "#FFFFFF",
+                            labelString: 'CVAR (5%)'},
                   ticks: {
+                    fontColor: "#FFFFFF",
                     min: <%= [-1*(@python_simulation.fetch("bench_CVAR")[0]*100).round(0) - 1,  -1*(@python_simulation.fetch("CVAR_year1")*100).round(0)  - 1 ].min %>,
                     max: <%= [-1*(@python_simulation.fetch("bench_CVAR")[0]*100).round(0) + 1,  -1*(@python_simulation.fetch("CVAR_year1")*100).round(0)  + 1 ].max %>
-                }
-            }],
+                          }
+                    }],
             yAxes: [{
+                  scaleLabel: {
+                            display: true,
+                            fontColor: "#FFFFFF",
+                            labelString: 'RETURN'},
+                                  
                   ticks: {
+                    fontColor: "#FFFFFF",
                     min: <%= [ (((@python_simulation.fetch("bench_dollar_50th")[0])/1000000)*100 -100).round(0)  - 1, (((@python_simulation.fetch("dollar_50th")[0])/1000000)*100 -100).round(0)  - 1].min %>,
                     max: <%= [ (((@python_simulation.fetch("bench_dollar_50th")[0])/1000000)*100 -100).round(0) + 1, (((@python_simulation.fetch("dollar_50th")[0])/1000000)*100 -100).round(0) + 1].max %>
-                }
-            }]
-            
-
-        }
-        
-    }
+                          }
+                          
+                    }]
+                  }
+              }
 });
 </script>
 </div>
@@ -496,125 +513,5 @@ var data = <%=  JSON.parse(@python_simulation.fetch("dollar_50th").to_json) %>;
         )
 
 )
-
-</script>
-<div class = "right col-6" id="my_dataviz2"></div>
-
-
-<script>
-
-// set the dimensions and margins of the graph
-var margin = {top: 7, right: 10, bottom: 90, left: 50},
-    width = 700 - margin.left - margin.right,
-    height = 750 - margin.top - margin.bottom;
-
-// append the svg object to the body of the page
-var Svg = d3.select("#my_dataviz2")
-  .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")")
-
-
-
-//Read the data
-// get the data
-var data = <%= [ [(((@python_simulation.fetch("dollar_50th")[0])/1000000)*100 -100).round(1), -1*(@python_simulation.fetch("CVAR_year1")*100).round(1) ],
-                 [(((@python_simulation.fetch("bench_dollar_50th")[0])/1000000)*100 -100).round(1), -1*(@python_simulation.fetch("bench_CVAR")[0]*100).round(1) ]]  %>;
-
-
-  // Add X axis
-  var x = d3.scaleLinear()
-    .domain([<%= [-1*(@python_simulation.fetch("CVAR_year1")*100).round(0),-1*(@python_simulation.fetch("bench_CVAR")[0]*100).round(0) ].min - 1%>, <%= 1 + [-1*(@python_simulation.fetch("CVAR_year1")*100).round(0),-1*(@python_simulation.fetch("bench_CVAR")[0]*100).round(0) ].max %> ])
-    .range([ 0, width ])
-  Svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x).tickSize(-height*1.3).ticks(10))
-    .selectAll("text")
-      .style("font-size", 15)
-      .style("fill", "#FFFFFF")
-    .select(".domain").remove()
-
-  
-  // Add Y axis
-  var y = d3.scaleLinear()
-    .domain([<%= [(((@python_simulation.fetch("dollar_50th")[0])/1000000)*100 -100).round(0),(((@python_simulation.fetch("bench_dollar_50th")[0])/1000000)*100 -100).round(0) ].min - 1%>, <%= 1 + [(((@python_simulation.fetch("dollar_50th")[0])/1000000)*100 -100).round(0),(((@python_simulation.fetch("bench_dollar_50th")[0])/1000000)*100 -100).round(0) ].max %> ])
-    .range([ height, 0])
-    .nice()
-  Svg.append("g")
-    .call(d3.axisLeft(y).tickSize(-width*1.3).ticks(10))
-    .selectAll("text")
-      .style("font-size", 15)
-      .style("fill", "#FFFFFF")
-    .select(".domain").remove()
-        
-    
-
-  // Customization
-  Svg.selectAll(".tick line").attr("stroke", "#EBEBEB")
-
-  // Add X axis label:
-  Svg.append("text")
-      .attr("text-anchor", "end")
-      .attr("x", width)
-      .attr("y", height + margin.top + 20)
-      .text("CVAR (5%)")
-      .style("fill", "white");
-
-  // Y axis label:
-  Svg.append("text")
-      .attr("text-anchor", "end")
-      .attr("transform", "rotate(-90)")
-      .attr("y", -margin.left+20)
-      .attr("x", -margin.top)
-      .text("Return")
-      .style("fill", "white");
-
-  // Color scale: give me a specie name, I return a color
-  var color = d3.scaleOrdinal()
-    .range([ "#5445FF", "#ABADBF"])
-
-  // Add dots
-  Svg.append('g')
-    .selectAll("dot")
-    .data(data)
-    .enter()
-    .append("circle")
-      .attr("cx", function (d) { return x(d[1]); })
-      .attr("cy", function (d) { return y(d[0]); } )
-      .attr("r", 10)
-      .style("fill", function (d) { return color(d) } );
-
-  // Add Legend
-  Svg.append('g')
-    .append("circle")
-      .attr("cx",550)
-      .attr("cy",700)
-      .attr("r", 6)
-      .style("fill", "#5445FF")
-  Svg.append('g')
-    .append("circle")
-      .attr("cx",550)
-      .attr("cy",720)
-      .attr("r", 6)
-      .style("fill", "#ABADBF")
-  Svg.append('g')
-    .append("text")
-      .attr("x",570)
-      .attr("y",705)
-      .text("Portfolio")
-      .style("font-size", "15px")
-      .style("fill", "#5445FF")
-  Svg.append('g')
-    .append("text")
-      .attr("x",570)
-      .attr("y",725)
-      .text("Benchmark")
-      .style("font-size", "15px")
-      .style("fill", "#ABADBF")
-    
-
 
 </script>
