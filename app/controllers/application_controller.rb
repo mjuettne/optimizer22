@@ -22,4 +22,8 @@ class ApplicationController < ActionController::Base
   number_to_currency(number, :unit => "R$ ", :separator => ",", :delimiter => ".")
 end
 
+def number_to_currency(number, options = {})
+  delegate_number_helper_method(:number_to_currency, number, options)
+end
+
 end

@@ -158,8 +158,49 @@
         </select>
       </div>
   </div>
+  <div class="col-3">
+      <div class="form-group">
+        <label for="query_portfolio2">Portfolio 3</label>
+        <select type="text" id="query_portfolio3" name="query_portfolio3" class="form-control">
+           <optgroup label="Curren Selection">
+          <option> </option>
+          <optgroup label="Portfolios">
+              <%@portfolios.each do |the_portfolio|%>
+          <option> <%=the_portfolio.name%> </option>
+              <%end%>
+        </select>
+      </div>
+  </div>
 </div>
+<div class="row col-12">
+  <div class="col-3">
+      <div class="form-group">
+        <label for="query_portfolio2">Portfolio 4</label>
+        <select type="text" id="query_portfolio4" name="query_portfolio4" class="form-control">
+           <optgroup label="Curren Selection">
+          <option> </option>
+          <optgroup label="Portfolios">
+              <%@portfolios.each do |the_portfolio|%>
+          <option> <%=the_portfolio.name%> </option>
+              <%end%>
+        </select>
+      </div>
+   </div>  
 
+     <div class="col-3">
+      <div class="form-group">
+        <label for="query_portfolio2">Portfolio 5</label>
+        <select type="text" id="query_portfolio5" name="query_portfolio5" class="form-control">
+           <optgroup label="Curren Selection">
+          <option> </option>
+          <optgroup label="Portfolios">
+              <%@portfolios.each do |the_portfolio|%>
+          <option> <%=the_portfolio.name%> </option>
+              <%end%>
+        </select>
+      </div>
+   </div>   
+  </div>
 
   <input type="submit" value="Create New Forecast" class="btn btn-success btn-lg"> 
 </form>

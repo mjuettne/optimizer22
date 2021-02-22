@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_12_204132) do
+ActiveRecord::Schema.define(version: 2021_02_22_014811) do
 
   create_table "asset_classes", force: :cascade do |t|
     t.string "name"
@@ -192,6 +192,9 @@ ActiveRecord::Schema.define(version: 2021_02_12_204132) do
     t.float "year28_exp"
     t.float "year29_exp"
     t.float "year30_exp"
+    t.integer "portfolio3_id"
+    t.integer "portfolio4_id"
+    t.integer "portfolio5_id"
   end
 
   create_table "forecasts", force: :cascade do |t|

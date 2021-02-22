@@ -372,6 +372,7 @@ port_year_28 = weights_port.dot(port_sample28)/100*100
 port_year_29 = weights_port.dot(port_sample29)/100*100
 port_year_30 = weights_port.dot(port_sample30)/100*100
 
+port_dollar0 = starting_value*(1+ port_year_1*0)
 port_dollar1 = (starting_value + income[0] + expense[0])*(1 + port_year_1)
 port_dollar2 = (np.maximum(zeros, (port_dollar1 + income[1] + expense[1] )))*(1 + port_year_2)
 port_dollar3 = (np.maximum(zeros, (port_dollar2 + income[2] + expense[2])))*(1 + port_year_3)
@@ -404,7 +405,7 @@ port_dollar29 = (np.maximum(zeros, (port_dollar28 + income[28] + expense[28])))*
 port_dollar30 = (np.maximum(zeros, (port_dollar29 + income[29] + expense[29])))*(1 + port_year_30)
 
 
-d = np.stack((port_dollar1, port_dollar2, port_dollar3, port_dollar4, port_dollar5, port_dollar6, port_dollar7, port_dollar8, port_dollar9, port_dollar10,
+d = np.stack((port_dollar0, port_dollar1, port_dollar2, port_dollar3, port_dollar4, port_dollar5, port_dollar6, port_dollar7, port_dollar8, port_dollar9, port_dollar10,
               port_dollar11, port_dollar12, port_dollar13, port_dollar14, port_dollar15, port_dollar16, port_dollar17, port_dollar18, port_dollar19, port_dollar20,
               port_dollar21, port_dollar22, port_dollar23, port_dollar24, port_dollar25, port_dollar26, port_dollar27, port_dollar28, port_dollar29, port_dollar30), axis = 0)
 sim_paths = np.transpose(d)

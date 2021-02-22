@@ -79,6 +79,9 @@
 #  forecast_id      :integer
 #  portfolio1_id    :integer
 #  portfolio2_id    :integer
+#  portfolio3_id    :integer
+#  portfolio4_id    :integer
+#  portfolio5_id    :integer
 #  user_id          :integer
 #  year10_cma_id    :integer
 #  year10_correl_id :integer
