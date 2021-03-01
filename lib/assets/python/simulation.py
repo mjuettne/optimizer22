@@ -140,6 +140,28 @@ bench_dollar8 = 1000000*((1 + bench_year_1)*(1 + bench_year_2)*(1 + bench_year_3
 bench_dollar9 = 1000000*((1 + bench_year_1)*(1 + bench_year_2)*(1 + bench_year_3)*(1 + bench_year_4)*(1 + bench_year_5)*(1 + bench_year_6)*(1 + bench_year_7)*(1 + bench_year_8)*(1 + bench_year_9)) 
 bench_dollar10 = 1000000*((1 + bench_year_1)*(1 + bench_year_2)*(1 + bench_year_3)*(1 + bench_year_4)*(1 + bench_year_5)*(1 + bench_year_6)*(1 + bench_year_7)*(1 + bench_year_8)*(1 + bench_year_9)*(1 + bench_year_10)) 
 
+dollar1_average = np.mean(dollar1)
+dollar2_average = np.mean(dollar2)
+dollar3_average = np.mean(dollar3)
+dollar4_average = np.mean(dollar4)
+dollar5_average = np.mean(dollar5)
+dollar6_average = np.mean(dollar6)
+dollar7_average = np.mean(dollar7)
+dollar8_average = np.mean(dollar8)
+dollar9_average = np.mean(dollar9)
+dollar10_average = np.mean(dollar10)
+
+bench_dollar1_average = np.mean(bench_dollar1)
+bench_dollar2_average = np.mean(bench_dollar2)
+bench_dollar3_average = np.mean(bench_dollar3)
+bench_dollar4_average = np.mean(bench_dollar4)
+bench_dollar5_average = np.mean(bench_dollar5)
+bench_dollar6_average = np.mean(bench_dollar6)
+bench_dollar7_average = np.mean(bench_dollar7)
+bench_dollar8_average = np.mean(bench_dollar8)
+bench_dollar9_average = np.mean(bench_dollar9)
+bench_dollar10_average = np.mean(bench_dollar10)
+
 dollar1_50th = np.percentile(dollar1, 50)
 dollar2_50th = np.percentile(dollar2, 50)
 dollar3_50th = np.percentile(dollar3, 50)
@@ -206,10 +228,12 @@ bench_dollar8_10th = np.percentile(bench_dollar8, 10)
 bench_dollar9_10th = np.percentile(bench_dollar9, 10)
 bench_dollar10_10th = np.percentile(bench_dollar10, 10)
 
+dollar_average = [dollar1_average, dollar2_average, dollar3_average, dollar4_average, dollar5_average, dollar6_average, dollar7_average, dollar8_average, dollar9_average, dollar10_average]
 dollar_50th = [dollar1_50th, dollar2_50th, dollar3_50th, dollar4_50th, dollar5_50th, dollar6_50th, dollar7_50th, dollar8_50th, dollar9_50th, dollar10_50th]
 dollar_90th = [dollar1_90th, dollar2_90th, dollar3_90th, dollar4_90th, dollar5_90th, dollar6_90th, dollar7_90th, dollar8_90th, dollar9_90th, dollar10_90th]
 dollar_10th = [dollar1_10th, dollar2_10th, dollar3_10th, dollar4_10th, dollar5_10th, dollar6_10th, dollar7_10th, dollar8_10th, dollar9_10th, dollar10_10th]
 
+bench_dollar_average = [bench_dollar1_average, bench_dollar2_average, bench_dollar3_average, bench_dollar4_average, bench_dollar5_average, bench_dollar6_average, bench_dollar7_average, bench_dollar8_average, bench_dollar9_average, bench_dollar10_average]
 bench_dollar_50th = [bench_dollar1_50th, bench_dollar2_50th, bench_dollar3_50th, bench_dollar4_50th, bench_dollar5_50th, bench_dollar6_50th, bench_dollar7_50th, bench_dollar8_50th, bench_dollar9_50th, bench_dollar10_50th]
 bench_dollar_90th = [bench_dollar1_90th, bench_dollar2_90th, bench_dollar3_90th, bench_dollar4_90th, bench_dollar5_90th, bench_dollar6_90th, bench_dollar7_90th, bench_dollar8_90th, bench_dollar9_90th, bench_dollar10_90th]
 bench_dollar_10th = [bench_dollar1_10th, bench_dollar2_10th, bench_dollar3_10th, bench_dollar4_10th, bench_dollar5_10th, bench_dollar6_10th, bench_dollar7_10th, bench_dollar8_10th, bench_dollar9_10th, bench_dollar10_10th]
@@ -459,6 +483,10 @@ encoded_dollar_year9 = json.dumps(numpy_dollar_year9, cls=NumpyArrayEncoder)  # 
 numpy_dollar_year10 = {"dollar_year10": dollar10}
 encoded_dollar_year10 = json.dumps(numpy_dollar_year10, cls=NumpyArrayEncoder)  # use dump() to write array into file
 
+#### Average
+numpy_dollar_average = {"dollar_average": dollar_average} 
+encoded_dollar_average = json.dumps(numpy_dollar_average, cls=NumpyArrayEncoder)  # use dump() to write array into file
+
 #### 50th Percentile
 numpy_dollar_50th = {"dollar_50th": dollar_50th}
 encoded_dollar_50th = json.dumps(numpy_dollar_50th, cls=NumpyArrayEncoder)  # use dump() to write array into file
@@ -487,6 +515,10 @@ encodbench_CVAR = json.dumps(numpybench_CVAR, cls=NumpyArrayEncoder)  # use dump
 ###Benchmark_return
 numpy_bench_returns_year1 = {"bench_returns_year1": bench_forecast1}
 encoded_bench_returns_year1 = json.dumps(numpy_bench_returns_year1, cls=NumpyArrayEncoder)  # use dump() to write array into file
+
+#### Benchmark Average
+numpy_bench_dollar_average = {"bench_dollar_average": bench_dollar_average} 
+encoded_bench_dollar_average = json.dumps(numpy_bench_dollar_average, cls=NumpyArrayEncoder)  # use dump() to write array into file
 
 #### Benchmark 50th Percentile
 numpy_bench_dollar_50th = {"bench_dollar_50th": bench_dollar_50th}
@@ -525,7 +557,11 @@ jsonMerged = {**json.loads(encodedSuccessRate_year1), **json.loads(encodedSucces
               **json.loads(encoded_bench_dollar_90th),
               **json.loads(encoded_bench_dollar_10th),
               **json.loads(encoded_bench_yield),
-              **json.loads(encodport_bench_Success_Rate) }
+              **json.loads(encodport_bench_Success_Rate),
+              **json.loads(encoded_dollar_average),
+              **json.loads(encoded_bench_dollar_average) }
+
+
 
 asString = json.dumps(jsonMerged)
 print(asString)

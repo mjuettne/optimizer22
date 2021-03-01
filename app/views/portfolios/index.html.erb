@@ -33,7 +33,7 @@
         <label for="name_box">Name</label>
         <input type="text" id="name_box" name="query_name" class="form-control">
       </div>
-       <div class="form-group">
+      <div class="form-group">
         <label for="cma_box">Capital Market Assumptions</label>
         <select type="text" id="cma_box" name="query_cma" class="form-control">
             <%@cmas.each do |the_cma|%>
@@ -50,18 +50,18 @@
          <select>
       </div>  
 
-
     <div>
+    
       <div class="panel-group" id="accordion">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-              <button type = "button" class="btn btn-secondary btn-lg">
+      
+    
+              <button style = "background-color: #5445FF" type = "button" class="btn btn-secondary btn-lg">
                   <a class = "text-white" data-toggle="collapse" data-parent="#accordion" href="#collapse1">Add Asset Classes</a>
               </button>
           </div>
 <div id="collapse1" class="panel-collapse collapse in">
   <table class="table table-hover">
-      <tr class="table-info">
+      <tr style = "background-color: #5445FF">
         <th>Name</th>
         <th>Check to Include</th>
         <th>Weight</th>
@@ -69,7 +69,7 @@
       </tr>
 
       <% @list_of_asset_classes.each do |an_asset_class| %>
-      <tr class="table-light">
+      <tr>
         <th> <%= an_asset_class.name %> </th>
         <td> <div class="form-check"> <input class="form-check-input" type="checkbox" value=<%= an_asset_class.id %>  name = "include[]"> </div> </td>
         <td>  <input class="form-control" type="number" min="0" max="100" step="0.01" id="min_box" name="query_weights[]" value = "0">    </td>

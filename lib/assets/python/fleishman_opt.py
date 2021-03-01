@@ -262,10 +262,10 @@ def output(mean, std, skew, kurt, correlation):
   for i in range(X):
     P[i] = (A[i] + Z[i]*(B[i] +Z[i]*(C[i]+ Z[i]*D[i])))*std[i]+mean[i]
 
-  for i in range(X):
-    for j in range(N):
-      if P[i][j] < -1 or P[i][j] > 1:
-        P[i][j] = mean[i]
+  # for i in range(X):
+  #   for j in range(N):
+  #     if P[i][j] < -1 or P[i][j] > 1:
+  #       P[i][j] = mean[i]
   
         
 

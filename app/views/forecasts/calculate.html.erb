@@ -1,3 +1,5 @@
+
+
 <h3>Simulation: <%= @the_forecast.name %> </h3>
 <div>
   <div>
@@ -9,15 +11,16 @@
 
 <hr>
 
-
-<div>Portfolio 1: $<%= (@python_forecat_port1.fetch("port_dollar30").sum/30000).round(0)%> </div>
-
-<div>Portfolio 2: $<%= (@python_forecat_port2.fetch("port_dollar30").sum/30000).round(0)%> </div>
-
+<h4> Summary </h4>
+<div class="container2" >
 <div class = "row">
-<div class = "left col-12">
-<canvas id="myLineChart" width="100" height="50"></canvas>
+
+    <div class="chart-container" style="position: relative;  height:50vh; width:80vw">
+          <canvas id="myLineChart"></canvas>
+    </div>
+ 
 <script>
+
 var ctx = document.getElementById('myLineChart').getContext('2d');
 
 var dataFirst_sim10th = {
@@ -72,29 +75,191 @@ var dataSecond_sim90th = {
   // Set More Options
 };
 
+<% if @python_forecat_port3 = 0%>
+<% else %>
+var dataThird_sim10th = {
+  label: "Portfolio 1",
+  data: <%= @python_forecat_port3.fetch("sim_paths").sort_by(&:last)[3000] %>, 
+  pointBackgroundColor: "#FFD966",
+  borderColor: "#FFD966",
+  lineTension: 0.3,
+  // Set More Options
+};
+<% end %>
 
-  
+<% if @python_forecat_port3 = 0%>
+<% else %>
+var dataThird_sim50th = {
+  // label: "Portfolio 1",
+  data: <%= @python_forecat_port3.fetch("sim_paths").sort_by(&:last)[15000] %>, 
+  pointBackgroundColor: "#FFD966",
+  borderColor: "#FFD966",
+  lineTension: 0.3,
+  // Set More Options
+};
+<% end %>
+
+<% if @python_forecat_port3 = 0%>
+<% else %>
+var dataThird_sim90th = {
+  // label: "Portfolio 1",
+  data: <%= @python_forecat_port3.fetch("sim_paths").sort_by(&:last)[27000] %>, 
+  pointBackgroundColor: "#FFD966",
+  borderColor: "#FFD966",
+  lineTension: 0.3,
+  // Set More Options
+};
+<% end %>
+
+var data1_average_10th = {
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio1_id}).at(0).name %> 10th",
+  data: <%= @python_forecat_port1.fetch("10th_Percentile") %>, 
+  pointBackgroundColor: "#5445FF",
+  borderColor: "#5445FF",
+  pointRadius: 0,
+  lineTension: 0.3,
+  // Set More Options
+};
+
+var data1_average_50th = {
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio1_id}).at(0).name %> 50th",
+  data: <%= @python_forecat_port1.fetch("50th_Percentile") %>, 
+  pointBackgroundColor: "#5445FF",
+  borderColor: "#5445FF",
+  pointRadius: 0,
+  lineTension: 0.3,
+  // Set More Options
+};
+
+var data1_average_90th = {
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio1_id}).at(0).name %> 90th",
+  data: <%= @python_forecat_port1.fetch("90th_Percentile") %>, 
+  pointBackgroundColor: "#5445FF",
+  borderColor: "#5445FF",
+  pointRadius: 0,
+  lineTension: 0.3,
+  // Set More Options
+};
+
+var data2_average_10th = {
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio2_id}).at(0).name %> 10th",
+  data: <%= @python_forecat_port2.fetch("10th_Percentile") %>, 
+  pointBackgroundColor: "#71B8FF",
+  borderColor: "#71B8FF",
+  pointRadius: 0,
+  lineTension: 0.3,
+  // Set More Options
+};
+
+var data2_average_50th = {
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio2_id}).at(0).name %> 50th",
+  data: <%= @python_forecat_port2.fetch("50th_Percentile") %>, 
+  pointBackgroundColor: "#71B8FF",
+  borderColor: "#71B8FF",
+  pointRadius: 0,
+  lineTension: 0.3,
+  // Set More Options
+};
+
+var data2_average_90th = {
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio2_id}).at(0).name %> 90th",
+  data: <%= @python_forecat_port2.fetch("90th_Percentile") %>, 
+  pointBackgroundColor: "#71B8FF",
+  borderColor: "#71B8FF",
+  pointRadius: 0,
+  lineTension: 0.3,
+  // Set More Options
+};
+
+<% if @python_forecat_port3 = 0%>
 var lineData = {
   labels: ["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"],
-  datasets: [dataFirst_sim10th, dataFirst_sim50th, dataFirst_sim90th, dataSecond_sim10th, dataSecond_sim50th, dataSecond_sim90th]
+  datasets: [dataFirst_sim10th, dataFirst_sim50th, dataFirst_sim90th, dataSecond_sim10th, dataSecond_sim50th, dataSecond_sim90th, data1_average_10th, data1_average_50th, data1_average_90th, data2_average_10th, data2_average_50th, data2_average_90th]
 };
+<% else %>  
+var lineData = {
+  labels: ["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"],
+  datasets: [dataFirst_sim10th, dataFirst_sim50th, dataFirst_sim90th, dataSecond_sim10th, dataSecond_sim50th, dataSecond_sim90th,  dataThird_sim10th, dataThird_sim50th, dataThird_sim90th]
+
+<% end %>
 
 var myLineChart = new Chart(ctx, {
     type: 'line',
-    data: lineData
+    data: lineData,
+    options: {
+        responsive: true, 
+        maintainAspectRatio: false,
+        legend: {
+             position: 'bottom',
+             labels: {
+                  fontColor: '#FFFFFF',
+                  fontSize: 15,                  
+                 }
+              },
+        title: {
+            display: false,
+            fontColor: '#FFFFFF',
+            fontSize: 15,
+            text: 'Custom Chart Title'
+        }     ,
+        scales: {
+            yAxes: [{
+                scaleLabel: {
+                      display: true,
+                      labelString: '$',
+                      fontColor: '#FFFFFF',
+                      fontSize: 15
+                    },
+                ticks: {
+                    beginAtZero: true,
+                    callback: function(value, index, values) {
+                      value = value.toString();
+                      value = value.split(/(?=(?:...)*$)/);
+                      value = value.join(',');
+                      return value;
+                    },
+                    fontColor: '#FFFFFF',
+                    fontSize: 15
+                },
+            }],
+          xAxes: [{
+                scaleLabel: {
+                      display: true,
+                      labelString: 'Year',
+                      fontColor: '#FFFFFF',
+                      fontSize: 15
+                    },
+                ticks: {
+                    fontSize: 15,
+                    fontColor: '#FFFFFF'
+                },
+            }]
+        } 
+
+    }
+
 });
 </script>
-</div>
+
 </div>
 
+
+
+<hr>
+<h4> <%= @portfolios.where({:id => @the_forecast_input.portfolio1_id}).at(0).name %> </h4>
+
+<div class="container2" >
 <div class = "row">
-<div class = "left col-6">
-<canvas id="myLineChart1" width="100" height="50"></canvas>
+
+    <div class="chart-container" style="position: relative; height:40vh; width:80vw">
+          <canvas id="myLineChart1" ></canvas>
+    </div>
+      
 <script>
 var ctx = document.getElementById('myLineChart1').getContext('2d');
 
 var dataFirst_sim10th = {
-  label: "Portfolio 1",
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio1_id}).at(0).name %> 10th",
   data: <%= @python_forecat_port1.fetch("sim_paths").sort_by(&:last)[3000] %>, 
   pointBackgroundColor: "#5445FF",
   borderColor: "#5445FF",
@@ -103,7 +268,7 @@ var dataFirst_sim10th = {
 };
 
 var dataFirst_sim50th = {
-  // label: "Portfolio 1",
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio1_id}).at(0).name %> 50th",
   data: <%= @python_forecat_port1.fetch("sim_paths").sort_by(&:last)[15000] %>, 
   pointBackgroundColor: "#5445FF",
   borderColor: "#5445FF",
@@ -111,7 +276,7 @@ var dataFirst_sim50th = {
   // Set More Options
 };
 var dataFirst_sim90th = {
-  // label: "Portfolio 1",
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio1_id}).at(0).name %> 90th",
   data: <%= @python_forecat_port1.fetch("sim_paths").sort_by(&:last)[27000] %>, 
   pointBackgroundColor: "#5445FF",
   borderColor: "#5445FF",
@@ -119,27 +284,420 @@ var dataFirst_sim90th = {
   // Set More Options
 };
 
+var data_income = {
+  label: "Annual Income",
+  type: 'bar',
+  data: [0, <%= @the_forecast_input.year1_cf %>, <%= @the_forecast_input.year2_cf %>, <%= @the_forecast_input.year3_cf %>, <%= @the_forecast_input.year4_cf %>, <%= @the_forecast_input.year5_cf %>, <%= @the_forecast_input.year6_cf %>, <%= @the_forecast_input.year7_cf %>, <%= @the_forecast_input.year8_cf %>, <%= @the_forecast_input.year9_cf %>, <%= @the_forecast_input.year10_cf %>,
+         <%= @the_forecast_input.year11_cf %>, <%= @the_forecast_input.year12_cf %>, <%= @the_forecast_input.year13_cf %>, <%= @the_forecast_input.year14_cf %>, <%= @the_forecast_input.year15_cf %>, <%= @the_forecast_input.year16_cf %>, <%= @the_forecast_input.year17_cf %>, <%= @the_forecast_input.year18_cf %>, <%= @the_forecast_input.year19_cf %>, <%= @the_forecast_input.year20_cf %>,
+         <%= @the_forecast_input.year21_cf %>, <%= @the_forecast_input.year22_cf %>, <%= @the_forecast_input.year23_cf %>, <%= @the_forecast_input.year24_cf %>, <%= @the_forecast_input.year25_cf %>, <%= @the_forecast_input.year26_cf %>, <%= @the_forecast_input.year27_cf %>, <%= @the_forecast_input.year28_cf %>, <%= @the_forecast_input.year29_cf %>, <%= @the_forecast_input.year30_cf %> ],  
+  backgroundColor: "#33CCFF",
+  borderColor: "#5445FF",
+  lineTension: 0.3,
+  // Set More Options
+};
+
+var data_expense = {
+  label: "Annual Expense",
+  type: 'bar',
+  data: [0, <%= @the_forecast_input.year1_exp %>, <%= @the_forecast_input.year2_exp %>, <%= @the_forecast_input.year3_exp %>, <%= @the_forecast_input.year4_exp %>, <%= @the_forecast_input.year5_exp %>, <%= @the_forecast_input.year6_exp %>, <%= @the_forecast_input.year7_exp %>, <%= @the_forecast_input.year8_exp %>, <%= @the_forecast_input.year9_exp %>, <%= @the_forecast_input.year10_exp %>,
+         <%= @the_forecast_input.year11_exp %>, <%= @the_forecast_input.year12_exp %>, <%= @the_forecast_input.year13_exp %>, <%= @the_forecast_input.year14_exp %>, <%= @the_forecast_input.year15_exp %>, <%= @the_forecast_input.year16_exp %>, <%= @the_forecast_input.year17_exp %>, <%= @the_forecast_input.year18_exp %>, <%= @the_forecast_input.year19_exp %>, <%= @the_forecast_input.year20_exp %>,
+         <%= @the_forecast_input.year21_exp %>, <%= @the_forecast_input.year22_exp %>, <%= @the_forecast_input.year23_exp %>, <%= @the_forecast_input.year24_exp %>, <%= @the_forecast_input.year25_exp %>, <%= @the_forecast_input.year26_exp %>, <%= @the_forecast_input.year27_exp %>, <%= @the_forecast_input.year28_exp %>, <%= @the_forecast_input.year29_exp %>, <%= @the_forecast_input.year30_exp %> ],  
+  backgroundColor: "#33CCFF",
+  borderColor: "#5445FF",
+  lineTension: 0.3,
+  // Set More Options
+};
+
+var data1_average_10th = {
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio1_id}).at(0).name %> 10th",
+  data: <%= @python_forecat_port1.fetch("10th_Percentile") %>, 
+  pointBackgroundColor: "#5445FF",
+  borderColor: "#5445FF",
+  pointRadius: 0,
+  lineTension: 0.3,
+  // Set More Options
+};
+
+var data1_average_50th = {
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio1_id}).at(0).name %> 50th",
+  data: <%= @python_forecat_port1.fetch("50th_Percentile") %>, 
+  pointBackgroundColor: "#5445FF",
+  borderColor: "#5445FF",
+  pointRadius: 0,
+  lineTension: 0.3,
+  // Set More Options
+};
+var data1_average_90th = {
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio1_id}).at(0).name %> 90th",
+  data: <%= @python_forecat_port1.fetch("90th_Percentile") %>, 
+  pointBackgroundColor: "#5445FF",
+  borderColor: "#5445FF",
+  pointRadius: 0,
+  lineTension: 0.3,
+  // Set More Options
+};
+  
+
   
 var lineData = {
   labels: ["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"],
-  datasets: [dataFirst_sim10th, dataFirst_sim50th, dataFirst_sim90th]
+  datasets: [dataFirst_sim10th, dataFirst_sim50th, dataFirst_sim90th, data1_average_10th, data1_average_50th, data1_average_90th]
 };
 
 var myLineChart1 = new Chart(ctx, {
     type: 'line',
-    data: lineData
+    data: lineData,
+    options: {
+        responsive: true, 
+        maintainAspectRatio: false,
+        legend: {
+             position: 'bottom',
+             labels: {
+                  fontColor: '#FFFFFF',
+                  
+                 }
+              },
+        title: {
+            display: false,
+            fontColor: '#FFFFFF',
+            text: 'Custom Chart Title'
+        }     ,
+        scales: {
+            yAxes: [{
+                scaleLabel: {
+                      display: true,
+                      labelString: '$',
+                      fontColor: '#FFFFFF',
+                      fontSize: 15
+                    },
+                ticks: {
+                    beginAtZero: true,
+                    callback: function(value, index, values) {
+                      value = value.toString();
+                      value = value.split(/(?=(?:...)*$)/);
+                      value = value.join(',');
+                      return value;
+                    },
+                    fontColor: '#FFFFFF'
+                },
+            }],
+          xAxes: [{
+                scaleLabel: {
+                      display: true,
+                      labelString: 'Year',
+                      fontColor: '#FFFFFF',
+                      fontSize: 15
+                    },
+                ticks: {
+                    fontColor: '#FFFFFF'
+                },
+            }]
+        } 
+
+    }
 });
 </script>
 </div>
+</div>
 
-<div class = "right col-6">
 
-<canvas id="myLineChart2" width="100" height="50"></canvas>
+<div class = "row">
+<div class = "left col-12">
+<form action = "calculate/download">
+    <table class="table table-hover">
+      <tr class="table" style = "background-color: #5445FF">
+            <th></th>
+            <th>Year 1</th>
+            <th>Year 2</th>
+            <th>Year 3</th>
+            <th>Year 4</th>
+            <th>Year 5</th>
+            <th>Year 6</th>
+            <th>Year 7</th>
+            <th>Year 8</th>
+            <th>Year 9</th>
+            <th>Year 10</th>
+      </tr>
+      <tr class="table" >
+        <th>10th Percentile</th>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[1].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[2].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[3].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[4].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[5].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[6].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[7].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[8].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[9].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[10].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+      </tr>
+      <tr hidden class="table" >
+        <th>10th Percentile</th>
+        <td> <input class="form-control" readonly="" name="port1_year1_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[1].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year2_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[2].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year3_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[3].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year4_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[4].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year5_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[5].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year6_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[6].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year7_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[7].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year8_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[8].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year9_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[9].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year10_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[10].round(0) %>> </td>
+      </tr>
+      <tr class="table">
+        <th>50th Percentile</th>
+        <td> <%= @python_forecat_port1.fetch("50th_Percentile")[1].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("50th_Percentile")[2].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("50th_Percentile")[3].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("50th_Percentile")[4].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("50th_Percentile")[5].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("50th_Percentile")[6].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("50th_Percentile")[7].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("50th_Percentile")[8].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("50th_Percentile")[9].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("50th_Percentile")[10].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+      </tr>
+      <tr hidden class="table">
+        <th>50th Percentile</th>
+        <td> <input class="form-control" readonly="" name="port1_year1_50th"  value = <%= @python_forecat_port1.fetch("50th_Percentile")[1].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year2_50th"  value = <%= @python_forecat_port1.fetch("50th_Percentile")[2].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year3_50th"  value = <%= @python_forecat_port1.fetch("50th_Percentile")[3].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year4_50th"  value = <%= @python_forecat_port1.fetch("50th_Percentile")[4].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year5_50th"  value = <%= @python_forecat_port1.fetch("50th_Percentile")[5].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year6_50th"  value = <%= @python_forecat_port1.fetch("50th_Percentile")[6].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year7_50th"  value = <%= @python_forecat_port1.fetch("50th_Percentile")[7].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year8_50th"  value = <%= @python_forecat_port1.fetch("50th_Percentile")[8].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year9_50th"  value = <%= @python_forecat_port1.fetch("50th_Percentile")[9].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year10_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[10].round(0) %>> </td>
+      </tr>
+      <tr class="table" >
+        <th>90th Percentile</th>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[1].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[2].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[3].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[4].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[5].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[6].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[7].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[8].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[9].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[10].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+      </tr>
+      <tr hidden class="table" >
+        <th>90th Percentile</th>
+        <td> <input class="form-control" readonly="" name="port1_year1_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[1].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year2_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[2].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year3_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[3].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year4_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[4].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year5_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[5].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year6_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[6].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year7_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[7].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year8_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[8].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year9_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[9].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year10_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[10].round(0) %>> </td>
+      </tr>
+      <tr class="table" style = "background-color: #5445FF">
+            <th></th>
+            <th>Year 11</th>
+            <th>Year 12</th>
+            <th>Year 13</th>
+            <th>Year 14</th>
+            <th>Year 15</th>
+            <th>Year 16</th>
+            <th>Year 17</th>
+            <th>Year 18</th>
+            <th>Year 19</th>
+            <th>Year 20</th>
+      </tr>
+      <tr class="table" >
+        <th>10th Percentile</th>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[11].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[12].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[13].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[14].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[15].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[16].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[17].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[18].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[19].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[20].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+      </tr>
+      <tr hidden class="table" >
+        <th>10th Percentile</th>
+        <td> <input class="form-control" readonly="" name="port1_year11_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[11].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year12_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[12].round(0)  %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year13_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[13].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year14_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[14].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year15_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[15].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year16_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[16].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year17_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[17].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year18_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[18].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year19_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[19].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year20_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[20].round(0) %>> </td>
+      </tr>
+      <tr class="table" >
+        <th>50th Percentile</th>
+        <td> <%= @python_forecat_port1.fetch("50th_Percentile")[11].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("50th_Percentile")[12].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("50th_Percentile")[13].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("50th_Percentile")[14].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("50th_Percentile")[15].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("50th_Percentile")[16].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("50th_Percentile")[17].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("50th_Percentile")[18].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("50th_Percentile")[19].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("50th_Percentile")[20].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+      </tr>
+      <tr hidden class="table" >
+        <th>50th Percentile</th>
+        <td> <input class="form-control" readonly="" name="port1_year11_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[11].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year12_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[12].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year13_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[13].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year14_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[14].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year15_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[15].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year16_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[16].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year17_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[17].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year18_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[18].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year19_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[19].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year20_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[20].round(0) %>> </td>
+      </tr>
+      <tr class="table" >
+        <th>90th Percentile</th>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[11].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[12].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[13].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[14].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[15].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[16].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[17].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[18].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[19].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[20].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+      </tr>
+      <tr hidden class="table" >
+        <th>90th Percentile</th>
+        <td> <input class="form-control" readonly="" name="port1_year11_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[11].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year12_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[12].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year13_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[13].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year14_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[14].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year15_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[15].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year16_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[16].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year17_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[17].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year18_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[18].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year19_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[19].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year20_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[20].round(0) %>> </td>
+      </tr>
+      <tr class="table" style = "background-color: #5445FF">
+            <th></th>
+            <th>Year 21</th>
+            <th>Year 22</th>
+            <th>Year 23</th>
+            <th>Year 24</th>
+            <th>Year 25</th>
+            <th>Year 26</th>
+            <th>Year 27</th>
+            <th>Year 28</th>
+            <th>Year 29</th>
+            <th>Year 30</th>
+      </tr>
+      <tr class="table" >
+        <th>10th Percentile</th>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[21].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[22].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[23].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[24].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[25].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[26].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[27].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[28].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[29].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("10th_Percentile")[30].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+      </tr>
+      <tr hidden class="table" >
+        <th>10th Percentile</th>
+        <td> <input class="form-control" readonly="" name="port1_year21_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[21].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year22_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[22].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year23_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[23].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year24_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[24].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year25_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[25].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year26_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[26].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year27_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[27].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year28_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[28].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year29_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[29].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year30_10th" value = <%= @python_forecat_port1.fetch("10th_Percentile")[30].round(0) %>> </td>
+      </tr>
+      <tr class="table" >
+        <th>50th Percentile</th>
+        <td>  <%= @python_forecat_port1.fetch("50th_Percentile")[21].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td>  <%= @python_forecat_port1.fetch("50th_Percentile")[22].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td>  <%= @python_forecat_port1.fetch("50th_Percentile")[23].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td>  <%= @python_forecat_port1.fetch("50th_Percentile")[24].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td>  <%= @python_forecat_port1.fetch("50th_Percentile")[25].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td>  <%= @python_forecat_port1.fetch("50th_Percentile")[26].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td>  <%= @python_forecat_port1.fetch("50th_Percentile")[27].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td>  <%= @python_forecat_port1.fetch("50th_Percentile")[28].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td>  <%= @python_forecat_port1.fetch("50th_Percentile")[29].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td>  <%= @python_forecat_port1.fetch("50th_Percentile")[30].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+      </tr>
+      <tr hidden class="table" >
+        <th>50th Percentile</th>
+        <td> <input class="form-control" readonly="" name="port1_year21_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[21].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year22_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[22].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year23_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[23].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year24_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[24].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year25_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[25].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year26_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[26].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year27_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[27].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year28_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[28].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year29_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[29].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year30_50th" value = <%= @python_forecat_port1.fetch("50th_Percentile")[30].round(0) %>> </td>
+      </tr>
+      <tr class="table" >
+        <th>90th Percentile</th>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[21].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[22].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[23].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[24].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[25].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[26].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[27].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[28].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[29].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port1.fetch("90th_Percentile")[30].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+      </tr>
+      <tr hidden class="table" >
+        <th>90th Percentile</th>
+        <td> <input class="form-control" readonly="" name="port1_year21_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[21].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year22_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[22].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year23_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[23].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year24_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[24].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year25_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[25].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year26_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[26].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year27_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[27].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year28_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[28].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year29_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[29].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year30_90th" value = <%= @python_forecat_port1.fetch("90th_Percentile")[30].round(0) %>> </td>
+      </tr>
+    </table>
+    <button type="submit"  style = "background-color: #5445FF" class="btn btn-lg">Export to Excel </button>
+    </form>
+</div>
+</div>
+
+<hr>
+<h4> <%= @portfolios.where({:id => @the_forecast_input.portfolio2_id}).at(0).name %> </h4>
+
+<div class="container2" >
+<div class = "row">
+
+    <div class="chart-container" style="position: relative; height:40vh; width:80vw">
+           <canvas id="myLineChart2"></canvas>
+    </div>
 <script>
 var ctx = document.getElementById('myLineChart2').getContext('2d');
 
 var dataFirst_sim10th = {
-  label: "Portfolio 1",
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio2_id}).at(0).name %> 10th",
   data: <%= @python_forecat_port2.fetch("sim_paths").sort_by(&:last)[3000] %>, 
   pointBackgroundColor: "#71B8FF",
   borderColor: "#71B8FF",
@@ -148,7 +706,7 @@ var dataFirst_sim10th = {
 };
 
 var dataFirst_sim50th = {
-  // label: "Portfolio 1",
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio2_id}).at(0).name %> 50th",
   data: <%= @python_forecat_port2.fetch("sim_paths").sort_by(&:last)[15000] %>, 
   pointBackgroundColor: "#71B8FF",
   borderColor: "#71B8FF",
@@ -156,7 +714,7 @@ var dataFirst_sim50th = {
   // Set More Options
 };
 var dataFirst_sim90th = {
-  // label: "Portfolio 1",
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio2_id}).at(0).name %> 90th",
   data: <%= @python_forecat_port2.fetch("sim_paths").sort_by(&:last)[27000] %>, 
   pointBackgroundColor: "#71B8FF",
   borderColor: "#71B8FF",
@@ -164,17 +722,637 @@ var dataFirst_sim90th = {
   // Set More Options
 };
 
+var data_income = {
+  label: "Annual Income",
+  type: 'bar',
+  data: [0, <%= @the_forecast_input.year1_cf %>, <%= @the_forecast_input.year2_cf %>, <%= @the_forecast_input.year3_cf %>, <%= @the_forecast_input.year4_cf %>, <%= @the_forecast_input.year5_cf %>, <%= @the_forecast_input.year6_cf %>, <%= @the_forecast_input.year7_cf %>, <%= @the_forecast_input.year8_cf %>, <%= @the_forecast_input.year9_cf %>, <%= @the_forecast_input.year10_cf %>,
+         <%= @the_forecast_input.year11_cf %>, <%= @the_forecast_input.year12_cf %>, <%= @the_forecast_input.year13_cf %>, <%= @the_forecast_input.year14_cf %>, <%= @the_forecast_input.year15_cf %>, <%= @the_forecast_input.year16_cf %>, <%= @the_forecast_input.year17_cf %>, <%= @the_forecast_input.year18_cf %>, <%= @the_forecast_input.year19_cf %>, <%= @the_forecast_input.year20_cf %>,
+         <%= @the_forecast_input.year21_cf %>, <%= @the_forecast_input.year22_cf %>, <%= @the_forecast_input.year23_cf %>, <%= @the_forecast_input.year24_cf %>, <%= @the_forecast_input.year25_cf %>, <%= @the_forecast_input.year26_cf %>, <%= @the_forecast_input.year27_cf %>, <%= @the_forecast_input.year28_cf %>, <%= @the_forecast_input.year29_cf %>, <%= @the_forecast_input.year30_cf %> ],  
+  backgroundColor: "#33CCFF",
+  borderColor: "#5445FF",
+  lineTension: 0.3,
+  // Set More Options
+};
+
+var data_expense = {
+  label: "Annual Expense",
+  type: 'bar',
+  data: [0, <%= @the_forecast_input.year1_exp %>, <%= @the_forecast_input.year2_exp %>, <%= @the_forecast_input.year3_exp %>, <%= @the_forecast_input.year4_exp %>, <%= @the_forecast_input.year5_exp %>, <%= @the_forecast_input.year6_exp %>, <%= @the_forecast_input.year7_exp %>, <%= @the_forecast_input.year8_exp %>, <%= @the_forecast_input.year9_exp %>, <%= @the_forecast_input.year10_exp %>,
+         <%= @the_forecast_input.year11_exp %>, <%= @the_forecast_input.year12_exp %>, <%= @the_forecast_input.year13_exp %>, <%= @the_forecast_input.year14_exp %>, <%= @the_forecast_input.year15_exp %>, <%= @the_forecast_input.year16_exp %>, <%= @the_forecast_input.year17_exp %>, <%= @the_forecast_input.year18_exp %>, <%= @the_forecast_input.year19_exp %>, <%= @the_forecast_input.year20_exp %>,
+         <%= @the_forecast_input.year21_exp %>, <%= @the_forecast_input.year22_exp %>, <%= @the_forecast_input.year23_exp %>, <%= @the_forecast_input.year24_exp %>, <%= @the_forecast_input.year25_exp %>, <%= @the_forecast_input.year26_exp %>, <%= @the_forecast_input.year27_exp %>, <%= @the_forecast_input.year28_exp %>, <%= @the_forecast_input.year29_exp %>, <%= @the_forecast_input.year30_exp %> ],  
+  backgroundColor: "#33CCFF",
+  borderColor: "#5445FF",
+  lineTension: 0.3,
+  // Set More Options
+};
+
+var data2_average_10th = {
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio2_id}).at(0).name %> 10th",
+  data: <%= @python_forecat_port2.fetch("10th_Percentile") %>, 
+  pointBackgroundColor: "#71B8FF",
+  borderColor: "#71B8FF",
+  pointRadius: 0,
+  lineTension: 0.3,
+  // Set More Options
+};
+
+var data2_average_50th = {
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio2_id}).at(0).name %> 50th",
+  data: <%= @python_forecat_port2.fetch("50th_Percentile") %>, 
+  pointBackgroundColor: "#71B8FF",
+  borderColor: "#71B8FF",
+  pointRadius: 0,
+  lineTension: 0.3,
+  // Set More Options
+};
+var data2_average_90th = {
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio2_id}).at(0).name %> 90th",
+  position: 'bottom',
+  data: <%= @python_forecat_port2.fetch("90th_Percentile") %>, 
+  pointBackgroundColor: "#71B8FF",
+  borderColor: "#71B8FF",
+  pointRadius: 0,
+  lineTension: 0.3,
+  // Set More Options
+};
+  
   
 var lineData = {
   labels: ["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"],
-  datasets: [dataFirst_sim10th, dataFirst_sim50th, dataFirst_sim90th]
+  datasets: [dataFirst_sim10th, dataFirst_sim50th, dataFirst_sim90th, data2_average_10th, data2_average_50th, data2_average_90th]
 };
 
 var myLineChart2 = new Chart(ctx, {
+    type: 'line',
+    data: lineData,
+    options: {
+        responsive: true, 
+        maintainAspectRatio: false,
+        legend: {
+             position: 'bottom',
+             labels: {
+                  fontColor: '#FFFFFF',
+                  
+                 }
+              },
+        title: {
+            display: false,
+            fontColor: '#FFFFFF',
+            text: 'Custom Chart Title'
+        }     ,
+        scales: {
+            yAxes: [{
+                scaleLabel: {
+                      display: true,
+                      labelString: '$',
+                      fontColor: '#FFFFFF',
+                      fontSize: 15
+                    },
+                ticks: {
+                    beginAtZero: true,
+                    callback: function(value, index, values) {
+                      value = value.toString();
+                      value = value.split(/(?=(?:...)*$)/);
+                      value = value.join(',');
+                      return value;
+                    },
+                    fontColor: '#FFFFFF'
+                },
+            }],
+          xAxes: [{
+                ticks: {
+                    fontColor: '#FFFFFF'
+                },
+            }]
+        } 
+
+    }
+});
+</script>
+</div>
+</div>
+
+
+<div class = "row">
+<div class = "left col-12">
+<form action = "calculate/download2">
+    <table class="table table-hover">
+      <tr class="table" style = "background-color: #5445FF">
+            <th></th>
+            <th>Year 1</th>
+            <th>Year 2</th>
+            <th>Year 3</th>
+            <th>Year 4</th>
+            <th>Year 5</th>
+            <th>Year 6</th>
+            <th>Year 7</th>
+            <th>Year 8</th>
+            <th>Year 9</th>
+            <th>Year 10</th>
+      </tr>
+      <tr class="table" >
+        <th>10th Percentile</th>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[1].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[2].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[3].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[4].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[5].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[6].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[7].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[8].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[9].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[10].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+      </tr>
+      <tr hidden class="table" >
+        <th>10th Percentile</th>
+        <td> <input class="form-control" readonly="" name="port1_year1_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[1].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year2_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[2].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year3_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[3].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year4_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[4].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year5_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[5].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year6_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[6].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year7_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[7].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year8_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[8].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year9_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[9].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year10_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[10].round(0) %>> </td>
+      </tr>
+      <tr class="table" >
+        <th>50th Percentile</th>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[1].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[2].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[3].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[4].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[5].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[6].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[7].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[8].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[9].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[10].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+      </tr>
+      <tr hidden class="table" >
+        <th>50th Percentile</th>
+        <td> <input class="form-control" readonly="" name="port1_year1_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[1].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year2_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[2].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year3_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[3].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year4_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[4].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year5_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[5].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year6_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[6].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year7_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[7].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year8_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[8].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year9_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[9].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year10_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[10].round(0) %>> </td>
+      </tr>
+      <tr class="table" >
+        <th>90th Percentile</th>
+        <td> <%= @python_forecat_port2.fetch("90th_Percentile")[1].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("90th_Percentile")[2].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("90th_Percentile")[3].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("90th_Percentile")[4].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("90th_Percentile")[5].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("90th_Percentile")[6].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("90th_Percentile")[7].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("90th_Percentile")[8].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("90th_Percentile")[9].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("90th_Percentile")[10].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+      </tr>
+      <tr hidden class="table" >
+        <th>90th Percentile</th>
+        <td> <input class="form-control" readonly="" name="port1_year1_90th" value = <%= @python_forecat_port2.fetch("90th_Percentile")[1].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year2_90th" value = <%= @python_forecat_port2.fetch("90th_Percentile")[2].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year3_90th" value = <%= @python_forecat_port2.fetch("90th_Percentile")[3].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year4_90th" value = <%= @python_forecat_port2.fetch("90th_Percentile")[4].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year5_90th" value = <%= @python_forecat_port2.fetch("90th_Percentile")[5].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year6_90th" value = <%= @python_forecat_port2.fetch("90th_Percentile")[6].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year7_90th" value = <%= @python_forecat_port2.fetch("90th_Percentile")[7].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year8_90th" value = <%= @python_forecat_port2.fetch("90th_Percentile")[8].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year9_90th" value = <%= @python_forecat_port2.fetch("90th_Percentile")[9].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year10_90th" value = <%= @python_forecat_port2.fetch("90th_Percentile")[10].round(0) %>> </td>
+      </tr>
+      <tr class="table" style = "background-color: #5445FF">
+            <th></th>
+            <th>Year 11</th>
+            <th>Year 12</th>
+            <th>Year 13</th>
+            <th>Year 14</th>
+            <th>Year 15</th>
+            <th>Year 16</th>
+            <th>Year 17</th>
+            <th>Year 18</th>
+            <th>Year 19</th>
+            <th>Year 20</th>
+      </tr>
+      <tr class="table" >
+        <th>10th Percentile</th>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[11].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[12].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[13].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[14].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[15].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[16].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[17].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[18].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[19].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[20].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+      </tr>
+      <tr hidden class="table" >
+        <th>10th Percentile</th>
+        <td> <input class="form-control" readonly="" name="port1_year11_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[11].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year12_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[12].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year13_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[13].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year14_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[14].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year15_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[15].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year16_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[16].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year17_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[17].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year18_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[18].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year19_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[19].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year20_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[20].round(0) %>> </td>
+      </tr>
+      <tr class="table" >
+        <th>50th Percentile</th>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[11].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[12].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[13].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[14].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[15].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[16].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[17].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[18].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[19].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[20].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+      </tr>
+      <tr hidden class="table" >
+        <th>50th Percentile</th>
+        <td> <input class="form-control" readonly="" name="port1_year11_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[11].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year12_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[12].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year13_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[13].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year14_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[14].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year15_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[15].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year16_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[16].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year17_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[17].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year18_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[18].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year19_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[19].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year20_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[20].round(0) %>> </td>
+      </tr>
+      <tr class="table" >
+        <th>90th Percentile</th>
+        <td> <%= @python_forecat_port2.fetch("90th_Percentile")[11].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("90th_Percentile")[12].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("90th_Percentile")[13].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("90th_Percentile")[14].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("90th_Percentile")[15].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("90th_Percentile")[16].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("90th_Percentile")[17].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("90th_Percentile")[18].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("90th_Percentile")[19].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("90th_Percentile")[20].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+      </tr>
+      <tr hidden class="table" >
+        <th>90th Percentile</th>
+        <td> <input class="form-control" readonly="" name="port1_year11_90th" value = <%= @python_forecat_port2.fetch("90th_Percentile")[11].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year12_90th" value = <%= @python_forecat_port2.fetch("90th_Percentile")[12].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year13_90th" value = <%= @python_forecat_port2.fetch("90th_Percentile")[13].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year14_90th" value = <%= @python_forecat_port2.fetch("90th_Percentile")[14].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year15_90th" value = <%= @python_forecat_port2.fetch("90th_Percentile")[15].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year16_90th" value = <%= @python_forecat_port2.fetch("90th_Percentile")[16].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year17_90th" value = <%= @python_forecat_port2.fetch("90th_Percentile")[17].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year18_90th" value = <%= @python_forecat_port2.fetch("90th_Percentile")[18].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year19_90th" value = <%= @python_forecat_port2.fetch("90th_Percentile")[19].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year20_90th" value = <%= @python_forecat_port2.fetch("90th_Percentile")[20].round(0) %>> </td>
+      </tr>
+      <tr class="table" style = "background-color: #5445FF">
+            <th></th>
+            <th>Year 21</th>
+            <th>Year 22</th>
+            <th>Year 23</th>
+            <th>Year 24</th>
+            <th>Year 25</th>
+            <th>Year 26</th>
+            <th>Year 27</th>
+            <th>Year 28</th>
+            <th>Year 29</th>
+            <th>Year 30</th>
+      </tr>
+      <tr class="table" >
+        <th>10th Percentile</th>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[21].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[22].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[23].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[24].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[25].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[26].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[27].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[28].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[29].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("10th_Percentile")[30].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+      </tr>
+      <tr hidden class="table" >
+        <th>10th Percentile</th>
+        <td> <input class="form-control" readonly="" name="port1_year21_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[21].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year22_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[22].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year23_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[23].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year24_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[24].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year25_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[25].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year26_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[26].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year27_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[27].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year28_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[28].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year29_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[29].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year30_10th" value = <%= @python_forecat_port2.fetch("10th_Percentile")[30].round(0) %>> </td>
+      </tr>
+      <tr class="table" >
+        <th>50th Percentile</th>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[21].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[22].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[23].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[24].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[25].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[26].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[27].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[28].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[29].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td> <%= @python_forecat_port2.fetch("50th_Percentile")[30].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+      </tr>
+      <tr hidden class="table" >
+        <th>50th Percentile</th>
+        <td> <input class="form-control" readonly="" name="port1_year21_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[21].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year22_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[22].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year23_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[23].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year24_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[24].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year25_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[25].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year26_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[26].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year27_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[27].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year28_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[28].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year29_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[29].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year30_50th" value = <%= @python_forecat_port2.fetch("50th_Percentile")[30].round(0) %>> </td>
+      </tr>
+      <tr class="table" >
+        <th>90th Percentile</th>
+        <td>  <%= @python_forecat_port2.fetch("90th_Percentile")[21].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td>  <%= @python_forecat_port2.fetch("90th_Percentile")[22].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td>  <%= @python_forecat_port2.fetch("90th_Percentile")[23].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td>  <%= @python_forecat_port2.fetch("90th_Percentile")[24].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td>  <%= @python_forecat_port2.fetch("90th_Percentile")[25].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td>  <%= @python_forecat_port2.fetch("90th_Percentile")[26].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td>  <%= @python_forecat_port2.fetch("90th_Percentile")[27].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td>  <%= @python_forecat_port2.fetch("90th_Percentile")[28].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td>  <%= @python_forecat_port2.fetch("90th_Percentile")[29].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+        <td>  <%= @python_forecat_port2.fetch("90th_Percentile")[30].round(0).to_s(:currency, { :precision => 0 }) %> </td>
+      </tr>
+      <tr hidden class="table" >
+        <th>90th Percentile</th>
+        <td> <input class="form-control" readonly="" name="port1_year21_90th" hidden value = <%= @python_forecat_port2.fetch("90th_Percentile")[21].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year22_90th" hidden value = <%= @python_forecat_port2.fetch("90th_Percentile")[22].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year23_90th" hidden value = <%= @python_forecat_port2.fetch("90th_Percentile")[23].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year24_90th" hidden value = <%= @python_forecat_port2.fetch("90th_Percentile")[24].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year25_90th" hidden value = <%= @python_forecat_port2.fetch("90th_Percentile")[25].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year26_90th" hidden value = <%= @python_forecat_port2.fetch("90th_Percentile")[26].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year27_90th" hidden value = <%= @python_forecat_port2.fetch("90th_Percentile")[27].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year28_90th" hidden value = <%= @python_forecat_port2.fetch("90th_Percentile")[28].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year29_90th" hidden value = <%= @python_forecat_port2.fetch("90th_Percentile")[29].round(0) %>> </td>
+        <td> <input class="form-control" readonly="" name="port1_year30_90th" hidden value = <%= @python_forecat_port2.fetch("90th_Percentile")[30].round(0) %>> </td>
+      </tr>
+    </table>
+    <button type="submit"  style = "background-color: #5445FF" class="btn btn-lg">Export to Excel </button>
+    </form>
+</div>
+</div>
+
+
+<div class="container2" >
+<div class = "row">
+
+<div class="chart-container" style="position: relative; height:40vh; width:80vw">
+          <canvas id="myLineChart3"></canvas>
+</div>
+
+<script>
+var ctx = document.getElementById('myLineChart3').getContext('2d');
+
+var data3_sim10th = {
+  label: "Portfolio 3",
+  <% if @python_forecat_port3 = 0 %>
+  data: ,
+  <% else %>
+  data: <%= @python_forecat_port3.fetch("sim_paths").sort_by(&:last)[3000] %>, 
+  <% end %>
+  pointBackgroundColor: "#FFD966",
+  borderColor: "#FFD966",
+  lineTension: 0.3,
+  // Set More Options
+};
+
+var data3_sim50th = {
+  // label: "Portfolio 1",
+  <% if @python_forecat_port3 = 0 %>
+  data: ,
+  <% else %>
+  data: <%= @python_forecat_port3.fetch("sim_paths").sort_by(&:last)[15000] %>, 
+  <% end %>
+  pointBackgroundColor: "#FFD966",
+  borderColor: "#FFD966",
+  lineTension: 0.3,
+  // Set More Options
+};
+var data3_sim90th = {
+  // label: "Portfolio 1",
+  <% if @python_forecat_port3 = 0 %>
+  data: ,
+  <% else %>
+  data: <%= @python_forecat_port3.fetch("sim_paths").sort_by(&:last)[27000] %>, 
+  <% end %>
+  pointBackgroundColor: "#FFD966",
+  borderColor: "#FFD966",
+  lineTension: 0.3,
+  // Set More Options
+};
+
+var data_income = {
+  label: "Annual Income",
+  type: 'bar',
+  data: [0, <%= @the_forecast_input.year1_cf %>, <%= @the_forecast_input.year2_cf %>, <%= @the_forecast_input.year3_cf %>, <%= @the_forecast_input.year4_cf %>, <%= @the_forecast_input.year5_cf %>, <%= @the_forecast_input.year6_cf %>, <%= @the_forecast_input.year7_cf %>, <%= @the_forecast_input.year8_cf %>, <%= @the_forecast_input.year9_cf %>, <%= @the_forecast_input.year10_cf %>,
+         <%= @the_forecast_input.year11_cf %>, <%= @the_forecast_input.year12_cf %>, <%= @the_forecast_input.year13_cf %>, <%= @the_forecast_input.year14_cf %>, <%= @the_forecast_input.year15_cf %>, <%= @the_forecast_input.year16_cf %>, <%= @the_forecast_input.year17_cf %>, <%= @the_forecast_input.year18_cf %>, <%= @the_forecast_input.year19_cf %>, <%= @the_forecast_input.year20_cf %>,
+         <%= @the_forecast_input.year21_cf %>, <%= @the_forecast_input.year22_cf %>, <%= @the_forecast_input.year23_cf %>, <%= @the_forecast_input.year24_cf %>, <%= @the_forecast_input.year25_cf %>, <%= @the_forecast_input.year26_cf %>, <%= @the_forecast_input.year27_cf %>, <%= @the_forecast_input.year28_cf %>, <%= @the_forecast_input.year29_cf %>, <%= @the_forecast_input.year30_cf %> ],  
+  backgroundColor: "#33CCFF",
+  borderColor: "#5445FF",
+  lineTension: 0.3,
+  // Set More Options
+};
+
+var data_expense = {
+  label: "Annual Expense",
+  type: 'bar',
+  data: [0, <%= @the_forecast_input.year1_exp %>, <%= @the_forecast_input.year2_exp %>, <%= @the_forecast_input.year3_exp %>, <%= @the_forecast_input.year4_exp %>, <%= @the_forecast_input.year5_exp %>, <%= @the_forecast_input.year6_exp %>, <%= @the_forecast_input.year7_exp %>, <%= @the_forecast_input.year8_exp %>, <%= @the_forecast_input.year9_exp %>, <%= @the_forecast_input.year10_exp %>,
+         <%= @the_forecast_input.year11_exp %>, <%= @the_forecast_input.year12_exp %>, <%= @the_forecast_input.year13_exp %>, <%= @the_forecast_input.year14_exp %>, <%= @the_forecast_input.year15_exp %>, <%= @the_forecast_input.year16_exp %>, <%= @the_forecast_input.year17_exp %>, <%= @the_forecast_input.year18_exp %>, <%= @the_forecast_input.year19_exp %>, <%= @the_forecast_input.year20_exp %>,
+         <%= @the_forecast_input.year21_exp %>, <%= @the_forecast_input.year22_exp %>, <%= @the_forecast_input.year23_exp %>, <%= @the_forecast_input.year24_exp %>, <%= @the_forecast_input.year25_exp %>, <%= @the_forecast_input.year26_exp %>, <%= @the_forecast_input.year27_exp %>, <%= @the_forecast_input.year28_exp %>, <%= @the_forecast_input.year29_exp %>, <%= @the_forecast_input.year30_exp %> ],  
+  backgroundColor: "#33CCFF",
+  borderColor: "#5445FF",
+  lineTension: 0.3,
+  // Set More Options
+};
+
+var data3_average_10th = {
+  label: "Portfolio 4",
+  <% if @python_forecat_port3 = 0 %>
+  data: ,
+  <% else %>
+  data: <%= @python_forecat_port3.fetch("10th_Percentile") %>, 
+  <% end %>
+  pointBackgroundColor: "#D6DCE5",
+  borderColor: "#D6DCE5",
+  pointRadius: 0,
+  lineTension: 0.3,
+  // Set More Options
+};
+
+var data3_average_50th = {
+  // label: "Portfolio 1",
+  <% if @python_forecat_port3 = 0 %>
+  data: ,
+  <% else %>
+  data: <%= @python_forecat_port3.fetch("50th_Percentile") %>, 
+  <% end %>
+  pointBackgroundColor: "#D6DCE5",
+  borderColor: "#D6DCE5",
+  pointRadius: 0,
+  lineTension: 0.3,
+  // Set More Options
+};
+var data3_average_90th = {
+  // label: "Portfolio 1",
+  <% if @python_forecat_port3 = 0 %>
+  data: ,
+  <% else %>
+  data: <%= @python_forecat_port3.fetch("90th_Percentile") %>, 
+  <% end %>
+  pointBackgroundColor: "#D6DCE5",
+  borderColor: "#D6DCE5",
+  pointRadius: 0,
+  lineTension: 0.3,
+  // Set More Options
+};
+  
+var lineData = {
+  labels: ["0","1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30"],
+  datasets: [data3_sim10th, data3_sim50th, data3_sim90th, data3_average_10th, data3_average_50th, data3_average_90th]
+};
+
+var myLineChart3 = new Chart(ctx, {
     type: 'line',
     data: lineData
 });
 </script>
 </div>
+</div>
+
+
+<div class="container2" >
+<div class = "row">
+    <div class="chart-container" style="position: relative; height:40vh; width:80vw">
+           <canvas id="myBarChart"></canvas>
+    </div>
+<script>
+var ctx = document.getElementById('myBarChart').getContext('2d');
+
+var data_port1 = {
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio1_id}).at(0).name %>",
+  data: [ <%= @python_forecat_port1.fetch("succes_rate")[0] %>, <%= @python_forecat_port1.fetch("succes_rate")[1] %>, <%= @python_forecat_port1.fetch("succes_rate")[2] %>, <%= @python_forecat_port1.fetch("succes_rate")[3] %>, <%= @python_forecat_port1.fetch("succes_rate")[4] %>, <%= @python_forecat_port1.fetch("succes_rate")[5] %>, <%= @python_forecat_port1.fetch("succes_rate")[6] %>, <%= @python_forecat_port1.fetch("succes_rate")[7] %>, <%= @python_forecat_port1.fetch("succes_rate")[8] %>, <%= @python_forecat_port1.fetch("succes_rate")[9] %>,
+          <%= @python_forecat_port1.fetch("succes_rate")[10] %>, <%= @python_forecat_port1.fetch("succes_rate")[11] %>, <%= @python_forecat_port1.fetch("succes_rate")[12] %>, <%= @python_forecat_port1.fetch("succes_rate")[13] %>, <%= @python_forecat_port1.fetch("succes_rate")[14] %>, <%= @python_forecat_port1.fetch("succes_rate")[15] %>, <%= @python_forecat_port1.fetch("succes_rate")[16] %>, <%= @python_forecat_port1.fetch("succes_rate")[17] %>, <%= @python_forecat_port1.fetch("succes_rate")[18] %>, <%= @python_forecat_port1.fetch("succes_rate")[19] %>,
+          <%= @python_forecat_port1.fetch("succes_rate")[20] %>, <%= @python_forecat_port1.fetch("succes_rate")[21] %>, <%= @python_forecat_port1.fetch("succes_rate")[22] %>, <%= @python_forecat_port1.fetch("succes_rate")[23] %>, <%= @python_forecat_port1.fetch("succes_rate")[24] %>, <%= @python_forecat_port1.fetch("succes_rate")[25] %>, <%= @python_forecat_port1.fetch("succes_rate")[26] %>, <%= @python_forecat_port1.fetch("succes_rate")[27] %>, <%= @python_forecat_port1.fetch("succes_rate")[28] %>, <%= @python_forecat_port1.fetch("succes_rate")[29] %>, 0.5 ],
+  barPercentage: 1.0,
+  backgroundColor: ["#5445FF", "#5445FF", "#5445FF", "#5445FF", "#5445FF", "#5445FF", "#5445FF", "#5445FF", "#5445FF", "#5445FF",
+                    "#5445FF", "#5445FF", "#5445FF", "#5445FF", "#5445FF", "#5445FF", "#5445FF", "#5445FF", "#5445FF", "#5445FF",
+                    "#5445FF", "#5445FF", "#5445FF", "#5445FF", "#5445FF", "#5445FF", "#5445FF", "#5445FF", "#5445FF", "#5445FF"],
+  // Set More Options
+};
+
+var data_port2 = {
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio2_id}).at(0).name %>",
+  data: [ <%= @python_forecat_port2.fetch("succes_rate")[0] %>, <%= @python_forecat_port2.fetch("succes_rate")[1] %>, <%= @python_forecat_port2.fetch("succes_rate")[2] %>, <%= @python_forecat_port2.fetch("succes_rate")[3] %>, <%= @python_forecat_port2.fetch("succes_rate")[4] %>, <%= @python_forecat_port2.fetch("succes_rate")[5] %>, <%= @python_forecat_port2.fetch("succes_rate")[6] %>, <%= @python_forecat_port2.fetch("succes_rate")[7] %>, <%= @python_forecat_port2.fetch("succes_rate")[8] %>, <%= @python_forecat_port2.fetch("succes_rate")[9] %>,
+          <%= @python_forecat_port2.fetch("succes_rate")[10] %>, <%= @python_forecat_port2.fetch("succes_rate")[11] %>, <%= @python_forecat_port2.fetch("succes_rate")[12] %>, <%= @python_forecat_port2.fetch("succes_rate")[13] %>, <%= @python_forecat_port2.fetch("succes_rate")[14] %>, <%= @python_forecat_port2.fetch("succes_rate")[15] %>, <%= @python_forecat_port2.fetch("succes_rate")[16] %>, <%= @python_forecat_port2.fetch("succes_rate")[17] %>, <%= @python_forecat_port2.fetch("succes_rate")[18] %>, <%= @python_forecat_port2.fetch("succes_rate")[19] %>,
+          <%= @python_forecat_port2.fetch("succes_rate")[20] %>, <%= @python_forecat_port2.fetch("succes_rate")[21] %>, <%= @python_forecat_port2.fetch("succes_rate")[22] %>, <%= @python_forecat_port2.fetch("succes_rate")[23] %>, <%= @python_forecat_port2.fetch("succes_rate")[24] %>, <%= @python_forecat_port2.fetch("succes_rate")[25] %>, <%= @python_forecat_port2.fetch("succes_rate")[26] %>, <%= @python_forecat_port2.fetch("succes_rate")[27] %>, <%= @python_forecat_port2.fetch("succes_rate")[28] %>, <%= @python_forecat_port2.fetch("succes_rate")[29] %>, 0.5 ],
+  barPercentage: 1.0,
+  backgroundColor: ["#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF",
+                    "#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF",
+                    "#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF", "#71B8FF"],
+  // Set More Options
+};
+<% if @python_forecat_port3 = 0%>
+<% else %>
+var data_port3 = {
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio3_id}).at(0).name %>",
+  data: [<%= @python_forecat_port3.fetch("succes_rate")[20] %>, <%= @python_forecat_port3.fetch("succes_rate")[21] %>, <%= @python_forecat_port3.fetch("succes_rate")[22] %>, <%= @python_forecat_port3.fetch("succes_rate")[23] %>, <%= @python_forecat_port3.fetch("succes_rate")[24] %>, <%= @python_forecat_port3.fetch("succes_rate")[25] %>, <%= @python_forecat_port3.fetch("succes_rate")[26] %>, <%= @python_forecat_port3.fetch("succes_rate")[27] %>, <%= @python_forecat_port3.fetch("succes_rate")[28] %>, <%= @python_forecat_port3.fetch("succes_rate")[29] %>, 0.5 ],
+  barPercentage: 1.0,
+  backgroundColor: ["#FFD966", "#FFD966", "#FFD966", "#FFD966", "#FFD966", "#FFD966", "#FFD966", "#FFD966", "#FFD966", "#FFD966"],
+  // Set More Options
+};
+<% end %>
+
+
+var barData = {
+  labels: [ "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20","21", "22", "23", "24", "25", "26", "27", "28", "29", "30"],
+  <% if @python_forecat_port3 = 0%>
+  datasets: [data_port1, data_port2],
+  <% else %>
+  datasets: [data_port1, data_port2, data_port3]
+  <% end %>
+  categoryPercentage: 0.25,
+  options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    min: 0,
+                    max: 1,
+                    stepSize: 0.1
+                        }
+                    }]
+                  }
+              }
+};
+
+var myBarChart = new Chart(ctx, {
+    type: 'bar',
+    data: barData,
+    options: {
+        legend: {
+             position: 'bottom',
+             labels: {
+                  fontColor: '#FFFFFF',
+                  fontSize: 20,
+                 }
+              },
+        title: {
+            display: false,
+            fontColor: '#FFFFFF',
+            text: 'Custom Chart Title'
+        }     ,
+        scales: {
+            yAxes: [{
+                scaleLabel: {
+                      display: true,
+                      labelString: 'Probabilty of Success',
+                      fontColor: '#FFFFFF',
+                      fontSize: 20
+                    },
+                ticks: {
+                    beginAtZero: false,
+                    fontColor: '#FFFFFF'
+                },
+            }],
+          xAxes: [{
+                scaleLabel: {
+                      display: true,
+                      labelString: 'Year',
+                      fontColor: '#FFFFFF',
+                      fontSize: 20
+                    },
+                ticks: {
+                    fontColor: '#FFFFFF'
+                },
+            }]
+        } 
+
+    }
+    
+});
+</script>
 </div>
 </div>

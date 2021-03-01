@@ -404,13 +404,155 @@ port_dollar28 = (np.maximum(zeros, (port_dollar27 + income[27] + expense[27])))*
 port_dollar29 = (np.maximum(zeros, (port_dollar28 + income[28] + expense[28])))*(1 + port_year_29)
 port_dollar30 = (np.maximum(zeros, (port_dollar29 + income[29] + expense[29])))*(1 + port_year_30)
 
-
 d = np.stack((port_dollar0, port_dollar1, port_dollar2, port_dollar3, port_dollar4, port_dollar5, port_dollar6, port_dollar7, port_dollar8, port_dollar9, port_dollar10,
               port_dollar11, port_dollar12, port_dollar13, port_dollar14, port_dollar15, port_dollar16, port_dollar17, port_dollar18, port_dollar19, port_dollar20,
               port_dollar21, port_dollar22, port_dollar23, port_dollar24, port_dollar25, port_dollar26, port_dollar27, port_dollar28, port_dollar29, port_dollar30), axis = 0)
 sim_paths = np.transpose(d)
 
+dollar0_50th = np.percentile(port_dollar0, 50)
+dollar1_50th = np.percentile(port_dollar1, 50)
+dollar2_50th = np.percentile(port_dollar2, 50)
+dollar3_50th = np.percentile(port_dollar3, 50)
+dollar4_50th = np.percentile(port_dollar4, 50)
+dollar5_50th = np.percentile(port_dollar5, 50)
+dollar6_50th = np.percentile(port_dollar6, 50)
+dollar7_50th = np.percentile(port_dollar7, 50)
+dollar8_50th = np.percentile(port_dollar8, 50)
+dollar9_50th = np.percentile(port_dollar9, 50)
+dollar10_50th = np.percentile(port_dollar10, 50)
+dollar11_50th = np.percentile(port_dollar11, 50)
+dollar12_50th = np.percentile(port_dollar12, 50)
+dollar13_50th = np.percentile(port_dollar13, 50)
+dollar14_50th = np.percentile(port_dollar14, 50)
+dollar15_50th = np.percentile(port_dollar15, 50)
+dollar16_50th = np.percentile(port_dollar16, 50)
+dollar17_50th = np.percentile(port_dollar17, 50)
+dollar18_50th = np.percentile(port_dollar18, 50)
+dollar19_50th = np.percentile(port_dollar19, 50)
+dollar20_50th = np.percentile(port_dollar20, 50)
+dollar21_50th = np.percentile(port_dollar21, 50)
+dollar22_50th = np.percentile(port_dollar22, 50)
+dollar23_50th = np.percentile(port_dollar23, 50)
+dollar24_50th = np.percentile(port_dollar24, 50)
+dollar25_50th = np.percentile(port_dollar25, 50)
+dollar26_50th = np.percentile(port_dollar26, 50)
+dollar27_50th = np.percentile(port_dollar27, 50)
+dollar28_50th = np.percentile(port_dollar28, 50)
+dollar29_50th = np.percentile(port_dollar29, 50)
+dollar30_50th = np.percentile(port_dollar30, 50)
 
+dollar0_10th = np.percentile(port_dollar0, 10)
+dollar1_10th = np.percentile(port_dollar1, 10)
+dollar2_10th = np.percentile(port_dollar2, 10)
+dollar3_10th = np.percentile(port_dollar3, 10)
+dollar4_10th = np.percentile(port_dollar4, 10)
+dollar5_10th = np.percentile(port_dollar5, 10)
+dollar6_10th = np.percentile(port_dollar6, 10)
+dollar7_10th = np.percentile(port_dollar7, 10)
+dollar8_10th = np.percentile(port_dollar8, 10)
+dollar9_10th = np.percentile(port_dollar9, 10)
+dollar10_10th = np.percentile(port_dollar10, 10)
+dollar11_10th = np.percentile(port_dollar11, 10)
+dollar12_10th = np.percentile(port_dollar12, 10)
+dollar13_10th = np.percentile(port_dollar13, 10)
+dollar14_10th = np.percentile(port_dollar14, 10)
+dollar15_10th = np.percentile(port_dollar15, 10)
+dollar16_10th = np.percentile(port_dollar16, 10)
+dollar17_10th = np.percentile(port_dollar17, 10)
+dollar18_10th = np.percentile(port_dollar18, 10)
+dollar19_10th = np.percentile(port_dollar19, 10)
+dollar20_10th = np.percentile(port_dollar20, 10)
+dollar21_10th = np.percentile(port_dollar21, 10)
+dollar22_10th = np.percentile(port_dollar22, 10)
+dollar23_10th = np.percentile(port_dollar23, 10)
+dollar24_10th = np.percentile(port_dollar24, 10)
+dollar25_10th = np.percentile(port_dollar25, 10)
+dollar26_10th = np.percentile(port_dollar26, 10)
+dollar27_10th = np.percentile(port_dollar27, 10)
+dollar28_10th = np.percentile(port_dollar28, 10)
+dollar29_10th = np.percentile(port_dollar29, 10)
+dollar30_10th = np.percentile(port_dollar30, 10)
+
+dollar0_90th = np.percentile(port_dollar0, 90)
+dollar1_90th = np.percentile(port_dollar1, 90)
+dollar2_90th = np.percentile(port_dollar2, 90)
+dollar3_90th = np.percentile(port_dollar3, 90)
+dollar4_90th = np.percentile(port_dollar4, 90)
+dollar5_90th = np.percentile(port_dollar5, 90)
+dollar6_90th = np.percentile(port_dollar6, 90)
+dollar7_90th = np.percentile(port_dollar7, 90)
+dollar8_90th = np.percentile(port_dollar8, 90)
+dollar9_90th = np.percentile(port_dollar9, 90)
+dollar10_90th = np.percentile(port_dollar10, 90)
+dollar11_90th = np.percentile(port_dollar11, 90)
+dollar12_90th = np.percentile(port_dollar12, 90)
+dollar13_90th = np.percentile(port_dollar13, 90)
+dollar14_90th = np.percentile(port_dollar14, 90)
+dollar15_90th = np.percentile(port_dollar15, 90)
+dollar16_90th = np.percentile(port_dollar16, 90)
+dollar17_90th = np.percentile(port_dollar17, 90)
+dollar18_90th = np.percentile(port_dollar18, 90)
+dollar19_90th = np.percentile(port_dollar19, 90)
+dollar20_90th = np.percentile(port_dollar20, 90)
+dollar21_90th = np.percentile(port_dollar21, 90)
+dollar22_90th = np.percentile(port_dollar22, 90)
+dollar23_90th = np.percentile(port_dollar23, 90)
+dollar24_90th = np.percentile(port_dollar24, 90)
+dollar25_90th = np.percentile(port_dollar25, 90)
+dollar26_90th = np.percentile(port_dollar26, 90)
+dollar27_90th = np.percentile(port_dollar27, 90)
+dollar28_90th = np.percentile(port_dollar28, 90)
+dollar29_90th = np.percentile(port_dollar29, 90)
+dollar30_90th = np.percentile(port_dollar30, 90)
+
+
+dollar_50th = [dollar0_50th, dollar1_50th, dollar2_50th, dollar3_50th, dollar4_50th, dollar5_50th, dollar6_50th, dollar7_50th, dollar8_50th, dollar9_50th, dollar10_50th,
+               dollar11_50th, dollar12_50th, dollar13_50th, dollar14_50th, dollar15_50th, dollar16_50th, dollar17_50th, dollar18_50th, dollar19_50th, dollar20_50th,
+               dollar21_50th, dollar22_50th, dollar23_50th, dollar24_50th, dollar25_50th, dollar26_50th, dollar27_50th, dollar28_50th, dollar29_50th, dollar30_50th]
+
+dollar_90th = [dollar0_90th, dollar1_90th, dollar2_90th, dollar3_90th, dollar4_90th, dollar5_90th, dollar6_90th, dollar7_90th, dollar8_90th, dollar9_90th, dollar10_90th,
+               dollar11_90th, dollar12_90th, dollar13_90th, dollar14_90th, dollar15_90th, dollar16_90th, dollar17_90th, dollar18_90th, dollar19_90th, dollar20_90th,
+               dollar21_90th, dollar22_90th, dollar23_90th, dollar24_90th, dollar25_90th, dollar26_90th, dollar27_90th, dollar28_90th, dollar29_90th, dollar30_90th]
+
+
+dollar_10th = [dollar0_10th, dollar1_10th, dollar2_10th, dollar3_10th, dollar4_10th, dollar5_10th, dollar6_10th, dollar7_10th, dollar8_10th, dollar9_10th, dollar10_10th,
+               dollar11_10th, dollar12_10th, dollar13_10th, dollar14_10th, dollar15_10th, dollar16_10th, dollar17_10th, dollar18_10th, dollar19_10th, dollar20_10th,
+               dollar21_10th, dollar22_10th, dollar23_10th, dollar24_10th, dollar25_10th, dollar26_10th, dollar27_10th, dollar28_10th, dollar29_10th, dollar30_10th]
+
+Success_Rate_year_1 = sum(map(lambda y : y > 0.0, port_dollar1))/len(port_dollar1)
+Success_Rate_year_2 = sum(map(lambda y : y > 0.0, port_dollar2))/len(port_dollar2)
+Success_Rate_year_3 = sum(map(lambda y : y > 0.0, port_dollar3))/len(port_dollar3)
+Success_Rate_year_4 = sum(map(lambda y : y > 0.0, port_dollar4))/len(port_dollar4)
+Success_Rate_year_5 = sum(map(lambda y : y > 0.0, port_dollar5))/len(port_dollar5)
+Success_Rate_year_6 = sum(map(lambda y : y > 0.0, port_dollar6))/len(port_dollar6)
+Success_Rate_year_7 = sum(map(lambda y : y > 0.0, port_dollar7))/len(port_dollar7)
+Success_Rate_year_8 = sum(map(lambda y : y > 0.0, port_dollar8))/len(port_dollar8)
+Success_Rate_year_9 = sum(map(lambda y : y > 0.0, port_dollar9))/len(port_dollar9)
+Success_Rate_year_10 = sum(map(lambda y : y > 0.0, port_dollar10))/len(port_dollar10)
+Success_Rate_year_11 = sum(map(lambda y : y > 0.0, port_dollar11))/len(port_dollar11)
+Success_Rate_year_12 = sum(map(lambda y : y > 0.0, port_dollar12))/len(port_dollar12)
+Success_Rate_year_13 = sum(map(lambda y : y > 0.0, port_dollar13))/len(port_dollar13)
+Success_Rate_year_14 = sum(map(lambda y : y > 0.0, port_dollar14))/len(port_dollar14)
+Success_Rate_year_15 = sum(map(lambda y : y > 0.0, port_dollar15))/len(port_dollar15)
+Success_Rate_year_16 = sum(map(lambda y : y > 0.0, port_dollar16))/len(port_dollar16)
+Success_Rate_year_17 = sum(map(lambda y : y > 0.0, port_dollar17))/len(port_dollar17)
+Success_Rate_year_18 = sum(map(lambda y : y > 0.0, port_dollar18))/len(port_dollar18)
+Success_Rate_year_19 = sum(map(lambda y : y > 0.0, port_dollar19))/len(port_dollar19)
+Success_Rate_year_20 = sum(map(lambda y : y > 0.0, port_dollar20))/len(port_dollar20)
+Success_Rate_year_21 = sum(map(lambda y : y > 0.0, port_dollar21))/len(port_dollar21)
+Success_Rate_year_22 = sum(map(lambda y : y > 0.0, port_dollar22))/len(port_dollar22)
+Success_Rate_year_23 = sum(map(lambda y : y > 0.0, port_dollar23))/len(port_dollar23)
+Success_Rate_year_24 = sum(map(lambda y : y > 0.0, port_dollar24))/len(port_dollar24)
+Success_Rate_year_25 = sum(map(lambda y : y > 0.0, port_dollar25))/len(port_dollar25)
+Success_Rate_year_26 = sum(map(lambda y : y > 0.0, port_dollar26))/len(port_dollar26)
+Success_Rate_year_27 = sum(map(lambda y : y > 0.0, port_dollar27))/len(port_dollar27)
+Success_Rate_year_28 = sum(map(lambda y : y > 0.0, port_dollar28))/len(port_dollar28)
+Success_Rate_year_29 = sum(map(lambda y : y > 0.0, port_dollar29))/len(port_dollar29)
+Success_Rate_year_30 = sum(map(lambda y : y > 0.0, port_dollar30))/len(port_dollar30)
+
+Success_Rate = [Success_Rate_year_1, Success_Rate_year_2, Success_Rate_year_3, Success_Rate_year_4, Success_Rate_year_5, Success_Rate_year_6, Success_Rate_year_7, Success_Rate_year_8, Success_Rate_year_9, Success_Rate_year_10,
+                           Success_Rate_year_11, Success_Rate_year_12, Success_Rate_year_13, Success_Rate_year_14, Success_Rate_year_15, Success_Rate_year_16, Success_Rate_year_17, Success_Rate_year_18, Success_Rate_year_19, Success_Rate_year_20,
+                           Success_Rate_year_21, Success_Rate_year_22, Success_Rate_year_23, Success_Rate_year_24, Success_Rate_year_25, Success_Rate_year_26, Success_Rate_year_27, Success_Rate_year_28, Success_Rate_year_29, Success_Rate_year_30, ]
 
 ### port Year 1 Dollars
 numpyport_port_dollar1 = {"port_dollar1": port_dollar1}
@@ -424,8 +566,27 @@ encodport_port_dollar30 = json.dumps(numpyport_port_dollar30, cls=NumpyArrayEnco
 numpyport_sim_paths = {"sim_paths": sim_paths}
 encodport_sim_paths = json.dumps(numpyport_sim_paths, cls=NumpyArrayEncoder)  # use dump() to write array into file
 
+### EXPENSES
+numpyport_expenses = {"expenses": expense}
+encodport_expenses = json.dumps(numpyport_expenses, cls=NumpyArrayEncoder)  # use dump() to write array into file
 
-jsonMerged = {**json.loads(encodport_port_dollar1), **json.loads(encodport_port_dollar30), **json.loads(encodport_sim_paths)}
+### 50th Percentile
+numpyport_dollar_50th = {"50th_Percentile": dollar_50th}
+encodport_dollar_50th = json.dumps(numpyport_dollar_50th, cls=NumpyArrayEncoder)  # use dump() to write array into file
+
+### 10th Percentile
+numpyport_dollar_10th = {"10th_Percentile": dollar_10th}
+encodport_dollar_10th = json.dumps(numpyport_dollar_10th, cls=NumpyArrayEncoder)  # use dump() to write array into file
+
+### 90th Percentile
+numpyport_dollar_90th = {"90th_Percentile": dollar_90th}
+encodport_dollar_90th = json.dumps(numpyport_dollar_90th, cls=NumpyArrayEncoder)  # use dump() to write array into file
+
+### Success Rate
+numpyport_succes_rate = {"succes_rate": Success_Rate}
+encodport_succes_rate = json.dumps(numpyport_succes_rate, cls=NumpyArrayEncoder)  # use dump() to write array into file
+
+jsonMerged = {**json.loads(encodport_port_dollar1), **json.loads(encodport_port_dollar30), **json.loads(encodport_sim_paths), **json.loads(encodport_expenses), **json.loads(encodport_dollar_50th), **json.loads(encodport_dollar_10th), **json.loads(encodport_dollar_90th), **json.loads(encodport_succes_rate)}
 asString = json.dumps(jsonMerged)
 print(asString)
 

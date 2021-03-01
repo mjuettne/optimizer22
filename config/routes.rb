@@ -173,6 +173,9 @@ Rails.application.routes.draw do
   
   get("/forecasts/:path_id", { :controller => "forecasts", :action => "show" })
   post("/forecasts/:path_id/calculate", { :controller => "forecasts", :action => "calculate" })
+
+  get("/forecasts/:path_id/calculate/download", { :controller => "forecasts", :action => "download" })
+  get("/forecasts/:path_id/calculate/download2", { :controller => "forecasts", :action => "download2" })
   
   # UPDATE
   

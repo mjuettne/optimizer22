@@ -4,7 +4,7 @@ wb = xlsx_package.workbook
 length = @weights_col1.length.to_i
 wb.add_worksheet(name: "Frontier Table") do |sheet|
 wb.styles do |style|
-  header = style.add_style(bg_color: "3498DB", fg_color: "FFFFFF", alignment: { horizontal: :left }, :sz => 10, :font_name => 'Montserrat', :b => true)
+  header = style.add_style(bg_color: "5445FF", fg_color: "FFFFFF", alignment: { horizontal: :left }, :sz => 10, :font_name => 'Montserrat', :b => true)
   row = style.add_style(bg_color: "FFFFFF", alignment: { horizontal: :left }, :sz => 10, :font_name => 'Montserrat', :number => true)
   summary_row = style.add_style(bg_color: "C0C0C0", alignment: { horizontal: :left }, :sz => 10, :font_name => 'Montserrat', :b => true, :number => true)
 

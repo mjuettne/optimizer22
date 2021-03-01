@@ -62,15 +62,14 @@
 
     <div>
       <div class="panel-group" id="accordion">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-              <button type = "button" class="btn btn-secondary btn-lg">
+  
+              <button type = "button" class="btn btn-lg" style = "background-color: #5445FF">
                   <a class = "text-white" data-toggle="collapse" data-parent="#accordion" href="#collapse1">Add Asset Classes</a>
               </button>
           </div>
 <div id="collapse1" class="panel-collapse collapse in">
    <table class="table table-hover">
-      <tr class="table-info">
+      <tr style = "background-color: #5445FF">
         <th>Name</th>
         <th>Check to Include</th>
         <th>Min</th>
@@ -79,7 +78,7 @@
       </tr>
 
       <% @list_of_asset_classes.each do |an_asset_class| %>
-      <tr class="table-light">
+      <tr>
         <th> <%= an_asset_class.name %> </th>
         <td> <div class="form-check"> <input class="form-check-input" type="checkbox" value=<%= an_asset_class.id %>  name = "include[]"> </div> </td>
         <td>  <input class="form-control" type="number" min="0" max="100" step="1" id="min_box" name="query_min[]" value = "0">    </td>

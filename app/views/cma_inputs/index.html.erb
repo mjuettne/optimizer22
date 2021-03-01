@@ -3,20 +3,23 @@
   <div>
     <h3> Edit Inputs: <%= @the_cma.name%> </h3>
   </div>
+    <div>
+        <a href="/cmas/<%= @the_cma.id%>">  Go back </a>
+      </div>
 </div>
 
 
-
+<hr>
 <div>
-  <div>
+  <div class = col-8>
     
 
  <table class="table table-hover">
  <form action="/modify_cma_input" method="post">
    
    <thead>
-   <input type="submit" class="btn btn-success btn-lg" value =  "Update CMAs" >
-    <tr>
+   
+    <tr style = "background-color: #5445FF">
       <th scope="col">Asset Class</th>
       <th scope="col">Expected Return (Arith)</th>
       <th scope="col">Standard Deviation</th>
@@ -30,7 +33,7 @@
   </thead>
    <tbody>
    <% @asset_class.each do |asset_class| %>
-    <tr class="table-light">
+    <tr>
       <th scope="row"> <%= asset_class.name %> </th>
       <td> <input class="form-control" type="number" min="0" max="1" step="0.0001" id="exp_ret_box" name="query_exp_ret[]" value = <%= @list_of_cma_inputs.where(:cma_id => @the_cma.id).where(:asset_class => asset_class.id)[0].exp_ret.round(4)%> > </td>
       <td> <input class="form-control" type="number" min="0" max="1" step="0.0001" id="std_dev_box" name="query_std_dev[]" value = <%= @list_of_cma_inputs.where(:cma_id => @the_cma.id).where(:asset_class => asset_class.id)[0].std_dev.round(4)%>></td>

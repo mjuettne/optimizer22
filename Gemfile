@@ -25,6 +25,14 @@ gem 'roo' # excel import
 
 gem 'faker' 
 
+gem "memory_profiler" # membory check
+gem "derailed_benchmarks" # membory check
+
+gem 'sidekiq', '~> 6.1.3' # SIDEKIQ
+gem 'parallel', '~> 1.11', '>= 1.11.2' # PARALLEL
+
+# gem "rack-timeout", require: "rack/timeout/base" #timeout
+
 group :development do
   gem 'listen', '~> 3.2'
   gem 'spring-watcher-listen', '~> 2.0.0'

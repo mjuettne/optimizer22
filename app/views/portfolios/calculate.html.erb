@@ -2,7 +2,13 @@
 
   .yAxis path {
     stroke: #B8B8B8;
-  }  
+  }
+
+  svg text {  
+            fill: white;
+            size: 13px;  
+        }  
+     
   
 </style>
 
@@ -40,13 +46,12 @@ var svg = d3.select("#my_dataviz")
           "translate(" + margin.left + "," + margin.top + ")");
 
 // get the data
-var data = <%=  JSON.parse(@python_simulation.fetch("returns_year1").to_json) %>;
-
+var data1 = <%= JSON.parse(@python_simulation.fetch("returns_year1").to_json) %>;
+var data2 = <%= JSON.parse(@python_simulation.fetch("bench_returns_year1").to_json) %>;
 // d3.json(myJson , function(data) {
-
   // X axis: scale and draw:
   var x = d3.scaleLinear()
-      .domain([<%= ((@python_simulation.fetch("returns_year1").min)*1).round(2) %>, <%= ((@python_simulation.fetch("returns_year1").max)*1).round(2) %>])     // can use this instead of 1000 to have the max of data: d3.max(data, function(d) { return +d.price })
+      .domain([<%= [-1, ((@python_simulation.fetch("returns_year1").min)*1).round(2)].max %>, <%= [1, ((@python_simulation.fetch("returns_year1").max)*1).round(2)].min %> ])     // can use this instead of 1000 to have the max of data: d3.max(data, function(d) { return +d.price })
       .range([0, width]);
   svg.append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -59,67 +64,90 @@ var data = <%=  JSON.parse(@python_simulation.fetch("returns_year1").to_json) %>
       .thresholds(x.ticks(70)); // then the numbers of bins
 
   // And apply this function to data to get the bins
-  var bins = histogram(data);
+  var bins1 = histogram(data1);
+  var bins2 = histogram(data2);
 
   // Y axis: scale and draw:
   var y = d3.scaleLinear()
       .range([height, 0]);
-      y.domain([0, d3.max(bins, function(d) { return d.length; })]);   // d3.hist has to be called before the Y axis obviously
+      
+      y.domain([0, d3.max(bins1, function(d) { return d.length; })]);
+         // d3.hist has to be called before the Y axis obviously
   svg.append("g")
       .call(d3.axisLeft(y));
+      
+  
+  
+    
 
   // Add a tooltip div. Here I define the general feature of the tooltip: stuff that do not depend on the data point.
   // Its opacity is set to 0: we don't see it by default.
-  var tooltip = d3.select("#my_dataviz")
-    .append("div")
-    .style("opacity", 0)
-    .attr("class", "tooltip")
-    .style("background-color", "black")
-    .style("color", "white")
-    .style("border-radius", "5px")
-    .style("padding", "10px")
+  // var tooltip = d3.select("#my_dataviz")
+  //   .append("div")
+  //   .style("opacity", 0)
+  //   .attr("class", "tooltip")
+  //   .style("background-color", "black")
+  //   .style("color", "white")
+  //   .style("border-radius", "5px")
+  //   .style("padding", "10px")
 
   // A function that change this tooltip when the user hover a point.
   // Its opacity is set to 1: we can now see it. Plus it set the text and position of tooltip depending on the datapoint (d)
-  var showTooltip = function(d) {
-    tooltip
-      .transition()
-      .duration(100)
-      .style("opacity", 1)
-    tooltip
-      .html("Range: " + d.x0 + " - " + d.x1)
-      .style("top", (event.pageY)+"px")
-      .style("left",(event.pageX)+"px")
-  }
-  var moveTooltip = function(d) {
-    tooltip
-      .style("top", (event.pageY)+"px")
-      .style("left",(event.pageX)+"px")
-  }
-  // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
-  var hideTooltip = function(d) {
-    tooltip
-      .transition()
-      .duration(100)
-      .style("opacity", 0)
-  }
+  // var showTooltip = function(d) {
+  //   tooltip
+  //     .transition()
+  //     .duration(100)
+  //     .style("opacity", 1)
+  //   tooltip
+  //     .html("Range: " + d.x0 + " - " + d.x1)
+  //     .style("top", (event.pageY)+"px")
+  //     .style("left",(event.pageX)+"px")
+  // }
+  // var moveTooltip = function(d) {
+  //   tooltip
+  //     .style("top", (event.pageY)+"px")
+  //     .style("left",(event.pageX)+"px")
+  // }
+  // // A function that change this tooltip when the leaves a point: just need to set opacity to 0 again
+  // var hideTooltip = function(d) {
+  //   tooltip
+  //     .transition()
+  //     .duration(100)
+  //     .style("opacity", 0)
+  // }
 
   // append the bar rectangles to the svg element
   svg.selectAll("rect")
-      .data(bins)
+      .data(bins1)
       .enter()
       .append("rect")
         .attr("x", 1)
         .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
         .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
         .attr("height", function(d) { return height - y(d.length); })
-        .style("fill", "#69b3a2")
+        .style("fill", "#5445FF")
+        // .style("opacity", 0.6)
         // Show tooltip on hover
-        .on("mouseover", showTooltip )
-        .on("mousemove", moveTooltip )
-        .on("mouseleave", hideTooltip )
+        // .on("mouseover", showTooltip )
+        // .on("mousemove", moveTooltip )
+        // .on("mouseleave", hideTooltip )
+  // append the bar rectangles to the svg element
+  svg.selectAll("rect2")
+      .data(bins2)
+      .enter()
+      .append("rect")
+        .attr("x", 1)
+        .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
+        .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
+        .attr("height", function(d) { return height - y(d.length); })
+        .style("fill", "#ABADBF")
+        // .style("opacity", 0.6)
+        // Show tooltip on hover
+        // .on("mouseover", showTooltip )
+        // .on("mousemove", moveTooltip )
+        // .on("mouseleave", hideTooltip )
 
-            // Append a vertical line to highlight the separation
+  // Append a vertical line to highlight the separation
   svg
     .append("line")
       .attr("x1", x(<%= (@python_simulation.fetch("returns_year1")).sum/(@python_simulation.fetch("returns_year1")).count  %>) )
@@ -128,6 +156,7 @@ var data = <%=  JSON.parse(@python_simulation.fetch("returns_year1").to_json) %>
       .attr("y2", y(1600))
       .attr("stroke", "grey")
       .attr("stroke-dasharray", "4")
+      
   svg
     .append("text")
     .attr("x", x(<%= ((@python_simulation.fetch("returns_year1").min)*1).round(2) %>))
@@ -135,6 +164,12 @@ var data = <%=  JSON.parse(@python_simulation.fetch("returns_year1").to_json) %>
     .text("Average: " + <%=  (((@python_simulation.fetch("returns_year1")).sum/(@python_simulation.fetch("returns_year1")).count).to_f*100).round(2) %> +"%")
     .style("font-size", "15px")
     .style("fill", "white")
+
+   // Handmade legend
+  svg.append("circle").attr("cx",10).attr("cy",30).attr("r", 6).style("fill", "#5445FF")
+  svg.append("circle").attr("cx",10).attr("cy",60).attr("r", 6).style("fill", "#ABADBF")
+  svg.append("text").attr("x", 20).attr("y", 30).text("Private Equity").style("font-size", "15px").attr("alignment-baseline","middle").style("fill", "white")
+  svg.append("text").attr("x", 20).attr("y", 60).text("Private Equity (Quarterly Return)").style("font-size", "15px").attr("alignment-baseline","middle").style("fill", "white")
 
 ;
 </script>
@@ -149,42 +184,46 @@ var ctx = document.getElementById('mixedChart').getContext('2d');
 var mixedChart = new Chart(ctx, {
     type: 'bubble',
     data: {
-        label: 'Portfolio',
+        label: 'Private Equity',
         datasets: [
           {
             type: 'bubble',
-            label: 'Portfolio',
+            label: 'Private Equity',
             data: [{
                     x: <%= -1*(@python_simulation.fetch("CVAR_year1")*100).round(1) %>,
-                    y: <%= (((@python_simulation.fetch("dollar_50th")[0])/1000000)*100 -100).round(1) %>,
+                    y: <%= (((@python_simulation.fetch("returns_year1")).sum/(@python_simulation.fetch("returns_year1")).count)*100).round(1) %>,
                     r: 15
                     }],
             backgroundColor: "#5445FF",        
             order: 1}, 
           { 
             type: 'bubble',
-            label: 'Benchmark',    
+            label: 'Private Equity (Quarterly Return)',    
             data: [{    
                     x: <%= -1*(@python_simulation.fetch("bench_CVAR")[0]*100).round(1) %>,
-                    y: <%= (((@python_simulation.fetch("bench_dollar_50th")[0])/1000000)*100 -100).round(1) %>,
+                    y: <%=  (((@python_simulation.fetch("bench_returns_year1")).sum/(@python_simulation.fetch("bench_returns_year1")).count)*100).round(1) %>,
                     r: 15
                     }],
             backgroundColor: "#ABADBF", 
             order: 2}]},     
     options: {
         legend: {
+             position: 'top',
              labels: {
-                  fontColor: "#FFFFFF"
+                  fontColor: "#FFFFFF",
+                  fontSize: 15,
                  }
               },
         scales: {
             xAxes: [{
                   scaleLabel: {
                             display: true,
+                            fontSize: 15,
                             fontColor: "#FFFFFF",
                             labelString: 'CVAR (5%)'},
                   ticks: {
                     fontColor: "#FFFFFF",
+                    fontSize: 13,
                     min: <%= [-1*(@python_simulation.fetch("bench_CVAR")[0]*100).round(0) - 1,  -1*(@python_simulation.fetch("CVAR_year1")*100).round(0)  - 1 ].min %>,
                     max: <%= [-1*(@python_simulation.fetch("bench_CVAR")[0]*100).round(0) + 1,  -1*(@python_simulation.fetch("CVAR_year1")*100).round(0)  + 1 ].max %>
                           }
@@ -192,13 +231,15 @@ var mixedChart = new Chart(ctx, {
             yAxes: [{
                   scaleLabel: {
                             display: true,
+                            fontSize: 15,
                             fontColor: "#FFFFFF",
                             labelString: 'RETURN'},
                                   
                   ticks: {
                     fontColor: "#FFFFFF",
-                    min: <%= [ (((@python_simulation.fetch("bench_dollar_50th")[0])/1000000)*100 -100).round(0)  - 1, (((@python_simulation.fetch("dollar_50th")[0])/1000000)*100 -100).round(0)  - 1].min %>,
-                    max: <%= [ (((@python_simulation.fetch("bench_dollar_50th")[0])/1000000)*100 -100).round(0) + 1, (((@python_simulation.fetch("dollar_50th")[0])/1000000)*100 -100).round(0) + 1].max %>
+                    fontSize: 13,
+                    min: <%= [ (((@python_simulation.fetch("bench_returns_year1")).sum/(@python_simulation.fetch("bench_returns_year1")).count)*100).round(0) - 1, (((@python_simulation.fetch("returns_year1")).sum/(@python_simulation.fetch("returns_year1")).count)*100).round(0) - 1].min %>,
+                    max: <%= [ (((@python_simulation.fetch("bench_returns_year1")).sum/(@python_simulation.fetch("bench_returns_year1")).count)*100).round(0) + 1, (((@python_simulation.fetch("returns_year1")).sum/(@python_simulation.fetch("returns_year1")).count)*100).round(0) + 1].max %>
                           }
                           
                     }]
@@ -228,16 +269,16 @@ var mixedChart = new Chart(ctx, {
 
   <tr>
     <td>Average Cumulative Return </td>
-    <td> <%= (((@python_simulation.fetch("dollar_50th")[0])/1000000)*100 -100).round(1)%>% </td>
-    <td> <%= (((@python_simulation.fetch("dollar_50th")[1])/1000000)*100 -100).round(1)%>% </td>
-    <td> <%= (((@python_simulation.fetch("dollar_50th")[2])/1000000)*100 -100).round(1)%>% </td>
-    <td> <%= (((@python_simulation.fetch("dollar_50th")[3])/1000000)*100 -100).round(1)%>% </td>
-    <td> <%= (((@python_simulation.fetch("dollar_50th")[4])/1000000)*100 -100).round(1)%>% </td>
-    <td> <%= (((@python_simulation.fetch("dollar_50th")[5])/1000000)*100 -100).round(1)%>% </td>
-    <td> <%= (((@python_simulation.fetch("dollar_50th")[6])/1000000)*100 -100).round(1)%>% </td>
-    <td> <%= (((@python_simulation.fetch("dollar_50th")[7])/1000000)*100 -100).round(1)%>% </td>
-    <td> <%= (((@python_simulation.fetch("dollar_50th")[8])/1000000)*100 -100).round(1)%>% </td>
-    <td> <%= (((@python_simulation.fetch("dollar_50th")[9])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("dollar_average")[0])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("dollar_average")[1])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("dollar_average")[2])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("dollar_average")[3])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("dollar_average")[4])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("dollar_average")[5])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("dollar_average")[6])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("dollar_average")[7])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("dollar_average")[8])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("dollar_average")[9])/1000000)*100 -100).round(1)%>% </td>
   </tr>
 
   <tr>
@@ -336,16 +377,16 @@ var mixedChart = new Chart(ctx, {
 
   <tr>
     <td>Average Cumulative Return </td>
-    <td> <%= (((@python_simulation.fetch("bench_dollar_50th")[0])/1000000)*100 -100).round(1)%>% </td>
-    <td> <%= (((@python_simulation.fetch("bench_dollar_50th")[1])/1000000)*100 -100).round(1)%>% </td>
-    <td> <%= (((@python_simulation.fetch("bench_dollar_50th")[2])/1000000)*100 -100).round(1)%>% </td>
-    <td> <%= (((@python_simulation.fetch("bench_dollar_50th")[3])/1000000)*100 -100).round(1)%>% </td>
-    <td> <%= (((@python_simulation.fetch("bench_dollar_50th")[4])/1000000)*100 -100).round(1)%>% </td>
-    <td> <%= (((@python_simulation.fetch("bench_dollar_50th")[5])/1000000)*100 -100).round(1)%>% </td>
-    <td> <%= (((@python_simulation.fetch("bench_dollar_50th")[6])/1000000)*100 -100).round(1)%>% </td>
-    <td> <%= (((@python_simulation.fetch("bench_dollar_50th")[7])/1000000)*100 -100).round(1)%>% </td>
-    <td> <%= (((@python_simulation.fetch("bench_dollar_50th")[8])/1000000)*100 -100).round(1)%>% </td>
-    <td> <%= (((@python_simulation.fetch("bench_dollar_50th")[9])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("bench_dollar_average")[0])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("bench_dollar_average")[1])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("bench_dollar_average")[2])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("bench_dollar_average")[3])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("bench_dollar_average")[4])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("bench_dollar_average")[5])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("bench_dollar_average")[6])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("bench_dollar_average")[7])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("bench_dollar_average")[8])/1000000)*100 -100).round(1)%>% </td>
+    <td> <%= (((@python_simulation.fetch("bench_dollar_average")[9])/1000000)*100 -100).round(1)%>% </td>
   </tr>
 
   <tr>

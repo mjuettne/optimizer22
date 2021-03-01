@@ -1,7 +1,8 @@
 class AssetClassesController < ApplicationController
   def index
     matching_asset_classes = AssetClass.all
-
+    mean = [1,2,3]
+    @hello = FirstJob.new(mean).perform_now
     @list_of_asset_classes = matching_asset_classes.order({ :created_at => :asc })
     render({ :template => "asset_classes/index.html.erb" })
     
