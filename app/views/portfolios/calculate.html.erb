@@ -21,6 +21,7 @@
 </div>
 
 
+
 <hr>
 <div class="row">
 
@@ -168,8 +169,8 @@ var data2 = <%= JSON.parse(@python_simulation.fetch("bench_returns_year1").to_js
    // Handmade legend
   svg.append("circle").attr("cx",10).attr("cy",30).attr("r", 6).style("fill", "#5445FF")
   svg.append("circle").attr("cx",10).attr("cy",60).attr("r", 6).style("fill", "#ABADBF")
-  svg.append("text").attr("x", 20).attr("y", 30).text("Private Equity").style("font-size", "15px").attr("alignment-baseline","middle").style("fill", "white")
-  svg.append("text").attr("x", 20).attr("y", 60).text("Private Equity (Quarterly Return)").style("font-size", "15px").attr("alignment-baseline","middle").style("fill", "white")
+  svg.append("text").attr("x", 20).attr("y", 30).text("<%= @the_portfolio.name %>").style("font-size", "15px").attr("alignment-baseline","middle").style("fill", "white")
+  svg.append("text").attr("x", 20).attr("y", 60).text("<%= @all_asset_class.where({:id => @the_portfolio.benchmark}).at(0).name %>").style("font-size", "15px").attr("alignment-baseline","middle").style("fill", "white")
 
 ;
 </script>
@@ -184,11 +185,11 @@ var ctx = document.getElementById('mixedChart').getContext('2d');
 var mixedChart = new Chart(ctx, {
     type: 'bubble',
     data: {
-        label: 'Private Equity',
+        label: '<%= @the_portfolio.name %>',
         datasets: [
           {
             type: 'bubble',
-            label: 'Private Equity',
+            label: '<%= @the_portfolio.name %>',
             data: [{
                     x: <%= -1*(@python_simulation.fetch("CVAR_year1")*100).round(1) %>,
                     y: <%= (((@python_simulation.fetch("returns_year1")).sum/(@python_simulation.fetch("returns_year1")).count)*100).round(1) %>,
@@ -198,7 +199,7 @@ var mixedChart = new Chart(ctx, {
             order: 1}, 
           { 
             type: 'bubble',
-            label: 'Private Equity (Quarterly Return)',    
+            label: '<%= @all_asset_class.where({:id => @the_portfolio.benchmark}).at(0).name %>',    
             data: [{    
                     x: <%= -1*(@python_simulation.fetch("bench_CVAR")[0]*100).round(1) %>,
                     y: <%=  (((@python_simulation.fetch("bench_returns_year1")).sum/(@python_simulation.fetch("bench_returns_year1")).count)*100).round(1) %>,

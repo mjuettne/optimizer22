@@ -269,7 +269,7 @@ class PortfoliosController < ApplicationController
     @skew = @skew.to_json
     @kurt = @kurt.to_json
     @correlation = @correlation.to_json
-    query_asset_id = @query_asset_id.to_json
+    @query_asset_id = @query_asset_id.to_json
     @yields = @yields.to_json
     @weights = @weights.to_json
 

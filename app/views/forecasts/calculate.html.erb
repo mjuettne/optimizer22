@@ -24,7 +24,7 @@
 var ctx = document.getElementById('myLineChart').getContext('2d');
 
 var dataFirst_sim10th = {
-  label: "Portfolio 1",
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio1_id}).at(0).name %> 10th",
   data: <%= @python_forecat_port1.fetch("sim_paths").sort_by(&:last)[3000] %>, 
   pointBackgroundColor: "#5445FF",
   borderColor: "#5445FF",
@@ -33,7 +33,7 @@ var dataFirst_sim10th = {
 };
 
 var dataFirst_sim50th = {
-  // label: "Portfolio 1",
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio1_id}).at(0).name %> 50th",
   data: <%= @python_forecat_port1.fetch("sim_paths").sort_by(&:last)[15000] %>, 
   pointBackgroundColor: "#5445FF",
   borderColor: "#5445FF",
@@ -41,7 +41,7 @@ var dataFirst_sim50th = {
   // Set More Options
 };
 var dataFirst_sim90th = {
-  // label: "Portfolio 1",
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio1_id}).at(0).name %> 90th",
   data: <%= @python_forecat_port1.fetch("sim_paths").sort_by(&:last)[27000] %>, 
   pointBackgroundColor: "#5445FF",
   borderColor: "#5445FF",
@@ -50,7 +50,7 @@ var dataFirst_sim90th = {
 };
 
 var dataSecond_sim10th = {
-  label: "Portfolio 1",
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio2_id}).at(0).name %> 10th",
   data: <%= @python_forecat_port2.fetch("sim_paths").sort_by(&:last)[3000] %>, 
   pointBackgroundColor: "#71B8FF",
   borderColor: "#71B8FF",
@@ -59,7 +59,7 @@ var dataSecond_sim10th = {
 };
 
 var dataSecond_sim50th = {
-  // label: "Portfolio 1",
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio2_id}).at(0).name %> 50th",
   data: <%= @python_forecat_port2.fetch("sim_paths").sort_by(&:last)[15000] %>, 
   pointBackgroundColor: "#71B8FF",
   borderColor: "#71B8FF",
@@ -67,7 +67,7 @@ var dataSecond_sim50th = {
   // Set More Options
 };
 var dataSecond_sim90th = {
-  // label: "Portfolio 1",
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio2_id}).at(0).name %> 90th",
   data: <%= @python_forecat_port2.fetch("sim_paths").sort_by(&:last)[27000] %>, 
   pointBackgroundColor: "#71B8FF",
   borderColor: "#71B8FF",
@@ -78,7 +78,7 @@ var dataSecond_sim90th = {
 <% if @python_forecat_port3 = 0%>
 <% else %>
 var dataThird_sim10th = {
-  label: "Portfolio 1",
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio3_id}).at(0).name %> 10th",
   data: <%= @python_forecat_port3.fetch("sim_paths").sort_by(&:last)[3000] %>, 
   pointBackgroundColor: "#FFD966",
   borderColor: "#FFD966",
@@ -90,7 +90,7 @@ var dataThird_sim10th = {
 <% if @python_forecat_port3 = 0%>
 <% else %>
 var dataThird_sim50th = {
-  // label: "Portfolio 1",
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio3_id}).at(0).name %> 50th",
   data: <%= @python_forecat_port3.fetch("sim_paths").sort_by(&:last)[15000] %>, 
   pointBackgroundColor: "#FFD966",
   borderColor: "#FFD966",
@@ -102,7 +102,7 @@ var dataThird_sim50th = {
 <% if @python_forecat_port3 = 0%>
 <% else %>
 var dataThird_sim90th = {
-  // label: "Portfolio 1",
+  label: "<%= @portfolios.where({:id => @the_forecast_input.portfolio3_id}).at(0).name %> 90th",
   data: <%= @python_forecat_port3.fetch("sim_paths").sort_by(&:last)[27000] %>, 
   pointBackgroundColor: "#FFD966",
   borderColor: "#FFD966",
