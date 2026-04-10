@@ -25,8 +25,8 @@ RUN sudo chown root:root /usr/bin/chromedriver
 RUN sudo chmod +x /usr/bin/chromedriver
 
 RUN wget https://selenium-release.storage.googleapis.com/3.13/selenium-server-standalone-3.13.0.jar
-RUN wget http://www.java2s.com/Code/JarDownload/testng/testng-6.8.7.jar.zip
-RUN unzip testng-6.8.7.jar.zip
+# RUN wget http://www.java2s.com/Code/JarDownload/testng/testng-6.8.7.jar.zip
+# RUN unzip testng-6.8.7.jar.zip
 
 USER gitpod
 WORKDIR /base-rails
